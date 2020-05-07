@@ -1,3 +1,5 @@
+import {PropositionQuestion} from './propositionQuestion';
+
 export class Question {
 
   constructor(
@@ -5,7 +7,7 @@ export class Question {
     public libelle: string = '',
     public type: string,
     public isRequired: boolean,
-    public propositions: object,
+    public propositions: string[],
     public order: number
   ) {
 
