@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {PropositionQuestion} from '../../model/propositionQuestion';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {Question} from '../../model/question';
@@ -10,12 +10,13 @@ import {Question} from '../../model/question';
 })
 export class QCheckBoxEditComponent implements OnChanges {
 
-  @Input() question: Question;
+  @Input() questionIn: Question;
   questionForm: FormGroup;
   showpropositionForm: boolean;
-  tabProp: string[] = [];
-  estObligatoire: string;
   reponses: string[] = ['Oui', 'Non'];
+  @Input() type = 'edit';
+  @Output() output = new EventEmitter<Question>();
+  questionOut: Question;
   constructor(private fb: FormBuilder) {
     this.createForm();
   }
@@ -25,6 +26,7 @@ export class QCheckBoxEditComponent implements OnChanges {
       labelQuestion: '',
       proposition1: '' ,
       proposition2: '',
+      estObligatoire: '',
       propositionsArray: this.fb.array([
       ])
     });
@@ -36,11 +38,12 @@ export class QCheckBoxEditComponent implements OnChanges {
 
   rebuildForm() {
     this.questionForm.reset({
-      labelQuestion: this.question.libelle,
-      proposition1: this.question.propositions[0],
-      proposition2: this.question.propositions[1],
+      labelQuestion: this.questionIn.libelle,
+      estObligatoire: this.questionIn.isRequired,
+      proposition1: this.questionIn.propositions[0],
+      proposition2: this.questionIn.propositions[1],
     });
-    this.setpropositions(this.question.propositions);
+    this.setpropositions(this.questionIn.propositions);
   }
 
   get propositionsArray(): FormArray {
@@ -60,28 +63,29 @@ export class QCheckBoxEditComponent implements OnChanges {
   }
 
   toBoolean(value) {
-    console.log(value);
     return value !== 'Non';
   }
+
+  addArray(tab , val) {
+    if (val !== undefined && !tab.includes(val) ) {
+      tab.push(val);
+    }
+  }
+
   onCreateFinalQuetion() {
 
       const valueQuestion = JSON.stringify(this.questionForm.value);
       const obj =  JSON.parse(valueQuestion);
-
-      if (obj.proposition1 !== undefined &&  obj.proposition2 !== undefined) {
-        if (!this.tabProp.includes(obj.proposition1) && !this.tabProp.includes(obj.proposition2)) {
-          this.tabProp.push(obj.proposition1);
-          this.tabProp.push(obj.proposition2);
-        }
-      }
+      let tabProp = [ ];
+      this.addArray( tabProp, obj.proposition1 );
+      this.addArray( tabProp, obj.proposition2);
 
       for (let i = 0; i < obj.propositionsArray.length; i++) {
-        if (!this.tabProp.includes(obj.proposition1) && obj.proposition1 !== undefined) {
-          this.tabProp.push(obj.propositionsArray[i].valeur);
+          this.addArray(tabProp , obj.propositionsArray[i].valeur);
         }
-      }
 
-      this.question = new Question(1, obj.labelQuestion, 'CheckBox', this.toBoolean(this.estObligatoire), this.tabProp, 1);
-      console.log(this.question);
+      this.questionOut = new Question(1, obj.labelQuestion, 'CheckBox', this.toBoolean(obj.estObligatoire), tabProp, 1);
+      this.output.emit(this.questionOut);
+      console.log(this.questionOut);
   }
 }

@@ -1,5 +1,3 @@
-import {PropositionQuestion} from './propositionQuestion';
-
 export class Question {
 
   constructor(

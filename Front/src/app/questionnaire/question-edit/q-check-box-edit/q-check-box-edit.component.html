@@ -18,10 +18,9 @@
           <label >Cette question est obligatoire ?</label>
         </div>
         <mat-radio-group
-                [ngModelOptions]="{standalone: true}"
                 aria-labelledby="example-radio-group-label"
                 class="example-radio-group"
-                [(ngModel)]="estObligatoire">
+                formControlName="estObligatoire">
           <mat-radio-button class="example-radio-button" *ngFor="let reponse of reponses" [value]="reponse">
             {{reponse}}
           </mat-radio-button>
