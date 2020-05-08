@@ -13,7 +13,9 @@ export class QCheckBoxEditComponent implements OnChanges {
   @Input() question: Question;
   questionForm: FormGroup;
   showpropositionForm: boolean;
-  tabProp: string[];
+  tabProp: string[] = [];
+  estObligatoire: string;
+  reponses: string[] = ['Oui', 'Non'];
   constructor(private fb: FormBuilder) {
     this.createForm();
   }
@@ -51,27 +53,35 @@ export class QCheckBoxEditComponent implements OnChanges {
   }
 
   addproposition() {
-    this.propositionsArray.push(this.fb.group(new PropositionQuestion('','')));
+    this.propositionsArray.push(this.fb.group(new PropositionQuestion('', '')));
   }
   removeproposition(i: number) {
     this.propositionsArray.removeAt(i);
   }
 
-
+  toBoolean(value) {
+    console.log(value);
+    return value !== 'Non';
+  }
   onCreateFinalQuetion() {
 
       const valueQuestion = JSON.stringify(this.questionForm.value);
       const obj =  JSON.parse(valueQuestion);
 
-      console.log(obj.labelQuestion);
-      if(obj.proposition1 !=undefined && obj.proposition2 !=undefined){
-        this.tabProp.push(obj.proposition1);
-        this.tabProp.push(obj.proposition2);
+      if (obj.proposition1 !== undefined &&  obj.proposition2 !== undefined) {
+        if (!this.tabProp.includes(obj.proposition1) && !this.tabProp.includes(obj.proposition2)) {
+          this.tabProp.push(obj.proposition1);
+          this.tabProp.push(obj.proposition2);
+        }
       }
 
+      for (let i = 0; i < obj.propositionsArray.length; i++) {
+        if (!this.tabProp.includes(obj.proposition1) && obj.proposition1 !== undefined) {
+          this.tabProp.push(obj.propositionsArray[i].valeur);
+        }
+      }
 
-      this.question = new Question(1, obj.labelQuestion, 'CheckBox', true, this.tabProp, 1);
+      this.question = new Question(1, obj.labelQuestion, 'CheckBox', this.toBoolean(this.estObligatoire), this.tabProp, 1);
       console.log(this.question);
-
   }
 }

@@ -1,5 +1,5 @@
 <div class="container border mb-4 p-3">
-  <form [formGroup]="questionForm" class="container mt-3" (ngSubmit)="onCreateFinalQuetion()">
+  <form [formGroup]="questionForm" class="container mt-3" >
     <div class="row r">
       <div class="col-6">
         <div class="form-group ">
@@ -10,6 +10,22 @@
             <input matInput formControlName="labelQuestion" >
           </mat-form-field>
         </div>
+      </div>
+    </div>
+    <div class="row r">
+      <div class="col-6">
+        <div class="form-group ">
+          <label >Cette question est obligatoire ?</label>
+        </div>
+        <mat-radio-group
+                [ngModelOptions]="{standalone: true}"
+                aria-labelledby="example-radio-group-label"
+                class="example-radio-group"
+                [(ngModel)]="estObligatoire">
+          <mat-radio-button class="example-radio-button" *ngFor="let reponse of reponses" [value]="reponse">
+            {{reponse}}
+          </mat-radio-button>
+        </mat-radio-group>
       </div>
     </div>
     <div class="row ">
@@ -53,7 +69,7 @@
       </div>
     </div>
     <div class="form-group">
-      <button mat-raised-button color="primary" type="submit" >Enregistrer</button>
+      <button mat-raised-button color="primary" (click)="onCreateFinalQuetion()" >Enregistrer</button>
     </div>
   </form>
 </div>

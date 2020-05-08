@@ -9,7 +9,7 @@ import {
     MatCheckboxModule,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule,
+    MatInputModule, MatRadioGroup, MatRadioModule,
     MatSelectModule
 } from '@angular/material';
 import { QRadioBtnShowComponent } from './questionnaire/question-show/q-radio-btn-show/q-radio-btn-show.component';
@@ -25,6 +25,8 @@ import { QSliderEditComponent } from './questionnaire/question-edit/q-slider-edi
 import { QCheckBoxEditComponent } from './questionnaire/question-edit/q-check-box-edit/q-check-box-edit.component';
 import { QRadioBtnEditComponent } from './questionnaire/question-edit/q-radio-btn-edit/q-radio-btn-edit.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { QuestionnaireEditComponent } from './questionnaire/questionnaire-edit/questionnaire-edit.component';
+import { QuestionnaireShowComponent } from './questionnaire/questionnaire-show/questionnaire-show.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     QDateTimeEditComponent,
     QSliderEditComponent,
     QCheckBoxEditComponent,
-    QRadioBtnEditComponent
+    QRadioBtnEditComponent,
+    QuestionnaireEditComponent,
+    QuestionnaireShowComponent
   ],
     imports: [
         BrowserModule,
@@ -54,7 +58,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
         MatButtonModule,
         MatCardModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatRadioModule
     ],
   providers: [],
   bootstrap: [AppComponent]
