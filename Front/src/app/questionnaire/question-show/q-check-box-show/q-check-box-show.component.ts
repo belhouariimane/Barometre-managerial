@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {Question} from '../../model/question';
 
 @Component({
   selector: 'app-q-check-box-show',
@@ -7,9 +8,9 @@ import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
   styleUrls: ['./q-check-box-show.component.scss']
 })
 export class QCheckBoxShowComponent implements OnInit {
-  @Input() type: string = "showff";
+  @Input() type = 'show';
   @Output() output = new EventEmitter();
-  @Input() question;
+  @Input() question ;
   constructor() { }
 
   ngOnInit() {

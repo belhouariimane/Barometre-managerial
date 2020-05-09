@@ -1,6 +1,7 @@
 
 <template #EditQuestionCheckBox></template>
 <template #ShowQuestionCheckBox> </template>
-<button (click)="createComponent('edit')" (click) ="sendToShow(questionToSendShow)" >Edit question</button>
-<button (click)="createComponent('show' , questionToSendShow)" >Show question</button>
+<button (click)="createComponent('edit') ; sendToShow(questionToSendShow)" >Edit question</button>
+
+<button (click)="createComponent('show' , questionToSendShow )" >Show question</button>
 

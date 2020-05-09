@@ -11,6 +11,7 @@ import {
 import {QCheckBoxEditComponent} from '../question-edit/q-check-box-edit/q-check-box-edit.component';
 import {QCheckBoxShowComponent} from '../question-show/q-check-box-show/q-check-box-show.component';
 import {Question} from '../model/question';
+import {async} from 'rxjs/internal/scheduler/async';
 
 @Component({
   selector: 'app-questionnaire-edit',
@@ -38,7 +39,7 @@ export class QuestionnaireEditComponent implements OnInit, OnDestroy {
 
     if (type !== 'edit') {
       const factory = this.resolver.resolveComponentFactory(QCheckBoxShowComponent);
-      this.componentRef = this.containerEdit.createComponent(factory);
+      this.componentRef = this.containerShow.createComponent(factory);
     } else {
       const factory = this.resolver.resolveComponentFactory(QCheckBoxEditComponent);
       this.componentRef = this.containerEdit.createComponent(factory);
@@ -48,7 +49,7 @@ export class QuestionnaireEditComponent implements OnInit, OnDestroy {
     // @ts-ignore
     this.componentRef.instance.type = type;
     // @ts-ignore
-    this.componentRef.instance.question = this.sendToShow(this.question);
+    this.componentRef.instance.question = this.question;
   }
 
   ngOnDestroy() {
