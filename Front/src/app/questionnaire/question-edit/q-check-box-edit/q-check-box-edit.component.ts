@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angula
 import {PropositionQuestion} from '../../model/propositionQuestion';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {Question} from '../../model/question';
+import {QuestionnaireEditComponent} from '../../questionnaire-edit/questionnaire-edit.component';
 
 @Component({
   selector: 'app-q-check-box-edit',
@@ -17,6 +18,7 @@ export class QCheckBoxEditComponent implements OnChanges {
   @Input() type = 'edit';
   @Output() output = new EventEmitter<Question>();
   questionOut: Question;
+
   constructor(private fb: FormBuilder) {
     this.createForm();
   }
@@ -76,13 +78,13 @@ export class QCheckBoxEditComponent implements OnChanges {
 
       const valueQuestion = JSON.stringify(this.questionForm.value);
       const obj =  JSON.parse(valueQuestion);
-      let tabProp = [ ];
+      const tabProp = [ ];
       this.addArray( tabProp, obj.proposition1 );
       this.addArray( tabProp, obj.proposition2);
 
       for (let i = 0; i < obj.propositionsArray.length; i++) {
           this.addArray(tabProp , obj.propositionsArray[i].valeur);
-        }
+      }
 
       this.questionOut = new Question(1, obj.labelQuestion, 'CheckBox', this.toBoolean(obj.estObligatoire), tabProp, 1);
       this.output.emit(this.questionOut);

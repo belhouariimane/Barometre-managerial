@@ -1,7 +1,60 @@
-
-<template #EditQuestionCheckBox></template>
+<p>hello ---------------------------------> </p>
 <template #ShowQuestionCheckBox> </template>
-<button (click)="createComponent('edit') ; sendToShow(questionToSendShow)" >Edit question</button>
-
+<button (click)="createComponent('edit') ; sendToShow(questionToSendShow);" >Edit question</button>
 <button (click)="createComponent('show' , questionToSendShow )" >Show question</button>
 
+
+
+<div class="container border mb-4 p-3">
+    <form [formGroup]="questionnaireForm" class="container mt-3" >
+        <div class="row r">
+            <div class="col-6">
+                <div class="form-group ">
+                    <label >le nom du questionnaire...</label>
+                </div>
+                <div class="form-group">
+                    <mat-form-field MatFormFieldControl >
+                        <input matInput formControlName="labelQuestionnaire" >
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-6">
+                <div class="form-group ">
+                    <label>Veuillez ajouter les questions :</label>
+                </div>
+            </div>
+        </div>
+
+        <button  mat-raised-button  mat-mini-fab color="accent" (click)=" addQuestion();"
+        *ngIf="!showQuestionForm">
+            <mat-icon>add</mat-icon>
+        </button>
+        <div formArrayName="questionsArray">
+            <div *ngFor="let question of  questionsArray.controls; let i = index" [formGroupName]="i">
+                <div class="row justify-content-center border mb-4 p-3">
+                    <div class="col-7">
+                        <app-q-check-box-edit
+                                (output)="getQuestion($event)"></app-q-check-box-edit>
+                    </div>
+                    <div class="col-3">
+                        <button mat-raised-button  mat-mini-fab color="accent" (click)="removeQuestion(i)" *ngIf="!showQuestionForm">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                    <div class="col-2">
+                        <button mat-raised-button type="submit" mat-mini-fab color="accent" (click)="sendToShow(createdQuestion);" >
+                            <mat-icon>done</mat-icon>
+                        </button>
+                    </div>
+                    ---{{createdQuestion | json}}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <button mat-raised-button color="primary" (click)="createFinalQuestionnaire()" >Enregistrer</button>
+        </div>
+    </form>
+</div>
+{{questionnaireForm.value | json}}
