@@ -1,1 +1,22 @@
-<app-questionnaire-edit></app-questionnaire-edit>
+<!--<app-questionnaire-edit></app-questionnaire-edit>-->
+
+<!-- Nav -->
+<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
+    <div class="navbar-nav">
+        <a class="nav-item nav-link" routerLink="/">Accueil</a>
+        <a class="nav-item nav-link" (click)="logout()">Se déconnecter</a>
+    </div>
+</nav>
+<!-- Application principale -->
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 offset-sm-3">
+                <h1 class="text-center">Baromètre managérial</h1>
+                <br/>
+                <app-alert></app-alert>
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>
