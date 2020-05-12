@@ -17,5 +17,5 @@ public class ConstantesREST {
 	public final static String ID_NOT_FOUND = "Aucun enregistrement trouvé avec cet Id ! ";
 	public final static String PASSWORD_INVALID = "Le mot de passe que vous avez entré n'est pas bon , Veuillez ressayer!";
 	public final static String PASSWORD_VALIDATION_ERROR = "Probleme technique lors de la validation du password";
-	public final static String EMAIL_OR_PASSWORD_NOT_SEND = "L'email ou le mot de passe ou les deux sont manquants !";
+	public final static String EMAIL_OR_PASSWORD_NOT_SEND = "L'email ou le mot de passe ou les deux sont manquants ! ";
 }
