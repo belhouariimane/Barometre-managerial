@@ -3,6 +3,9 @@
  */
 package fr.univ.angers.info.m2.acdi.bm.entities;
 
+import java.lang.reflect.Field;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +21,7 @@ public class Administrateur {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(unique = true)
 	private String email;
 	private String password;
 	private String nom;
@@ -117,6 +121,13 @@ public class Administrateur {
 				return false;
 		} else if (!prenom.equals(other.prenom))
 			return false;
+		return true;
+	}
+
+	public boolean checkNull() throws IllegalAccessException {
+		for (Field f : getClass().getDeclaredFields())
+			if (f.get(this) != null)
+				return false;
 		return true;
 	}
 

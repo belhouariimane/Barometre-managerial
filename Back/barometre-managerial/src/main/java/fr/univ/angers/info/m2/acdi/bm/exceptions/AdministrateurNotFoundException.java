@@ -9,6 +9,10 @@ package fr.univ.angers.info.m2.acdi.bm.exceptions;
  */
 public class AdministrateurNotFoundException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -966093498383408990L;
 	private Long id;
 
 	public AdministrateurNotFoundException(Long id) {
