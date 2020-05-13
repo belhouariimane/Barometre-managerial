@@ -1,15 +1,16 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Optional, Output} from '@angular/core';
 import {PropositionQuestion} from '../../model/propositionQuestion';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {Question} from '../../model/question';
 import {QuestionnaireEditComponent} from '../../questionnaire-edit/questionnaire-edit.component';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({
   selector: 'app-q-check-box-edit',
   templateUrl: './q-check-box-edit.component.html',
   styleUrls: ['./q-check-box-edit.component.scss']
 })
-export class QCheckBoxEditComponent implements OnChanges {
+export class QCheckBoxEditComponent implements  OnChanges {
 
   @Input() questionIn: Question;
   questionForm: FormGroup;
@@ -18,9 +19,23 @@ export class QCheckBoxEditComponent implements OnChanges {
   @Input() type = 'edit';
   @Output() output = new EventEmitter<Question>();
   questionOut: Question;
-
-  constructor(private fb: FormBuilder) {
+  action: string;
+  local_data: any;
+  constructor(private fb: FormBuilder,
+              public dialogRef: MatDialogRef<QCheckBoxEditComponent>,
+              @Optional() @Inject(MAT_DIALOG_DATA) public data: Question) {
     this.createForm();
+    this.local_data = {...data};
+    this.action = this.local_data.action;
+  }
+
+  doAction() {
+    this.onCreateFinalQuetion();
+    this.dialogRef.close({event: this.action, data: this.questionOut});
+  }
+
+  closeDialog() {
+    this.dialogRef.close({event: 'Cancel'});
   }
 
   createForm() {
@@ -33,6 +48,7 @@ export class QCheckBoxEditComponent implements OnChanges {
       ])
     });
   }
+
 
   ngOnChanges() {
     this.rebuildForm();
@@ -58,7 +74,7 @@ export class QCheckBoxEditComponent implements OnChanges {
   }
 
   addproposition() {
-    this.propositionsArray.push(this.fb.group(new PropositionQuestion('', '')));
+    return this.propositionsArray.push(this.fb.group(new PropositionQuestion('', '')));
   }
   removeproposition(i: number) {
     this.propositionsArray.removeAt(i);
@@ -75,7 +91,6 @@ export class QCheckBoxEditComponent implements OnChanges {
   }
 
   onCreateFinalQuetion() {
-
       const valueQuestion = JSON.stringify(this.questionForm.value);
       const obj =  JSON.parse(valueQuestion);
       const tabProp = [ ];
@@ -86,8 +101,10 @@ export class QCheckBoxEditComponent implements OnChanges {
           this.addArray(tabProp , obj.propositionsArray[i].valeur);
       }
 
-      this.questionOut = new Question(1, obj.labelQuestion, 'CheckBox', this.toBoolean(obj.estObligatoire), tabProp, 1);
+      this.questionOut = new Question(Date.now() , obj.labelQuestion, 'CheckBox', this.toBoolean(obj.estObligatoire), tabProp, 1);
+      this.data = this.questionOut;
       this.output.emit(this.questionOut);
       console.log(this.questionOut);
   }
+
 }

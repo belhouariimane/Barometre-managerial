@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
     MatButtonModule, MatCardModule,
-    MatCheckboxModule,
+    MatCheckboxModule, MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule, MatRadioModule,
-    MatSelectModule
+    MatInputModule, MatNativeDateModule,
+    MatSelectModule, MatTableModule
 } from '@angular/material';
+import {MatRadioModule} from '@angular/material/radio';
+
 import { QRadioBtnShowComponent } from './questionnaire/question-show/q-radio-btn-show/q-radio-btn-show.component';
 import { QCheckBoxShowComponent } from './questionnaire/question-show/q-check-box-show/q-check-box-show.component';
 import { QSliderShowComponent } from './questionnaire/question-show/q-slider-show/q-slider-show.component';
@@ -27,6 +29,8 @@ import { QRadioBtnEditComponent } from './questionnaire/question-edit/q-radio-bt
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { QuestionnaireEditComponent } from './questionnaire/questionnaire-edit/questionnaire-edit.component';
 import { QuestionnaireShowComponent } from './questionnaire/questionnaire-show/questionnaire-show.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatRadioGroup} from '@angular/material/typings/radio';
 
 @NgModule({
   declarations: [
@@ -59,9 +63,27 @@ import { QuestionnaireShowComponent } from './questionnaire/questionnaire-show/q
         MatCardModule,
         FormsModule,
         ReactiveFormsModule,
-        MatRadioModule
+        MatRadioModule,
+        MatDialogModule,
+        MatTableModule,
+        MatDatepickerModule,
+        MatNativeDateModule
     ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [MatDatepickerModule],
+  bootstrap: [AppComponent],
+  entryComponents: [
+      QRadioBtnShowComponent,
+      QCheckBoxShowComponent,
+      QSliderShowComponent,
+      QDateTimeShowComponent,
+      QInputShowComponent,
+      QSelectShowComponent,
+      QSelectEditComponent,
+      QInputEditComponent,
+      QDateTimeEditComponent,
+      QSliderEditComponent,
+      QCheckBoxEditComponent,
+      QRadioBtnEditComponent
+    ],
 })
 export class AppModule { }

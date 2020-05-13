@@ -1,1 +1,7 @@
-<p>q-input-show works!</p>
+<mat-form-field class="example-full-width">
+    <mat-label>{{data.libelle}}</mat-label>
+    <textarea matInput ></textarea>
+</mat-form-field>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Fermer</button>
+</div>

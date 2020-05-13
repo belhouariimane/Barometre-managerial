@@ -1,9 +1,12 @@
-<div class="row">
-  <mat-label class="col-3">{{question.libelle}}</mat-label>
-  <mat-select required class="col-6">
-    <mat-option value="volvo">Volvo</mat-option>
-    <mat-option value="saab">Saab</mat-option>
-    <mat-option value="mercedes">Mercedes</mat-option>
-    <mat-option value="audi">Audi</mat-option>
+
+<mat-form-field>
+  <mat-label>{{data.libelle}}</mat-label>
+  <mat-select>
+    <mat-option *ngFor="let reponse of data.propositions" [value]="reponse">
+      {{reponse}}
+    </mat-option>
   </mat-select>
+</mat-form-field>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Fermer</button>
 </div>

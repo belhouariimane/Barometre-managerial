@@ -1,9 +1,11 @@
 
 <mat-label>
-     {{question.libelle}}
+     {{data.libelle}}
 </mat-label>
-<div *ngFor="let reponse of question.propositions">
+<div *ngFor="let reponse of data.propositions">
      <mat-checkbox>{{reponse}}</mat-checkbox>
 </div>
-
+<div mat-dialog-actions>
+     <button mat-button (click)="onNoClick()">Fermer</button>
+</div>
 

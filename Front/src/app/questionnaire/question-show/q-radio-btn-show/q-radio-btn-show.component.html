@@ -1,1 +1,12 @@
-<p>q-radio-btn-show works!</p>
+<label >{{data.libelle}}</label>
+<mat-radio-group
+        aria-labelledby="example-radio-group-label"
+        class="example-radio-group"
+        [(ngModel)]="chosenResponse">
+    <mat-radio-button class="example-radio-button" *ngFor="let reponse of data.propositions" [value]="reponse">
+        {{reponse}}
+    </mat-radio-button>
+</mat-radio-group>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Fermer</button>
+</div>

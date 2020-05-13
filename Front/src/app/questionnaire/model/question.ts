@@ -10,4 +10,14 @@ export class Question {
   ) {
 
   }
+
+  setQuestion(libelle: string = '',
+              type: string,
+              isRequired: boolean,
+              propositions: string[]) {
+    this.isRequired = isRequired;
+    this.libelle = libelle;
+    this.type = type;
+    this.propositions = propositions;
+  }
 }

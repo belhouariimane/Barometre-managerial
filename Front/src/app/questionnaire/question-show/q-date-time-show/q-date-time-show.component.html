@@ -1,1 +1,9 @@
-<p>q-date-time-show works!</p>
+<mat-form-field>
+    <mat-label>{{data.libelle}}</mat-label>
+    <input matInput [matDatepicker]="picker">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Fermer</button>
+</div>

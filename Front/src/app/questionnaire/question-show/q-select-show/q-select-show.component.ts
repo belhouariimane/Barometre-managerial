@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
 import {Question} from '../../model/question';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({
   selector: 'app-q-select-show',
@@ -7,12 +8,16 @@ import {Question} from '../../model/question';
   styleUrls: ['./q-select-show.component.scss']
 })
 export class QSelectShowComponent implements OnInit {
-  public question;
+  @Output() output = new EventEmitter();
+  @Input() question ;
+  constructor(
+      public dialogRef: MatDialogRef<QSelectShowComponent>,
+      @Inject(MAT_DIALOG_DATA) public data: Question) {}
 
-  constructor() { }
-
-  ngOnInit() {
-    this.question = new Question(1, 'libelleQuestion', 'select', true, null, 1);
+  onNoClick(): void {
+    this.dialogRef.close();
   }
-
+  ngOnInit() {
+    console.log(this.data);
+  }
 }
