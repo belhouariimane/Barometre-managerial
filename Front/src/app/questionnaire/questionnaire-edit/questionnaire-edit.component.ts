@@ -24,6 +24,8 @@ import {QRadioBtnShowComponent} from '../question-show/q-radio-btn-show/q-radio-
 import {QSelectShowComponent} from '../question-show/q-select-show/q-select-show.component';
 import {QSliderShowComponent} from '../question-show/q-slider-show/q-slider-show.component';
 import {QInputShowComponent} from '../question-show/q-input-show/q-input-show.component';
+import {DeleteQuestionComponent} from '../delete-question/delete-question.component';
+import {consoleTestResultHandler} from 'tslint/lib/test';
 
 @Component({
   selector: 'app-questionnaire-edit',
@@ -40,7 +42,9 @@ import {QInputShowComponent} from '../question-show/q-input-show/q-input-show.co
     QDateTimeEditComponent,
     QSliderEditComponent,
     QCheckBoxEditComponent,
-    QRadioBtnEditComponent]
+    QRadioBtnEditComponent,
+    DeleteQuestionComponent
+  ]
 
 })
 export class QuestionnaireEditComponent implements OnInit, OnChanges {
@@ -50,7 +54,7 @@ export class QuestionnaireEditComponent implements OnInit, OnChanges {
   questionnaire: Questionnaire;
   questionnaireForm: FormGroup;
   @Input() questionnaireIn: Questionnaire;
-  displayedColumns: string[] = ['id', 'label', 'estObligatoire', 'type', 'action'];
+  displayedColumns: string[] = ['id', 'label', 'estObligatoire', 'type', 'propositions', 'action'];
   // @ts-ignore
   dataSource: Question[] = [] ;
 
@@ -80,8 +84,8 @@ export class QuestionnaireEditComponent implements OnInit, OnChanges {
       comp = this.selectEditQuestion(action);
     } else if (action.startsWith('Show')) {
       comp = this.selectShowQuestion(obj.type);
-    }else{
-      comp = this.selectEditQuestion(action);
+    } else if (action.startsWith('Delete')) {
+      comp =  this.selectShowQuestion(obj.type);
     }
     dialogRef = this.dialog.open( comp , {
       width: '700px',
@@ -168,8 +172,13 @@ export class QuestionnaireEditComponent implements OnInit, OnChanges {
     }
   }
 
+  addArray(tab , val) {
+    if (val !== undefined && !tab.includes(val) ) {
+      tab.push(val);
+    }
+  }
   addRowData(rowObj) {
-    this.questionnaire.questions.push(rowObj);
+    this.addArray(this.questionnaire.questions, rowObj );
     // @ts-ignore
     this.dataSource.push({
       idQuestion: rowObj.idQuestion,
@@ -200,28 +209,20 @@ export class QuestionnaireEditComponent implements OnInit, OnChanges {
     });
   }
   deleteRowData(rowObj) {
+    console.log('on Delete');
+    console.log(rowObj);
     this.dataSource = this.dataSource.filter((value, key) => {
       // tslint:disable-next-line:no-unused-expression
-       rowObj.idQuestion !== value.idQuestion;
+       return rowObj.idQuestion !== value.idQuestion;
     });
     this.questionnaire.questions = this.dataSource ;
-  }
-
-  addArray(tab , val) {
-    if (val !== undefined && !tab.includes(val) ) {
-      tab.push(val);
-    }
   }
   createFinalQuestionnaire() {
     const valueQuestionnaire = JSON.stringify(this.questionnaireForm.value);
     const obj =  JSON.parse(valueQuestionnaire);
-
-    const tabQuestion = [];
-    // tslint:disable-next-line:prefer-for-of
-    for (let i = 0; i < obj.questionsArray.length; i++) {
-      this.addArray(tabQuestion , obj.questionsArray[i].valeur);
-    }
-    this.questionnaire = new Questionnaire(1, obj.labelQuestionnaire, tabQuestion );
+    this.questionnaire = new Questionnaire(1, obj.labelQuestionnaire, this.questionnaire.questions );
+    console.log('finalQestionnaire');
+    console.log(this.questionnaire);
   }
 
 }

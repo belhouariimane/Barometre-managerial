@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {QCheckBoxEditComponent} from '../../question-edit/q-check-box-edit/q-check-box-edit.component';
 import {Question} from '../../model/question';
 import {QInputEditComponent} from '../../question-edit/q-input-edit/q-input-edit.component';
 
@@ -12,12 +11,21 @@ import {QInputEditComponent} from '../../question-edit/q-input-edit/q-input-edit
 export class QInputShowComponent implements OnInit {
   @Output() output = new EventEmitter();
   @Input() question ;
+  action: string;
+  localData: any;
   constructor(
       public dialogRef: MatDialogRef<QInputEditComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: Question) {}
+      @Inject(MAT_DIALOG_DATA) public data: Question) {
+    this.localData = {...data};
+    this.action = this.localData.action;
+  }
 
-  onNoClick(): void {
-    this.dialogRef.close();
+
+  closeDialog() {
+    this.dialogRef.close({event: 'Cancel'});
+  }
+  doAction() {
+    this.dialogRef.close({event: this.action, data: this.data});
   }
   ngOnInit() {
     console.log(this.data);

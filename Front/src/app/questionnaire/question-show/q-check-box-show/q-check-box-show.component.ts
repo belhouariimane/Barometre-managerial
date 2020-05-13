@@ -10,18 +10,26 @@ import {QCheckBoxEditComponent} from '../../question-edit/q-check-box-edit/q-che
   styleUrls: ['./q-check-box-show.component.scss']
 })
 export class QCheckBoxShowComponent implements OnInit {
-  @Input() type = 'show';
   @Output() output = new EventEmitter();
   @Input() question ;
+  action: string;
+  localData: any;
+
   constructor(
       public dialogRef: MatDialogRef<QCheckBoxEditComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: Question) {}
+      @Inject(MAT_DIALOG_DATA) public data: Question) {
+    this.localData = {...data};
+    this.action = this.localData.action;
+  }
 
-  onNoClick(): void {
-    this.dialogRef.close();
+
+  closeDialog() {
+    this.dialogRef.close({event: 'Cancel'});
+  }
+  doAction() {
+    this.dialogRef.close({event: this.action, data: this.data});
   }
   ngOnInit() {
-    console.log(this.type);
     console.log(this.data);
   }
 

@@ -1,12 +1,22 @@
-
-<mat-form-field>
-  <mat-label>{{data.libelle}}</mat-label>
-  <mat-select>
-    <mat-option *ngFor="let reponse of data.propositions" [value]="reponse">
-      {{reponse}}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Fermer</button>
+<div *ngIf="action != 'Delete'; else elseTemplate">
+  <mat-form-field>
+    <mat-label>{{data.libelle}}</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let reponse of data.propositions" [value]="reponse">
+        {{reponse}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div mat-dialog-actions>
+    <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Fermer</button>
+  </div>
 </div>
+
+<ng-template #elseTemplate>
+  Etes-vous sûr(e) de vouloir supprimer la question <b>{{data.libelle}}</b>?
+  <div mat-dialog-actions>
+    <button mat-button mat-raised-button color="primary"  (click)="doAction()">{{action}}</button>
+    <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Fermer</button>
+  </div>
+</ng-template>
+

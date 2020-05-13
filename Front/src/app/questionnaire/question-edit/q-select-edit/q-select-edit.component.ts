@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Optional, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Optional, Output} from '@angular/core';
 import {Question} from '../../model/question';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
@@ -9,7 +9,7 @@ import {PropositionQuestion} from '../../model/propositionQuestion';
   templateUrl: './q-select-edit.component.html',
   styleUrls: ['./q-select-edit.component.scss']
 })
-export class QSelectEditComponent implements OnInit {
+export class QSelectEditComponent implements OnChanges {
 
   @Input() questionIn: Question;
   @Output() output = new EventEmitter<Question>();
@@ -28,7 +28,9 @@ export class QSelectEditComponent implements OnInit {
   }
 
   doAction() {
-    this.onCreateFinalQuetion();
+    if (this.action.startsWith('Add')) {
+      this.onCreateFinalQuetion();
+    }
     this.dialogRef.close({event: this.action, data: this.questionOut});
   }
 

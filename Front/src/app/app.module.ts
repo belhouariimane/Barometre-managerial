@@ -9,7 +9,7 @@ import {
     MatCheckboxModule, MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule, MatNativeDateModule,
+    MatInputModule, MatListModule, MatNativeDateModule,
     MatSelectModule, MatTableModule
 } from '@angular/material';
 import {MatRadioModule} from '@angular/material/radio';
@@ -31,6 +31,7 @@ import { QuestionnaireEditComponent } from './questionnaire/questionnaire-edit/q
 import { QuestionnaireShowComponent } from './questionnaire/questionnaire-show/questionnaire-show.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatRadioGroup} from '@angular/material/typings/radio';
+import { DeleteQuestionComponent } from './questionnaire/delete-question/delete-question.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import {MatRadioGroup} from '@angular/material/typings/radio';
     QCheckBoxEditComponent,
     QRadioBtnEditComponent,
     QuestionnaireEditComponent,
-    QuestionnaireShowComponent
+    QuestionnaireShowComponent,
+    DeleteQuestionComponent
   ],
     imports: [
         BrowserModule,
@@ -67,7 +69,8 @@ import {MatRadioGroup} from '@angular/material/typings/radio';
         MatDialogModule,
         MatTableModule,
         MatDatepickerModule,
-        MatNativeDateModule
+        MatNativeDateModule,
+        MatListModule
     ],
   providers: [MatDatepickerModule],
   bootstrap: [AppComponent],
@@ -83,7 +86,8 @@ import {MatRadioGroup} from '@angular/material/typings/radio';
       QDateTimeEditComponent,
       QSliderEditComponent,
       QCheckBoxEditComponent,
-      QRadioBtnEditComponent
+      QRadioBtnEditComponent,
+      DeleteQuestionComponent
     ],
 })
 export class AppModule { }

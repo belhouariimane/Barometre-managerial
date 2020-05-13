@@ -1,11 +1,19 @@
-
-<mat-label>
-     {{data.libelle}}
-</mat-label>
-<div *ngFor="let reponse of data.propositions">
-     <mat-checkbox>{{reponse}}</mat-checkbox>
+<div *ngIf="action != 'Delete'; else elseTemplate">
+     <mat-label>
+          {{data.libelle}}
+     </mat-label>
+     <div *ngFor="let reponse of data.propositions">
+          <mat-checkbox>{{reponse}}</mat-checkbox>
+     </div>
+     <div mat-dialog-actions>
+          <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Fermer</button>
+     </div>
 </div>
-<div mat-dialog-actions>
-     <button mat-button (click)="onNoClick()">Fermer</button>
-</div>
 
+<ng-template #elseTemplate>
+     Etes-vous sûr(e) de vouloir supprimer la question <b>{{data.libelle}}</b>?
+     <div mat-dialog-actions>
+          <button mat-button mat-raised-button color="primary"  (click)="doAction()">{{action}}</button>
+          <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Fermer</button>
+     </div>
+</ng-template>

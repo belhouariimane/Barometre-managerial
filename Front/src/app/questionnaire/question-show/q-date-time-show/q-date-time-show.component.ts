@@ -12,15 +12,23 @@ export class QDateTimeShowComponent implements OnInit {
 
   @Output() output = new EventEmitter();
   @Input() question ;
+  action: string;
+  localData: any;
   constructor(
       public dialogRef: MatDialogRef<QDateTimeEditComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: Question) {}
+      @Inject(MAT_DIALOG_DATA) public data: Question) {
+    this.localData = {...data};
+    this.action = this.localData.action;
+  }
 
-  onNoClick(): void {
-    this.dialogRef.close();
+
+  closeDialog() {
+    this.dialogRef.close({event: 'Cancel'});
+  }
+  doAction() {
+    this.dialogRef.close({event: this.action, data: this.data});
   }
   ngOnInit() {
     console.log(this.data);
   }
-
 }
