@@ -5,6 +5,7 @@ import {delay, dematerialize, materialize, mergeMap} from 'rxjs/operators';
 import {register} from 'ts-node';
 import {error} from 'util';
 import {ok} from 'assert';
+import {User} from '../models/user';
 
 let users = JSON.parse(localStorage.getItem('users')) || [];
 let questionnaires = JSON.parse(localStorage.getItem('questionnaires')) || [];
@@ -22,12 +23,14 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             .pipe(dematerialize());
 
         function handleRoute() {
-            console.log('url : ' + url);
+            // console.log('url : ' + url);
             switch (true) {
                 case url.endsWith('/users/authenticate') && method === 'POST':
                     return authenticate();
                 case url.endsWith('/users/register') && method === 'POST':
                     return register();
+                case url.match(/\/users\/update\/\d+$/) && method === 'POST':
+                    return updateUser();
                 case url.endsWith('/users') && method === 'GET':
                     return getUsers();
                 case url.match(/\/users\/\d+$/) && method === 'DELETE':
@@ -66,9 +69,34 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             if (users.find(x => x.username === user.username)) {
                 return error('Le nom d\'utilisateur "' + user.username + '" est déjà pris. Veuillez en choisir un autre.');
             }
-            user.id = user.length ? Math.max(...user.map(x => x.id)) + 1 : 1;
+            user.id = users.length ? Math.max(...users.map(x => x.id)) + 1 : 1;
             users.push(user);
             localStorage.setItem('users', JSON.stringify(users));
+            return ok();
+        }
+
+        function updateUser() {
+            const user = body;
+            console.log('user : ' + user.id + ', '+ user.firstName + ', ' + user.lastName + ', ' + user.username + ', ' + user.password);
+
+            // dans un 1er temps, retire l'utilisateur de la liste via son id
+            const updatedUser = users.find(x => x.id === idFromUrl());
+            users = users.filter(x => x.id !== idFromUrl());
+
+            // pour chacun de ses champs (sauf id) on met à jour seulement si une valeur est renseignée dans le formulaire
+            user.id = idFromUrl();
+            user.firstName = user.firstName.length ? user.firstName : updatedUser.firstName;
+            user.lastName = user.lastName.length ? user.lastName : updatedUser.lastName;
+            user.username = user.username.length ? user.username : updatedUser.username;
+            user.password = user.username.password ? user.password : updatedUser.password;
+
+            console.log('updatedUser : ' + user.id + user.firstName + ', ' + user.lastName + ', ' + user.username + ', ' + user.password);
+
+            // puis on ajoute ce même utilisateur modifié en gardant le même id
+            users.push(user);
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('currentUser', JSON.stringify(user));
+
             return ok();
         }
 
@@ -106,7 +134,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         function deleteQuestionnaire() {
-            if(!isLoggedIn()) {
+            if (!isLoggedIn()) {
                 return unauthorized();
             }
             questionnaires = questionnaires.filter(x => x.idQuestionnaire !== idFromUrl());

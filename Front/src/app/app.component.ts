@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {User} from './models/user';
 import {AuthService} from './services/auth.service';
 import {Router} from '@angular/router';
+import {UserService} from './services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,7 @@ export class AppComponent {
 
   constructor(
       private router: Router,
-      private authService: AuthService
+      private authService: AuthService,
   ) {
     this.authService.currentUser.subscribe(x => this.currentUser = x);
   }
@@ -27,5 +28,9 @@ export class AppComponent {
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  myAccount() {
+    this.router.navigate(['/myaccount']);
   }
 }

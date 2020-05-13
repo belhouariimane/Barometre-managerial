@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {AuthService} from '../services/auth.service';
 import {Router} from '@angular/router';
 import {UserService} from '../services/user.service';
@@ -38,8 +38,15 @@ export class RegisterComponent implements OnInit {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       username: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]]
-    });
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(6)]]
+    }, { validators: this.checkPasswords});
+  }
+
+  checkPasswords: ValidatorFn = (group: FormGroup): ValidationErrors | null => {
+      const pass = group.get('password').value;
+      const confirmPass = group.get('confirmPassword').value;
+      return pass === confirmPass ? null : { 'notSame': true }
   }
 
   // accès simplifié aux champs du formulaire
@@ -58,13 +65,24 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
+    // enregistre le nouvel utilisateur puis le connecte immédiatement
     this.loading = true;
     this.userService.register(this.registerForm.value)
         .pipe(first())
         .subscribe(
             data => {
               this.alertService.success('Inscription enregistrée', true);
-              this.router.navigate(['/login']);
+              this.authService.login(this.f.username.value, this.f.password.value)
+                  .pipe(first())
+                  .subscribe(
+                      date => {
+                        this.router.navigate(['/']);
+                      },
+                      error => {
+                        this.alertService.error(error);
+                        this.loading = false;
+                      }
+                  );
             }, error => {
               this.alertService.error(error);
               this.loading = false;
