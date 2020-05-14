@@ -1,0 +1,22 @@
+<h1>Bonjour {{currentUser.firstName}} !</h1>
+<p>Tu es connecté.</p>
+<h3>Liste des utilisateurs inscrits :</h3>
+<ul>
+    <li *ngFor="let user of users">
+        {{user.username}} ({{user.firstName}} {{user.lastName}})
+        - <a (click)="deleteUser(user.id)" class="text-danger">Delete</a>
+    </li>
+</ul>
+<h3>Liste de tes questionnaires :</h3>
+<ul>
+    <li *ngFor="let questionnaire of questionnaires">
+        Questionnaire n°{{questionnaire.idQuestionnaire}}
+        Titre : {{questionnaire.titre}}
+        Nombre de questions : {{questionnaire.nbQuestions}})
+        Anonyme : {{ questionnaire.isAnonymous ? "oui" : "non" }}
+        - <a (click)="deleteQuestionnaire(questionnaire.idQuestionnaire)" class="text-danger">Delete</a>
+    </li>
+</ul>
+<button class="btn btn-primary" (click)="onNewQuestionnaire()">
+    Nouveau questionnaire
+</button>
