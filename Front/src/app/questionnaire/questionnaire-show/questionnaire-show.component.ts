@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {ArrayType} from '@angular/compiler';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-questionnaire-show',
@@ -6,10 +8,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./questionnaire-show.component.scss']
 })
 export class QuestionnaireShowComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
+  constructor(private fb: FormBuilder) {}
+  ngOnInit(): void {
   }
-
 }

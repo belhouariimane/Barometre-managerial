@@ -1,1 +1,19 @@
-<p>q-date-time-show works!</p>
+<div *ngIf="action != 'Delete'; else elseTemplate">
+
+    <mat-form-field>
+        <mat-label>{{data.libelle}}</mat-label>
+        <input matInput [matDatepicker]="picker">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <div mat-dialog-actions>
+        <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Fermer</button>
+    </div>
+</div>
+<ng-template #elseTemplate>
+    Etes-vous sûr(e) de vouloir supprimer la question <b>{{data.libelle}}</b>?
+    <div mat-dialog-actions>
+        <button mat-button mat-raised-button color="primary"  (click)="doAction()">{{action}}</button>
+        <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Fermer</button>
+    </div>
+</ng-template>
