@@ -6,6 +6,8 @@ package fr.univ.angers.info.m2.acdi.bm.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.univ.angers.info.m2.acdi.bm.entities.Administrateur;
 import fr.univ.angers.info.m2.acdi.bm.exceptions.AdministrateurNotFoundException;
+import fr.univ.angers.info.m2.acdi.bm.response.RetourGeneral;
 import fr.univ.angers.info.m2.acdi.bm.services.AdministrateurService;
 
 /**
@@ -31,19 +34,16 @@ public class AdministrateurController {
 	private AdministrateurService administrateurService;
 
 	@PostMapping("/create")
-	Administrateur creerAdministrateur(@RequestBody Administrateur newAdministrateur) {
-		return administrateurService.save(newAdministrateur);
+	public ResponseEntity<RetourGeneral> creerAdministrateur(@RequestBody Administrateur newAdministrateur) {
+		RetourGeneral retour = administrateurService.save(newAdministrateur);
+		return traitementReponse(retour);
 	}
 
 	@PutMapping("/update/{id}")
-	Administrateur updateAdministrateur(@RequestBody Administrateur administrateur, @PathVariable Long id) {
-		try {
-			return administrateurService.update(administrateur, id);
-		} catch (AdministrateurNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+	public ResponseEntity<RetourGeneral> updateAdministrateur(@RequestBody Administrateur administrateur,
+			@PathVariable Long id) {
+		RetourGeneral retour = administrateurService.update(administrateur, id);
+		return traitementReponse(retour);
 	}
 
 	@DeleteMapping("/delete/{id}")
@@ -69,8 +69,17 @@ public class AdministrateurController {
 	}
 
 	@PostMapping("/login")
-	Administrateur authentification(@PathVariable String email, @PathVariable String password) {
-		return administrateurService.login(email, password);
+	public ResponseEntity<RetourGeneral> authentification(@RequestBody Administrateur administrateur) {
+		RetourGeneral retour = administrateurService.login(administrateur);
+		return traitementReponse(retour);
+	}
+
+	private ResponseEntity<RetourGeneral> traitementReponse(RetourGeneral retour) {
+		if (retour.getRetour() != null) {
+			return new ResponseEntity<RetourGeneral>(retour, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<RetourGeneral>(retour, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }

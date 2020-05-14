@@ -15,5 +15,5 @@ import fr.univ.angers.info.m2.acdi.bm.entities.Administrateur;
  */
 public interface AdministrateurRepository extends CrudRepository<Administrateur, Long> {
 
-	public List<Administrateur> findByEmail(String email);
+	List<Administrateur> findByEmail(String email);
 }
