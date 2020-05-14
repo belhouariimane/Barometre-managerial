@@ -47,17 +47,17 @@ public class AdministrateurController {
 	}
 
 	@DeleteMapping("/delete/{id}")
-	void deleteAdministrateur(@PathVariable Long id) {
+	public void deleteAdministrateur(@PathVariable Long id) {
 		administrateurService.deleteById(id);
 	}
 
 	@GetMapping("/all")
-	List<Administrateur> all() {
+	public List<Administrateur> all() {
 		return administrateurService.findAll();
 	}
 
 	@GetMapping("/{id}")
-	Administrateur recupererAdministrateurParId(@PathVariable Long id) {
+	public Administrateur recupererAdministrateurParId(@PathVariable Long id) {
 		Administrateur administrateur = null;
 		try {
 			administrateur = administrateurService.findById(id);

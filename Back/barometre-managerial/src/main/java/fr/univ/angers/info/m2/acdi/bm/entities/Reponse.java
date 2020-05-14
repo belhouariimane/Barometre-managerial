@@ -6,7 +6,9 @@ package fr.univ.angers.info.m2.acdi.bm.entities;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,7 +32,7 @@ public class Reponse implements Serializable {
 	private Participant participant;
 	@ManyToOne
 	private Question question;
-	@OneToMany
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinColumn(name="ID_PROPOSITION")
 	private List<Proposition> propositions;
 

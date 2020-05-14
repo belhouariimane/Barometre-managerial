@@ -4,12 +4,14 @@
 package fr.univ.angers.info.m2.acdi.bm.entities;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  * @author aharboul
@@ -26,6 +28,8 @@ public class Administrateur {
 	private String password;
 	private String nom;
 	private String prenom;
+	@OneToMany(mappedBy = "administrateur")
+	private List<Questionnaire> questionnaires;
 
 	/**
 	 * 
@@ -73,6 +77,20 @@ public class Administrateur {
 
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
+	}
+
+	/**
+	 * @return the questionnaires
+	 */
+	public List<Questionnaire> getQuestionnaires() {
+		return questionnaires;
+	}
+
+	/**
+	 * @param questionnaires the questionnaires to set
+	 */
+	public void setQuestionnaires(List<Questionnaire> questionnaires) {
+		this.questionnaires = questionnaires;
 	}
 
 	@Override

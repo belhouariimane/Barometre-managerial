@@ -24,8 +24,8 @@ public class AdministrateurService {
 
 	public List<Administrateur> findAll() {
 		Iterable<Administrateur> it = administrateurRepository.findAll();
-		List<Administrateur> admin = new ArrayList<Administrateur>();
-		it.forEach(e -> admin.add(e));
+		List<Administrateur> admin = new ArrayList<>();
+		it.forEach(admin::add);
 		return admin;
 	}
 
@@ -47,12 +47,10 @@ public class AdministrateurService {
 						retour.setDescription(ConstantesREST.ID_NOT_INSERTABLE);
 					}
 				}
+			} catch (DataIntegrityViolationException e1) {
+				retour.setDescription(ConstantesREST.EXISTED_EMAIL);
 			} catch (Exception e) {
-				if (e instanceof DataIntegrityViolationException) {
-					retour.setDescription(ConstantesREST.EXISTED_EMAIL);
-				} else {
-					retour.setDescription(ConstantesREST.UNKNOWN_ERROR);
-				}
+				retour.setDescription(ConstantesREST.UNKNOWN_ERROR);
 			}
 		}
 		return retour;

@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,7 +25,7 @@ public class Participant implements Serializable {
 	private String nom;
 	@ManyToOne
 	private Questionnaire questionnaire;
-	@OneToMany(mappedBy = "participant")
+	@OneToMany(mappedBy = "participant", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	private List<Reponse> reponses;
 
 	/**
