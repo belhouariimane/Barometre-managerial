@@ -41,7 +41,6 @@ import {ErrorInterceptor} from './helpers/error.interceptor';
 import {fakeBackendProvider} from './helpers/fake-backend';
 import { MyaccountComponent } from './myaccount/myaccount.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatRadioGroup} from '@angular/material/typings/radio';
 
 @NgModule({
   declarations: [

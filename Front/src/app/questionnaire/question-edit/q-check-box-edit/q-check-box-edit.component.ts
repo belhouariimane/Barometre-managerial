@@ -104,7 +104,6 @@ export class QCheckBoxEditComponent implements  OnChanges {
       this.questionOut = new Question(Date.now() , obj.labelQuestion, 'CheckBox', this.toBoolean(obj.estObligatoire), tabProp, 1);
       this.data = this.questionOut;
       this.output.emit(this.questionOut);
-      console.log(this.questionOut);
   }
 
 }

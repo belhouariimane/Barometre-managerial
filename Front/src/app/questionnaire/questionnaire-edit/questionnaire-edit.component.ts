@@ -24,7 +24,6 @@ import {QRadioBtnShowComponent} from '../question-show/q-radio-btn-show/q-radio-
 import {QSelectShowComponent} from '../question-show/q-select-show/q-select-show.component';
 import {QSliderShowComponent} from '../question-show/q-slider-show/q-slider-show.component';
 import {QInputShowComponent} from '../question-show/q-input-show/q-input-show.component';
-import {consoleTestResultHandler} from 'tslint/lib/test';
 
 @Component({
   selector: 'app-questionnaire-edit',
@@ -91,8 +90,6 @@ export class QuestionnaireEditComponent implements OnInit, OnChanges {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      console.log(result);
       if (result.event.startsWith('Add')) {
         this.addRowData(result.data);
       } else if (result.event === 'Update') {
@@ -177,15 +174,16 @@ export class QuestionnaireEditComponent implements OnInit, OnChanges {
   }
   addRowData(rowObj) {
     this.addArray(this.questionnaire.questions, rowObj );
+    this.addArray(this.dataSource, rowObj);
     // @ts-ignore
-    this.dataSource.push({
+    /*this.dataSource.push({
       idQuestion: rowObj.idQuestion,
       libelle: rowObj.libelle,
       isRequired: rowObj.isRequired,
       type: rowObj.type,
       propositions: rowObj.propositions,
       order : rowObj.order
-    });
+    }); */
     this.table.renderRows();
     console.log(this.questionnaire.questions);
   }
@@ -207,8 +205,6 @@ export class QuestionnaireEditComponent implements OnInit, OnChanges {
     });
   }
   deleteRowData(rowObj) {
-    console.log('on Delete');
-    console.log(rowObj);
     this.dataSource = this.dataSource.filter((value, key) => {
       // tslint:disable-next-line:no-unused-expression
        return rowObj.idQuestion !== value.idQuestion;
