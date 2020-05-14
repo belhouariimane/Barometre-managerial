@@ -25,17 +25,20 @@ public class QuestionnaireController {
 	
 	@PostMapping("/create")
 	public ResponseEntity<ResponseSingleQuestionnaire> create(@RequestBody Questionnaire questionnaire) {
-		return this.questionnaireService.creerQuestionnaire(questionnaire);
+		ResponseSingleQuestionnaire rsq = this.questionnaireService.insertOne(questionnaire);
+		return new ResponseEntity<ResponseSingleQuestionnaire>(rsq, rsq.getStatus());
 	}
 	
 	@GetMapping("/read/{id}")
 	public ResponseEntity<ResponseSingleQuestionnaire> read(@PathVariable("id") Long id) {
-		return this.questionnaireService.readQuestionnaire(id);
+		ResponseSingleQuestionnaire rsq = this.questionnaireService.readQuestionnaireById(id);
+		return new ResponseEntity<ResponseSingleQuestionnaire>(rsq, rsq.getStatus());
 	}
 	
 	@PutMapping("/update")
 	public ResponseEntity<ResponseSingleQuestionnaire> update(Questionnaire questionnaire) {
-		return this.questionnaireService.updateQuestionnaire(questionnaire);
+		ResponseSingleQuestionnaire rsq = this.questionnaireService.updateQuestionnaire(questionnaire);
+		return new ResponseEntity<ResponseSingleQuestionnaire>(rsq, rsq.getStatus());
 	}
 	
 	@GetMapping("/findByIdAdministrateur/{idAdministrateur}")

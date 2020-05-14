@@ -2,41 +2,33 @@ package fr.univ.angers.info.m2.acdi.bm.request.response;
 
 import org.springframework.http.HttpStatus;
 
-import fr.univ.angers.info.m2.acdi.bm.entities.Questionnaire;
+import fr.univ.angers.info.m2.acdi.bm.entities.Question;
 
-public class ResponseSingleQuestionnaire {
+public class ResponseSingleQuestion {
 	private String message;
-	private Questionnaire questionnaire;
+	private Question question;
 	private HttpStatus status;
-	
-	public ResponseSingleQuestionnaire(String message, Questionnaire questionnaire, HttpStatus status) {
+	public ResponseSingleQuestion(String message, Question question, HttpStatus status) {
 		this.message = message;
-		this.questionnaire = questionnaire;
+		this.question = question;
 		this.status = status;
 	}
-
 	public String getMessage() {
 		return message;
 	}
-
 	public void setMessage(String message) {
 		this.message = message;
 	}
-
-	public Questionnaire getQuestionnaire() {
-		return questionnaire;
+	public Question getQuestion() {
+		return question;
 	}
-
-	public void setQuestionnaire(Questionnaire questionnaire) {
-		this.questionnaire = questionnaire;
+	public void setQuestion(Question question) {
+		this.question = question;
 	}
-
 	public HttpStatus getStatus() {
 		return status;
 	}
-
 	public void setStatus(HttpStatus status) {
 		this.status = status;
 	}
-	
 }
