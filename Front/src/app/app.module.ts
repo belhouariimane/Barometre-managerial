@@ -30,8 +30,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { QuestionnaireEditComponent } from './questionnaire/questionnaire-edit/questionnaire-edit.component';
 import { QuestionnaireShowComponent } from './questionnaire/questionnaire-show/questionnaire-show.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatRadioGroup} from '@angular/material/typings/radio';
-import { DeleteQuestionComponent } from './questionnaire/delete-question/delete-question.component';
 
 @NgModule({
   declarations: [
@@ -49,8 +47,7 @@ import { DeleteQuestionComponent } from './questionnaire/delete-question/delete-
     QCheckBoxEditComponent,
     QRadioBtnEditComponent,
     QuestionnaireEditComponent,
-    QuestionnaireShowComponent,
-    DeleteQuestionComponent
+    QuestionnaireShowComponent
   ],
     imports: [
         BrowserModule,
@@ -86,8 +83,7 @@ import { DeleteQuestionComponent } from './questionnaire/delete-question/delete-
       QDateTimeEditComponent,
       QSliderEditComponent,
       QCheckBoxEditComponent,
-      QRadioBtnEditComponent,
-      DeleteQuestionComponent
-    ],
+      QRadioBtnEditComponent
+  ],
 })
 export class AppModule { }
