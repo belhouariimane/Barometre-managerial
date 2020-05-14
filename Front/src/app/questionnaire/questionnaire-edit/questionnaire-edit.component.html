@@ -1,7 +1,97 @@
 
-<template #EditQuestionCheckBox></template>
-<template #ShowQuestionCheckBox> </template>
-<button (click)="createComponent('edit') ; sendToShow(questionToSendShow)" >Edit question</button>
+<div class="container border mb-4 p-3">
+    <form [formGroup]="questionnaireForm" class="container" >
+        <div class="row r">
+            <div class="col-6">
+                <div class="form-group ">
+                    <label >le nom du questionnaire...</label>
+                </div>
+                <div class="form-group">
+                    <mat-form-field MatFormFieldControl >
+                        <input matInput formControlName="labelQuestionnaire" >
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-6">
+                <div class="form-group ">
+                    <label>Veuillez ajouter les questions :</label>
+                </div>
+            </div>
+        </div>
+        <button  mat-raised-button  mat-mini-fab color="accent" (click)="openDialog('AddCheckBox',{})">
+            <mat-icon>check_box</mat-icon>
+        </button>
+        <button  mat-raised-button  mat-mini-fab color="accent" (click)="openDialog('AddDateTimePicker',{})">
+            <mat-icon>date_range</mat-icon>
+        </button>
+        <button  mat-raised-button  mat-mini-fab color="accent" (click)="openDialog('AddInput',{})">
+            <mat-icon>notes</mat-icon>
+        </button>
+        <button  mat-raised-button  mat-mini-fab color="accent" (click)="openDialog('AddRadioBtn',{})">
+            <mat-icon>radio_button_checked</mat-icon>
+        </button>
+        <button  mat-raised-button  mat-mini-fab color="accent" (click)="openDialog('AddSelect',{})">
+            <mat-icon>list</mat-icon>
+        </button>
 
-<button (click)="createComponent('show' , questionToSendShow )" >Show question</button>
+        <table mat-table [dataSource]="dataSource" #mytable class="my-table " style=" width: 100%;">
+
+            <!-- Id Column -->
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> ID. </th>
+                <td mat-cell *matCellDef="let element"> {{element.idQuestion}} </td>
+            </ng-container>
+
+            <!-- label Column -->
+            <ng-container matColumnDef="label">
+                <th mat-header-cell *matHeaderCellDef> label </th>
+                <td mat-cell *matCellDef="let element"> {{element.libelle}} </td>
+            </ng-container>
+            <!-- required Column -->
+            <ng-container matColumnDef="estObligatoire">
+                <th mat-header-cell *matHeaderCellDef> est obligatoire </th>
+                <td mat-cell *matCellDef="let element"> {{element.isRequired}} </td>
+            </ng-container>
+            <!-- type Column -->
+            <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef> type </th>
+                <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+            </ng-container>
+            <!-- type Column -->
+            <ng-container matColumnDef="propositions">
+                <th mat-header-cell *matHeaderCellDef> proposition de réponse </th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-list >
+                        <mat-list-item *ngFor="let reponse of element.propositions">
+                            <mat-icon matListIcon> arrow_right </mat-icon>
+                            {{reponse}}
+                        </mat-list-item>
+                    </mat-list>
+                </td>
+            </ng-container>
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> Action </th>
+                <td mat-cell *matCellDef="let element" class="action-link">
+                    <button mat-button mat-raised-button color="accent" (click)="openDialog('Update',element)"><mat-icon>update</mat-icon> </button>
+                    <button mat-button mat-raised-button color="warn" (click)="openDialog('Delete',element)"><mat-icon>delete</mat-icon> </button>
+                    <button mat-button mat-raised-button color="primary" (click)="openDialog('Show',element)"><mat-icon>slideshow</mat-icon> </button>
+
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <div class="form-group">
+            <button mat-raised-button color="primary" (click)="createFinalQuestionnaire()" >Enregistrer</button>
+        </div>
+    </form>
+</div>
+
+{{questionnaireForm.value | json}}
+
 

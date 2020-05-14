@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-q-slider-edit',
@@ -6,7 +7,6 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./q-slider-edit.component.scss']
 })
 export class QSliderEditComponent implements OnInit {
-
   constructor() { }
 
   ngOnInit() {

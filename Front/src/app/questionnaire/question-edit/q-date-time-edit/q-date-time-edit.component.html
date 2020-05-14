@@ -1,61 +1,42 @@
-<div class="container border mb-4 p-3">
-    <form [formGroup]="questionForm" class="container mt-3">
-        <div class="row r">
-            <div class="col-6">
-                <div class="form-group ">
-                    <label >Saisissez le texte de la question...</label>
-                </div>
-                <div class="form-group">
-                    <mat-form-field MatFormFieldControl >
-                        <input matInput formControlName="labelQuestion" >
-                    </mat-form-field>
-                </div>
-            </div>
-        </div>
-        <div class="row ">
-            <div class="col-6">
-                <div class="form-group ">
-                    <label>Veuillez ajouter les propositions de réponse possibles :</label>
-                </div>
-            </div>
-        </div>
-        <div class="row ">
-            <div class="col-6">
-                <mat-form-field MatFormFieldControl >
-                    <input matInput formControlName="proposition1" placeholder="proposition de réponse {{1}}">
-                </mat-form-field>
-            </div>
-        </div>
-        <div class="row ">
-            <div class="col-6">
-                <mat-form-field MatFormFieldControl >
-                    <input matInput formControlName="proposition2" placeholder="proposition de réponse {{2}}">
-                </mat-form-field>
-            </div>
-        </div>
-        <button  mat-raised-button  mat-mini-fab color="accent"  (click)="addproposition()" *ngIf="!showpropositionForm">
-            <mat-icon>add</mat-icon>
-        </button>
-        <div formArrayName="propositionsArray">
-            <div *ngFor="let proposition of propositionsArray.controls; let i = index" [formGroupName]="i">
-                <div class="row justify-content-center border mb-4 p-3">
-                    <div class="col-9">
-                        <mat-form-field MatFormFieldControl >
-                            <input matInput formControlName="valeur" placeholder="proposition de réponse">
+<div mat-dialog-content>
+    <div class="container border mb-4 p-3">
+        <form [formGroup]="questionForm" class="container mt-9"  >
+            <div class="row ">
+                <div class="col-6">
+                    <div class="form-group ">
+                        <label >Saisissez le texte de la question...</label>
+                    </div>
+                    <div class="form-group">
+                        <mat-form-field MatFormFieldControl *ngIf="action != 'Delete'; else elseTemplate" >
+                            <input matInput formControlName="labelQuestion" [(ngModel)]="data.libelle">
                         </mat-form-field>
                     </div>
-                    <div class="col-3">
-                        <button mat-raised-button  mat-mini-fab color="accent" (click)="removeproposition(i)" *ngIf="!showpropositionForm">
-                            <mat-icon>delete</mat-icon>
-                         </button>
-                    </div>
                 </div>
             </div>
-        </div>
-        <div class="form-group">
-            <button mat-raised-button color="primary">Primary</button>
-        </div>
-    </form>
-</div>
-{{questionForm.value | json}}
+            <div class="row ">
+                <div class="col-6">
+                    <div class="form-group ">
+                        <label >Cette question est obligatoire ?</label>
+                    </div>
+                    <mat-radio-group
+                            aria-labelledby="example-radio-group-label"
+                            class="example-radio-group"
+                            formControlName="estObligatoire">
+                        <mat-radio-button class="example-radio-button" *ngFor="let reponse of reponses" [value]="reponse">
+                            {{reponse}}
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </form>
+    </div>
+    <ng-template #elseTemplate>
 
+        Sure to delete <b>{{data.libelle}}</b>?
+    </ng-template>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button mat-raised-button color="primary"  (click)="doAction()">{{action}}</button>
+    <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Cancel</button>
+</div>
