@@ -1,1 +1,36 @@
-<app-questionnaire-edit></app-questionnaire-edit>
+<!--<app-questionnaire-edit></app-questionnaire-edit>-->
+
+<!-- Nav -->
+<nav class="navbar navbar-expand navbar-dark bg-dark">
+    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+        <a class="navbar-brand nav-item nav-link "  routerLink='#'>Baromètre Managérial</a>
+    </div>
+    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item" *ngIf="currentUser">
+                <a class="nav-link " (click)="myAccount()">Mon compte</a>
+            </li>
+            <li class="nav-item" *ngIf="currentUser">
+                <a class="nav-link " (click)="logout()">Se déconnecter</a>
+            </li>
+            <li class="nav-item" *ngIf="!currentUser">
+                <a class="nav-link " routerLink="/login">Connexion</a>
+            </li>
+            <li class="nav-item" *ngIf="!currentUser">
+                <a class="nav-link " routerLink="/register">Inscription</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Application principale -->
+<div class="jumbotron h-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 offset-sm-2 ">
+                <app-alert></app-alert>
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>

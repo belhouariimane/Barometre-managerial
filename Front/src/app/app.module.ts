@@ -29,6 +29,17 @@ import { QRadioBtnEditComponent } from './questionnaire/question-edit/q-radio-bt
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { QuestionnaireEditComponent } from './questionnaire/questionnaire-edit/questionnaire-edit.component';
 import { QuestionnaireShowComponent } from './questionnaire/questionnaire-show/questionnaire-show.component';
+import { AlertComponent } from './alert/alert.component';
+import {AlertService} from './services/alert.service';
+import {AuthService} from './services/auth.service';
+import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
+import {JwtInterceptor} from './helpers/jwt.interceptor';
+import {ErrorInterceptor} from './helpers/error.interceptor';
+import {fakeBackendProvider} from './helpers/fake-backend';
+import { MyaccountComponent } from './myaccount/myaccount.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 
 @NgModule({
@@ -47,6 +58,12 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
     QCheckBoxEditComponent,
     QRadioBtnEditComponent,
     QuestionnaireEditComponent,
+    QuestionnaireShowComponent,
+    AlertComponent,
+    HomeComponent,
+    LoginComponent,
+    RegisterComponent,
+    MyaccountComponent,
     QuestionnaireShowComponent
   ],
     imports: [
@@ -63,14 +80,25 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
         FormsModule,
         ReactiveFormsModule,
         MatRadioModule,
+        HttpClientModule,
+        MatRadioModule,
         MatDialogModule,
         MatTableModule,
         MatDatepickerModule,
         MatNativeDateModule,
         MatListModule
     ],
-  providers: [MatDatepickerModule],
+  providers: [
+      { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+      { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+
+      // création de fausses données en attendant le back ...
+      fakeBackendProvider,
+      MatDatepickerModule
+  ],
+
   bootstrap: [AppComponent],
+
   entryComponents: [
       QRadioBtnShowComponent,
       QCheckBoxShowComponent,
@@ -84,6 +112,6 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
       QSliderEditComponent,
       QCheckBoxEditComponent,
       QRadioBtnEditComponent
-  ],
+    ],
 })
 export class AppModule { }
