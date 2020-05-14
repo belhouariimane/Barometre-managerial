@@ -42,7 +42,6 @@ import {fakeBackendProvider} from './helpers/fake-backend';
 import { MyaccountComponent } from './myaccount/myaccount.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatRadioGroup} from '@angular/material/typings/radio';
-import { DeleteQuestionComponent } from './questionnaire/delete-question/delete-question.component';
 
 @NgModule({
   declarations: [
@@ -65,9 +64,8 @@ import { DeleteQuestionComponent } from './questionnaire/delete-question/delete-
     HomeComponent,
     LoginComponent,
     RegisterComponent,
-    MyaccountComponent
-    QuestionnaireShowComponent,
-    DeleteQuestionComponent
+    MyaccountComponent,
+    QuestionnaireShowComponent
   ],
     imports: [
         BrowserModule,
@@ -83,7 +81,7 @@ import { DeleteQuestionComponent } from './questionnaire/delete-question/delete-
         FormsModule,
         ReactiveFormsModule,
         MatRadioModule,
-        HttpClientModule
+        HttpClientModule,
         MatRadioModule,
         MatDialogModule,
         MatTableModule,
@@ -96,11 +94,12 @@ import { DeleteQuestionComponent } from './questionnaire/delete-question/delete-
       { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 
       // création de fausses données en attendant le back ...
-      fakeBackendProvider
+      fakeBackendProvider,
+      MatDatepickerModule
   ],
-  bootstrap: [AppComponent]
-  providers: [MatDatepickerModule],
+
   bootstrap: [AppComponent],
+
   entryComponents: [
       QRadioBtnShowComponent,
       QCheckBoxShowComponent,
@@ -113,8 +112,7 @@ import { DeleteQuestionComponent } from './questionnaire/delete-question/delete-
       QDateTimeEditComponent,
       QSliderEditComponent,
       QCheckBoxEditComponent,
-      QRadioBtnEditComponent,
-      DeleteQuestionComponent
+      QRadioBtnEditComponent
     ],
 })
 export class AppModule { }

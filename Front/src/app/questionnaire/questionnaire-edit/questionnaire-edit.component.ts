@@ -24,7 +24,6 @@ import {QRadioBtnShowComponent} from '../question-show/q-radio-btn-show/q-radio-
 import {QSelectShowComponent} from '../question-show/q-select-show/q-select-show.component';
 import {QSliderShowComponent} from '../question-show/q-slider-show/q-slider-show.component';
 import {QInputShowComponent} from '../question-show/q-input-show/q-input-show.component';
-import {DeleteQuestionComponent} from '../delete-question/delete-question.component';
 import {consoleTestResultHandler} from 'tslint/lib/test';
 
 @Component({
@@ -42,8 +41,7 @@ import {consoleTestResultHandler} from 'tslint/lib/test';
     QDateTimeEditComponent,
     QSliderEditComponent,
     QCheckBoxEditComponent,
-    QRadioBtnEditComponent,
-    DeleteQuestionComponent
+    QRadioBtnEditComponent
   ]
 
 })
