@@ -5,6 +5,7 @@ import {UserService} from '../services/user.service';
 import {first} from 'rxjs/operators';
 import {QuestionnaireService} from '../services/questionnaire.service';
 import {Questionnaire} from '../models/questionnaire';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -15,15 +16,14 @@ import {Questionnaire} from '../models/questionnaire';
 // Le composant home contient la logique permettant d'afficher l'utilisateur actuel ainsi que la liste de tous ses questionnaires
 export class HomeComponent implements OnInit {
   currentUser: User;
-  private newQuest: Questionnaire;
   users = [];
   questionnaires = [];
-  counter = 0;
 
   constructor(
       private authService: AuthService,
       private userService: UserService,
-      private questionnaireService: QuestionnaireService
+      private questionnaireService: QuestionnaireService,
+      private router: Router
   ) {
     this.currentUser = this.authService.currentUserValue;
   }
@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit {
     this.loadAllQuestionnaires();
   }
 
+  // provisoire, à supprimer par la suite
   private loadAllUsers() {
     this.userService.getAll()
         .pipe(first())
@@ -45,8 +46,9 @@ export class HomeComponent implements OnInit {
         .subscribe(() => this.loadAllUsers());
   }
 
+  // Charge la liste de questionnaires en fonction de l'id de l'utilisateur
   private loadAllQuestionnaires() {
-    this.questionnaireService.getAll()
+    this.questionnaireService.getAllByIdUser(this.currentUser.id)
         .pipe(first())
         .subscribe(questionnaires => this.questionnaires = questionnaires);
   }
@@ -55,15 +57,5 @@ export class HomeComponent implements OnInit {
     this.questionnaireService.delete(id)
         .pipe(first())
         .subscribe(() => this.loadAllQuestionnaires());
-  }
-
-  onNewQuestionnaire() {
-    this.newQuest = new Questionnaire();
-    this.newQuest.titre = 'Nouveau titre';
-    this.newQuest.isAnonymous = false;
-    this.newQuest.idQuestionnaire = ++this.counter;
-    this.newQuest.nbQuestions = Math.floor(Math.random() * 11);
-    this.questionnaireService.register(this.newQuest);
-    this.loadAllQuestionnaires();
   }
 }

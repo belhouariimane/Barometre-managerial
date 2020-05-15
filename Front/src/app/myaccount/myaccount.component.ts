@@ -52,7 +52,6 @@ export class MyaccountComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    console.log('Coucou');
 
     // réinitialise les alertes lors de la soumission du formulaire
     this.alertService.clear();

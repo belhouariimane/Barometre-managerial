@@ -1,7 +1,11 @@
 export class Questionnaire {
-    idQuestionnaire: number;
+    id: number;
     titre: string;
-    nbQuestions: number;
+    description: string;
     isAnonymous: boolean;
+    dateCreation: Date;
+    datePeremption: Date;
+    idUser: number;
+
     constructor() { }
 }

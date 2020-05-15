@@ -41,6 +41,7 @@ import {ErrorInterceptor} from './helpers/error.interceptor';
 import {fakeBackendProvider} from './helpers/fake-backend';
 import { MyaccountComponent } from './myaccount/myaccount.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
         MatTableModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        MatListModule
+        MatListModule,
+        MatSlideToggleModule
     ],
   providers: [
       { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

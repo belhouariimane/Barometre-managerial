@@ -23,23 +23,25 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             .pipe(dematerialize());
 
         function handleRoute() {
-            // console.log('url : ' + url);
             switch (true) {
                 case url.endsWith('/users/authenticate') && method === 'POST':
                     return authenticate();
                 case url.endsWith('/users/register') && method === 'POST':
-                    return register();
+                    return registerUser();
                 case url.match(/\/users\/update\/\d+$/) && method === 'POST':
                     return updateUser();
                 case url.endsWith('/users') && method === 'GET':
                     return getUsers();
                 case url.match(/\/users\/\d+$/) && method === 'DELETE':
                     return deleteUser();
+                case url.match(/\/questionnaires\/update\/\d+$/) && method === 'POST':
+                    return updateQuestionnaire();
                 case url.endsWith('/questionnaires/register') || method === 'POST':
-                    console.log('Nouveau questionnaire');
                     return registerQuestionnaire();
-                case url.endsWith('/questionnaires') && method === 'GET':
-                    return getQuestionnaires();
+                case url.match(/\/questionnaires\/all\/\d+$/) && method === 'GET':
+                    return getQuestionnairesByIdUser();
+                case url.match(/\/questionnaires\/\d+$/) && method === 'GET':
+                    return getQuestionnaireById();
                 case url.match(/\/questionnaires\/\d+$/) && method === 'DELETE':
                     return deleteQuestionnaire();
                 default:
@@ -49,6 +51,11 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         // fonctions de routage
 
+        // ----------------------------
+        // FONCTIONS USER
+        // ----------------------------
+
+        // Valide ou non l'authentification
         function authenticate() {
             const { username, password } = body;
             const user = users.find( x => x.username === username && x.password === password);
@@ -64,7 +71,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             });
         }
 
-        function register() {
+        // Enregistre l'utilisateur
+        function registerUser() {
             const user = body;
             if (users.find(x => x.username === user.username)) {
                 return error('Le nom d\'utilisateur "' + user.username + '" est déjà pris. Veuillez en choisir un autre.');
@@ -75,9 +83,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return ok();
         }
 
+        // Met à jour l'utilisateur
         function updateUser() {
             const user = body;
-            console.log('user : ' + user.id + ', '+ user.firstName + ', ' + user.lastName + ', ' + user.username + ', ' + user.password);
 
             // dans un 1er temps, retire l'utilisateur de la liste via son id
             const updatedUser = users.find(x => x.id === idFromUrl());
@@ -90,8 +98,6 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             user.username = user.username.length ? user.username : updatedUser.username;
             user.password = user.username.password ? user.password : updatedUser.password;
 
-            console.log('updatedUser : ' + user.id + user.firstName + ', ' + user.lastName + ', ' + user.username + ', ' + user.password);
-
             // puis on ajoute ce même utilisateur modifié en gardant le même id
             users.push(user);
             localStorage.setItem('users', JSON.stringify(users));
@@ -100,15 +106,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return ok();
         }
 
-        function registerQuestionnaire() {
-            const questionnaire = body;
-            questionnaire.idQuestionnaire = questionnaire.length ? Math.max(...questionnaire.map(x => x.id)) + 1 : 1;
-            questionnaires.push(questionnaire);
-            localStorage.setItem('questionnaires', JSON.stringify(questionnaires));
-            console.log('Nouveau questionnaire enregistré');
-            return ok();
-        }
-
+        // Récupère l'ensemble des utilisateurs
         function getUsers() {
             if (!isLoggedIn()) {
                 return unauthorized();
@@ -116,14 +114,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return ok(users);
         }
 
-        function getQuestionnaires() {
-            console.log('affichage des questionnaires');
-            if (!isLoggedIn()) {
-                return unauthorized();
-            }
-            return ok(questionnaires);
-        }
-
+        // Supprime un utilisateur
         function deleteUser() {
             if (!isLoggedIn()) {
                 return unauthorized();
@@ -133,14 +124,73 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return ok();
         }
 
+        // ----------------------------
+        // FONCTIONS QUESTIONNAIRE
+        // ----------------------------
+
+        // Récupère tous les questionnaires créés par l'utilisateur en cours
+        function getQuestionnairesByIdUser() {
+            if (!isLoggedIn()) {
+                return unauthorized();
+            }
+            return ok(questionnaires.filter(x => x.idUser === idFromUrl()));
+        }
+
+        // Récupère le questionnaire à partir de son id
+        function getQuestionnaireById() {
+            if (!isLoggedIn()) {
+                return unauthorized();
+            }
+            return ok(questionnaires.find(x => x.id === idFromUrl()));
+        }
+
+        // Enregistre un questionnaire
+        function registerQuestionnaire() {
+            const questionnaire = body;
+            questionnaire.id = questionnaires.length ? Math.max(...questionnaires.map(x => x.id)) + 1 : 1;
+            questionnaires.push(questionnaire);
+            console.log('Questionnaire enregistré');
+            console.log('id : ' + questionnaire.id);
+            console.log('idUser : ' + questionnaire.idUser);
+            console.log('titre : ' + questionnaire.titre);
+            console.log('description : ' + questionnaire.description);
+            console.log('isAnonymous : ' + questionnaire.isAnonymous);
+            console.log('dateCreation : ' + questionnaire.dateCreation);
+            console.log('datePeremption : ' + questionnaire.datePeremption);
+
+            localStorage.setItem('questionnaires', JSON.stringify(questionnaires));
+            return ok();
+        }
+
+        // Met à jour le questionnaire
+        function updateQuestionnaire() {
+            const questionnaire = body;
+            // dans un 1er temps, retire le questionnaire de la liste via son id
+            const updatedQuestionnaire = questionnaires.find(x => x.id === idFromUrl());
+            questionnaires = questionnaires.filter(x => x.id !== idFromUrl());
+
+            // pour chacun de ses champs (sauf id) on met à jour seulement si une valeur est renseignée dans le formulaire
+            questionnaire.id = idFromUrl();
+            questionnaire.titre = questionnaire.titre.length ? questionnaire.titre : updatedQuestionnaire.titre;
+            questionnaire.description = questionnaire.description.length ? questionnaire.description : updatedQuestionnaire.description;
+            questionnaire.isAnonymous = updatedQuestionnaire.isAnonymous;
+
+            // puis on ajoute ce même questionnaire modifié en gardant le même id
+            questionnaires.push(questionnaire);
+            localStorage.setItem('questionnaires', JSON.stringify(questionnaires));
+            return ok();
+        }
+
+        // Supprime un questionnaire
         function deleteQuestionnaire() {
             if (!isLoggedIn()) {
                 return unauthorized();
             }
-            questionnaires = questionnaires.filter(x => x.idQuestionnaire !== idFromUrl());
+            questionnaires = questionnaires.filter(x => x.id !== idFromUrl());
             localStorage.setItem('questionnaires', JSON.stringify(questionnaires));
             return ok();
         }
+
 
 
         // helper functions

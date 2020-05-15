@@ -6,4 +6,7 @@ export class User {
     lastName: string;
     // token utilisé pour contenir le jeton JWT renvoyé par l'API en cas d'authentification réussie
     token: string;
+    dateCreation: Date;
+
+    constructor() {}
 }

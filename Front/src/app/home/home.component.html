@@ -1,25 +1,29 @@
-<h1>Bonjour {{currentUser.firstName}} !</h1>
-<p>Tu es connecté.</p>
+<h3>Bonjour {{currentUser.firstName}} !</h3>
 <h3>Liste des utilisateurs inscrits :</h3>
-<ul>
-    <li *ngFor="let user of users">
+<ul class="list-group">
+    <li *ngFor="let user of users" class="list-group-item m-3 rounded border border-primary">
         {{user.username}} ({{user.firstName}} {{user.lastName}})
-        - <a (click)="deleteUser(user.id)" class="text-danger">Delete</a>
+        <button class="btn btn-danger float-right " (click)="deleteUser(user.id)" >Supprimer</button>
     </li>
 </ul>
-<h3>Liste de tes questionnaires :</h3>
-<ul>
-    <li *ngFor="let questionnaire of questionnaires">
-        Questionnaire n°{{questionnaire.idQuestionnaire}}
-        Titre : {{questionnaire.titre}}
-        Nombre de questions : {{questionnaire.nbQuestions}})
-        Anonyme : {{ questionnaire.isAnonymous ? "oui" : "non" }}
-        - <a (click)="deleteQuestionnaire(questionnaire.idQuestionnaire)" class="text-danger">Delete</a>
-    </li>
+<h3>Liste des questionnaires :</h3>
+<ul class="list-group">
+    <div *ngFor="let questionnaire of questionnaires" class="list-group-item m-3 rounded border border-info">
+        <div [routerLink]="['/edit-questionnaire', questionnaire.id]">
+        <h4>{{questionnaire.id}} : {{questionnaire.titre}}</h4>
+        <h5>{{questionnaire.description}} </h5>
+        <div>Anonyme : {{ questionnaire.isAnonymous ? "oui" : "non" }} </div>
+        <div>Nombre de questions : 20</div>
+        <div>Nombre de participations : 32</div>
+        </div>
+        <button class="btn btn-danger float-right " (click)="deleteQuestionnaire(questionnaire.id)" >Supprimer</button>
+    </div>
 </ul>
-<button class="btn btn-primary mx-3" routerLink="/edit-questionnaire">
-    Nouveau questionnaire
-</button>
-<button class="btn btn-primary mx-3" routerLink="/show-questionnaire">
-    Afficher les questionnaires
-</button>
+<div class="text-center mt-3">
+    <button class="btn btn-primary mx-3" routerLink="/edit-questionnaire">
+        Nouveau questionnaire
+    </button>
+    <button class="btn btn-primary mx-3" routerLink="/show-questionnaire">
+        Afficher les questionnaires
+    </button>
+</div>
