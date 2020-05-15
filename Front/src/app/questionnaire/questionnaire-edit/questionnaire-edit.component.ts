@@ -7,8 +7,6 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import {QCheckBoxEditComponent} from '../question-edit/q-check-box-edit/q-check-box-edit.component';
-import {QCheckBoxShowComponent} from '../question-show/q-check-box-show/q-check-box-show.component';
 import {Question} from '../../models/question';
 import {Questionnaire} from '../../models/questionnaire';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -18,18 +16,20 @@ import {QInputEditComponent} from '../question-edit-dialog/q-input-edit/q-input-
 import {QSliderEditComponent} from '../question-edit-dialog/q-slider-edit/q-slider-edit.component';
 import {QSelectEditComponent} from '../question-edit-dialog/q-select-edit/q-select-edit.component';
 import {ComponentType} from '@angular/cdk/portal/typings/portal';
-import {QDateTimeEditComponent} from '../question-edit/q-date-time-edit/q-date-time-edit.component';
-import {QDateTimeShowComponent} from '../question-show/q-date-time-show/q-date-time-show.component';
-import {QRadioBtnShowComponent} from '../question-show/q-radio-btn-show/q-radio-btn-show.component';
-import {QSelectShowComponent} from '../question-show/q-select-show/q-select-show.component';
-import {QSliderShowComponent} from '../question-show/q-slider-show/q-slider-show.component';
-import {QInputShowComponent} from '../question-show/q-input-show/q-input-show.component';
 import {ActivatedRoute} from '@angular/router';
 import {QuestionnaireService} from '../../services/questionnaire.service';
 import {filter, find, first} from 'rxjs/operators';
 import {AlertService} from '../../services/alert.service';
 import {AuthService} from '../../services/auth.service';
 import {errorObject} from 'rxjs/internal-compatibility';
+import {QSliderShowComponent} from '../question-show-dialog/q-slider-show/q-slider-show.component';
+import {QCheckBoxEditComponent} from '../question-edit-dialog/q-check-box-edit/q-check-box-edit.component';
+import {QSelectShowComponent} from '../question-show-dialog/q-select-show/q-select-show.component';
+import {QDateTimeEditComponent} from '../question-edit-dialog/q-date-time-edit/q-date-time-edit.component';
+import {QRadioBtnShowComponent} from '../question-show-dialog/q-radio-btn-show/q-radio-btn-show.component';
+import {QInputShowComponent} from '../question-show-dialog/q-input-show/q-input-show.component';
+import {QDateTimeShowComponent} from '../question-show-dialog/q-date-time-show/q-date-time-show.component';
+import {QCheckBoxShowComponent} from '../question-show-dialog/q-check-box-show/q-check-box-show.component';
 
 @Component({
   selector: 'app-questionnaire-edit',
