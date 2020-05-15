@@ -1,21 +1,21 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {Question} from '../../model/question';
-import {QDateTimeEditComponent} from '../../question-edit/q-date-time-edit/q-date-time-edit.component';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {QCheckBoxEditComponent} from '../../question-edit-dialog/q-check-box-edit/q-check-box-edit.component';
 
 @Component({
-  selector: 'app-q-date-time-show',
-  templateUrl: './q-date-time-show.component.html',
-  styleUrls: ['./q-date-time-show.component.scss']
+  selector: 'app-q-check-box-show',
+  templateUrl: './q-check-box-show.component.html',
+  styleUrls: ['./q-check-box-show.component.scss']
 })
-export class QDateTimeShowComponent implements OnInit {
-
+export class QCheckBoxShowComponent implements OnInit {
   @Output() output = new EventEmitter();
   @Input() question ;
   action: string;
   localData: any;
+
   constructor(
-      public dialogRef: MatDialogRef<QDateTimeEditComponent>,
+      public dialogRef: MatDialogRef<QCheckBoxEditComponent>,
       @Inject(MAT_DIALOG_DATA) public data: Question) {
     this.localData = {...data};
     this.action = this.localData.action;
@@ -31,4 +31,5 @@ export class QDateTimeShowComponent implements OnInit {
   ngOnInit() {
     console.log(this.data);
   }
+
 }

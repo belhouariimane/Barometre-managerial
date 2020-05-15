@@ -1,17 +1,16 @@
-
-<!--<div class="card m-3">-->
-<!--    <h5 class="card-header">{{questionniare}}</h5>-->
-<!--        <div class="card-body">-->
-<!--            <form>-->
-<!--                <div class="form-row">-->
-<!--                    <div *ngFor="let question in questionnaire.questions">-->
-<!--                        <template #ShowQuestionCheckBox> </template>-->
-<!--                        <template #ShowQuestionDateTime> </template>-->
-<!--                        <template #ShowQuestionInput> </template>-->
-<!--                        <template #ShowQuestionRadioBtn> </template>-->
-<!--                        <template #ShowQuestionSelect> </template>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </form>-->
-<!--        </div>-->
-<!--</div>-->
+<div class="card m-3">
+    <h5 class="card-header">{{questionnaire.libelleQuestionnaire}}</h5>
+        <div class="card-body">
+            <form>
+                <div class="form">
+                    <div *ngFor="let question of questionnaire.questions">
+                        <div class="row">
+                            <div class="col-9">
+                                <app-question [question]="question"></app-question>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form >
+        </div>
+</div>
