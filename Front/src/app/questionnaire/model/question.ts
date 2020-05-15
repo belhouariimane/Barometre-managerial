@@ -1,7 +1,7 @@
 export class Question {
 
   constructor(
-    public idQuestion: number,
+    public id: number,
     public libelle: string = '',
     public type: string,
     public isRequired: boolean,

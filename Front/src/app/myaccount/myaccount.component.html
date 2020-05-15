@@ -62,3 +62,11 @@
     <button class="btn btn-danger mx-3" (click)="logout()">Déconnexion</button>
     <button class="btn btn-dark mx-3" (click)="deleteAccount()">Suppression définitive du compte</button>
 </div>
+
+<ng-template>
+    Etes-vous sûr(e) de vouloir supprimer définitivement votre compte?
+    <div mat-dialog-actions>
+        <button mat-button mat-raised-button color="primary"  >Oui</button>
+        <button mat-button mat-flat-button color="warn">Fermer</button>
+    </div>
+</ng-template>
