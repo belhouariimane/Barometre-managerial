@@ -14,63 +14,69 @@ import fr.univ.angers.info.m2.acdi.bm.request.response.ResponseSingleQuestionnai
 
 @Service
 public class QuestionnaireService {
-	
+
 	@Autowired
 	private QuestionnaireRepository questionnaireRepository;
 	@Autowired
 	private AdministrateurService administrateurService;
-	
+
 	public ResponseSingleQuestionnaire insertOne(Questionnaire questionnaire) {
 		// Vérification de la validité du questionnaire,
 		// conformité des champs obligatoires
 		if (!questionnaire.validity()) {
-			return new ResponseSingleQuestionnaire("Les champs du questionnaire sont invalides", null, HttpStatus.BAD_REQUEST);
+			return new ResponseSingleQuestionnaire("Les champs du questionnaire sont invalides", null,
+					HttpStatus.BAD_REQUEST);
 		}
-		
+
 		try {
-			administrateurService.findById(questionnaire.getIdAdministrateur());
+			administrateurService.findById(questionnaire.getAdministrateur().getId());
 		} catch (AdministrateurNotFoundException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			return new ResponseSingleQuestionnaire("L'administrateur d'identifiant renseilgné n'a pas été trouvé", null, HttpStatus.BAD_REQUEST);
+			// e.printStackTrace();
+			return new ResponseSingleQuestionnaire("L'administrateur d'identifiant renseilgné n'a pas été trouvé", null,
+					HttpStatus.BAD_REQUEST);
 		}
-		
+
 		// S'assurer que le champs id du questionnaire est forcément NULL
 		if (questionnaire.getId() != null) {
-			return new ResponseSingleQuestionnaire("Impossible de créer un questionnaire ayant déjà un identifiant", null, HttpStatus.BAD_REQUEST);
+			return new ResponseSingleQuestionnaire("Impossible de créer un questionnaire ayant déjà un identifiant",
+					null, HttpStatus.BAD_REQUEST);
 		}
-		
+
 		Questionnaire savedQuestionnaire = this.questionnaireRepository.save(questionnaire);
-		
+
 		return new ResponseSingleQuestionnaire("Questionnaire créé", savedQuestionnaire, HttpStatus.OK);
 	}
-	
+
 	public ResponseSingleQuestionnaire readQuestionnaireById(Long id) {
 		Optional<Questionnaire> questionnaire = this.questionnaireRepository.findById(id);
 		if (!questionnaire.isPresent()) {
-			return new ResponseSingleQuestionnaire("Le questionnaire d'identifiant renseigné n'a pas été trouvé", null, HttpStatus.valueOf(419));
+			return new ResponseSingleQuestionnaire("Le questionnaire d'identifiant renseigné n'a pas été trouvé", null,
+					HttpStatus.valueOf(419));
 		}
 		return new ResponseSingleQuestionnaire("Questionnaire trouvé", questionnaire.get(), HttpStatus.OK);
 	}
-	
+
 	public ResponseSingleQuestionnaire updateQuestionnaire(Questionnaire questionnaire) {
 		// Le questionnaire passé dans le corps de la requête doit comporter un champ id
 		if (questionnaire.getId() == null) {
-			return new ResponseSingleQuestionnaire("Il faut renseigner l'identifiant du questionnaire à mettre à jour", null, HttpStatus.BAD_REQUEST);
+			return new ResponseSingleQuestionnaire("Il faut renseigner l'identifiant du questionnaire à mettre à jour",
+					null, HttpStatus.BAD_REQUEST);
 		}
-		
+
 		// si le questionnaire d'identifiant renseigné n'existe pas,
 		// on ne fait pas de mise à jour
 		Optional<Questionnaire> lastRecord = this.questionnaireRepository.findById(questionnaire.getId());
 		if (!lastRecord.isPresent()) {
-			return new ResponseSingleQuestionnaire("Le questionnaire d'identifiant renseigné n'a pas été trouvé", null, HttpStatus.valueOf(419));
+			return new ResponseSingleQuestionnaire("Le questionnaire d'identifiant renseigné n'a pas été trouvé", null,
+					HttpStatus.valueOf(419));
 		}
-		
+
 		// Seront modifiés les champs qui ont été renseignés
 		Questionnaire questionnaireToUpdate = lastRecord.get();
-		
-		if (questionnaire.getIdAdministrateur() != null) {
-			questionnaireToUpdate.setIdAdministrateur(questionnaire.getIdAdministrateur());
+
+		if (questionnaire.getAdministrateur() != null && questionnaire.getAdministrateur().getId() != null) {
+			questionnaireToUpdate.getAdministrateur().setId(questionnaire.getAdministrateur().getId());
 		}
 		if (questionnaire.getTitre() != null) {
 			questionnaireToUpdate.setTitre(questionnaire.getTitre());
@@ -84,13 +90,14 @@ public class QuestionnaireService {
 		if (questionnaire.getAnonymous() != null) {
 			questionnaireToUpdate.setAnonymous(questionnaire.getAnonymous());
 		}
-		
+
 		Questionnaire savedQuestionnaire = this.questionnaireRepository.save(questionnaireToUpdate);
-		
-		return new ResponseSingleQuestionnaire("Mise à jour du questionnaire effectué avec succès", savedQuestionnaire, HttpStatus.OK);
+
+		return new ResponseSingleQuestionnaire("Mise à jour du questionnaire effectué avec succès", savedQuestionnaire,
+				HttpStatus.OK);
 	}
-	
+
 	public List<Questionnaire> findByIdAdministrateur(Long idAdministrateur) {
-		return this.questionnaireRepository.findByIdAdministrateur(idAdministrateur);
+		return this.questionnaireRepository.findByAdministrateur(idAdministrateur);
 	}
 }

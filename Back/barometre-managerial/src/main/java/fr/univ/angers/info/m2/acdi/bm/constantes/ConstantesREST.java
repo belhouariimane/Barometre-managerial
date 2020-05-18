@@ -8,7 +8,7 @@ package fr.univ.angers.info.m2.acdi.bm.constantes;
  *
  */
 public class ConstantesREST {
-	
+
 	private ConstantesREST() {
 		throw new IllegalAccessError("classes des Constante");
 	}
@@ -22,4 +22,11 @@ public class ConstantesREST {
 	public static final String PASSWORD_INVALID = "Le mot de passe que vous avez entré n'est pas bon , Veuillez ressayer!";
 	public static final String PASSWORD_VALIDATION_ERROR = "Probleme technique lors de la validation du password";
 	public static final String EMAIL_OR_PASSWORD_NOT_SEND = "L'email ou le mot de passe ou les deux sont manquants ! ";
+	public static final String ID_NULL = "L'id que vous essayer de passer est : NULL ! ";
+	public static final String CREATE_ERROR = "Probleme lors de l'enregistrement !";
+
+	public static String objectNotFound(Object object) {
+		return object.getClass().getSimpleName() + " non trouvé dans la base de donnée !";
+	}
+
 }

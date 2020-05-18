@@ -32,24 +32,18 @@ public class ParticipantController {
 	private ParticipantService participantService;
 
 	@PostMapping("/create")
-	public Participant creerAdministrateur(@RequestBody Participant newParticipant) {
-		return participantService.save(newParticipant);
+	public ResponseEntity<RetourGeneral> creerAdministrateur(@RequestBody Participant newParticipant) {
+		return traitementReponse(participantService.save(newParticipant));
 	}
 
 	@GetMapping("/all")
-	List<Participant> all() {
-		return participantService.findAll();
+	public ResponseEntity<RetourGeneral> all() {
+		return traitementReponse(participantService.findAll());
 	}
 
 	@GetMapping("/{id}")
-	Participant recupererParticipantParId(@PathVariable Long id) {
-		Participant participant = null;
-		try {
-			participant = participantService.findById(id);
-		} catch (ParticipantNotFoundException e) {
-			e.printStackTrace();
-		}
-		return participant;
+	public ResponseEntity<RetourGeneral> recupererParticipantParId(@PathVariable Long id) {
+		return traitementReponse(participantService.findById(id));
 	}
 
 	@SuppressWarnings("unused")

@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 import fr.univ.angers.info.m2.acdi.bm.entities.Questionnaire;
 
 public interface QuestionnaireRepository extends CrudRepository<Questionnaire, Long>{
-	List<Questionnaire> findByIdAdministrateur(Long idAdministrateur);
+	List<Questionnaire> findByAdministrateur(Long idAdministrateur);
 }
