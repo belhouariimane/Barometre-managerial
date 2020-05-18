@@ -29,7 +29,7 @@ docker network rm $NETWORK_NAME
 docker network create -d bridge $NETWORK_NAME
 
 # création du container de base de données
-docker run --name $CONTAINER_NAME_BM_SPRING_BOOT -v $VOLUME_DATA:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -d -p 3306:3306 $IMAGE_NAME_DATABASE
+docker run --name $CONTAINER_NAME_DATABASE -v $VOLUME_DATA:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -d -p 3306:3306 --network "$NETWORK_NAME" $IMAGE_NAME_DATABASE
 
 # Pour les étapes suivantes, il faut s'assurer qu'on est bien dans le répertoire
 # $HOME/deploy
