@@ -312,11 +312,11 @@ export class QuestionnaireEditComponent implements OnInit, OnChanges {
     // });
   }
   deleteRowData(rowObj) {
-    // this.dataSource = this.dataSource.filter((value, key) => {
-    //   // tslint:disable-next-line:no-unused-expression
-    //    return rowObj.idQuestion !== value.idQuestion;
+    //this.dataSource = this.dataSource.filter((value, key) => {
+      // tslint:disable-next-line:no-unused-expression
+      //  return rowObj.idQuestion !== value.id;
     // });
-    // // this.questionnaire.questions = this.dataSource ;
+    //this.questionnaire.questions = this.dataSource ;
   }
   createFinalQuestionnaire() {
     const valueQuestionnaire = JSON.stringify(this.questionnaireForm.value);

@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Optional, Output} from '@angular/core';
 import {Question} from '../../model/question';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from '@angular/material';
 import {PropositionQuestion} from '../../model/propositionQuestion';
 
 @Component({
@@ -18,16 +18,31 @@ export class QSelectEditComponent implements OnChanges {
   questionOut: Question;
   action: string;
   localData: any;
+  showpropositionForm: boolean;
+  messageSnackBar = '' ;
 
   constructor(private fb: FormBuilder,
+              private snackBar: MatSnackBar,
               public dialogRef: MatDialogRef<QSelectEditComponent>,
               @Optional() @Inject(MAT_DIALOG_DATA) public data: Question) {
     this.createForm();
     this.localData = {...data};
     this.action = this.localData.action;
   }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+    });
+  }
+  get qForm() { return this.questionForm.controls; }
 
   doAction() {
+    // stop here if form is invalid
+    if (this.questionForm.invalid) {
+      this.messageSnackBar = 'Ajout de question a échoué ';
+      this.closeDialog();
+      return;
+    }
     if (this.action.startsWith('Add')) {
       this.onCreateFinalQuetion();
     }
@@ -39,10 +54,10 @@ export class QSelectEditComponent implements OnChanges {
   }
   createForm() {
     this.questionForm = this.fb.group({
-      labelQuestion: '',
-      estObligatoire: '',
-      proposition1: '' ,
-      proposition2: '',
+      labelQuestion: ['', Validators.required],
+      proposition1: ['', Validators.required],
+      proposition2: ['', Validators.required],
+      estObligatoire: ['', Validators.required],
       propositionsArray: this.fb.array([
       ])
     });
@@ -98,6 +113,8 @@ export class QSelectEditComponent implements OnChanges {
     this.questionOut = new Question(Date.now() , obj.labelQuestion, 'select', this.toBoolean(obj.estObligatoire), tabProp, 1);
     this.data = this.questionOut;
     this.output.emit(this.questionOut);
+    this.messageSnackBar = 'ajout OK';
+
   }
 
 }

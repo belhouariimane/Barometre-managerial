@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Optional, Output} from '@angular/core';
 import {PropositionQuestion} from '../../model/propositionQuestion';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Question} from '../../model/question';
 import {QuestionnaireEditComponent} from '../../questionnaire-edit/questionnaire-edit.component';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-q-check-box-edit',
@@ -20,34 +20,48 @@ export class QCheckBoxEditComponent implements  OnChanges {
   @Output() output = new EventEmitter<Question>();
   questionOut: Question;
   action: string;
-  local_data: any;
+  localData: any;
+  messageSnackBar = '' ;
   constructor(private fb: FormBuilder,
+              private snackBar: MatSnackBar,
               public dialogRef: MatDialogRef<QCheckBoxEditComponent>,
               @Optional() @Inject(MAT_DIALOG_DATA) public data: Question) {
     this.createForm();
-    this.local_data = {...data};
-    this.action = this.local_data.action;
+    this.localData = {...data};
+    this.action = this.localData.action;
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+    });
   }
 
   doAction() {
+    // stop here if form is invalid
+    if (this.questionForm.invalid) {
+      this.messageSnackBar = 'Ajout de question a échoué ';
+      this.closeDialog();
+      return;
+    }
     this.onCreateFinalQuetion();
     this.dialogRef.close({event: this.action, data: this.questionOut});
   }
 
   closeDialog() {
-    this.dialogRef.close({event: 'Cancel'});
+    this.dialogRef.close({event: 'Fermer'});
   }
 
   createForm() {
     this.questionForm = this.fb.group({
-      labelQuestion: '',
-      proposition1: '' ,
-      proposition2: '',
-      estObligatoire: '',
+      labelQuestion: ['', Validators.required],
+      proposition1: ['', Validators.required],
+      proposition2: ['', Validators.required],
+      estObligatoire: ['', Validators.required],
       propositionsArray: this.fb.array([
       ])
     });
   }
+  get qForm() { return this.questionForm.controls; }
 
 
   ngOnChanges() {
@@ -91,19 +105,20 @@ export class QCheckBoxEditComponent implements  OnChanges {
   }
 
   onCreateFinalQuetion() {
-      const valueQuestion = JSON.stringify(this.questionForm.value);
-      const obj =  JSON.parse(valueQuestion);
-      const tabProp = [ ];
-      this.addArray( tabProp, obj.proposition1 );
-      this.addArray( tabProp, obj.proposition2);
+    const valueQuestion = JSON.stringify(this.questionForm.value);
+    const obj =  JSON.parse(valueQuestion);
+    const tabProp = [ ];
+    this.addArray( tabProp, obj.proposition1 );
+    this.addArray( tabProp, obj.proposition2);
 
-      for (let i = 0; i < obj.propositionsArray.length; i++) {
-          this.addArray(tabProp , obj.propositionsArray[i].valeur);
-      }
+    for (let i = 0; i < obj.propositionsArray.length; i++) {
+        this.addArray(tabProp , obj.propositionsArray[i].valeur);
+    }
 
-      this.questionOut = new Question(Date.now() , obj.labelQuestion, 'CheckBox', this.toBoolean(obj.estObligatoire), tabProp, 1);
-      this.data = this.questionOut;
-      this.output.emit(this.questionOut);
+    this.questionOut = new Question(Date.now() , obj.labelQuestion, 'CheckBox', this.toBoolean(obj.estObligatoire), tabProp, 1);
+    this.data = this.questionOut;
+    this.output.emit(this.questionOut);
+    this.messageSnackBar = 'ajout OK';
   }
 
 }
