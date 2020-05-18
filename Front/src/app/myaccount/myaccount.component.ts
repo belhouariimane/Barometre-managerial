@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../services/auth.service';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
@@ -6,6 +6,7 @@ import {UserService} from '../services/user.service';
 import {User} from '../models/user';
 import {AlertService} from '../services/alert.service';
 import {first} from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-myaccount',
@@ -18,6 +19,7 @@ export class MyaccountComponent implements OnInit {
   loading = false;
   submitted = false;
   currentUser: User;
+  message: string;
 
   constructor(private formBuilder: FormBuilder,
               private authService: AuthService,
@@ -40,7 +42,7 @@ export class MyaccountComponent implements OnInit {
   checkPasswords: ValidatorFn = (group: FormGroup): ValidationErrors | null => {
     const pass = group.get('password').value;
     const confirmPass = group.get('confirmPassword').value;
-    return pass === confirmPass ? null : { 'notSame': true }
+    return pass === confirmPass ? null : { 'notSame': true };
   }
 
   // accès simplifié aux champs du formulaire
@@ -77,12 +79,12 @@ export class MyaccountComponent implements OnInit {
   }
 
   deleteAccount() {
-    // const dialogRef = this.dialog.open(HTMLDialogElement);
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log('fermé');
-    // });
-    // this.userService.delete(this.authService.currentUserValue.id);
-    // this.router.navigate(['/login']);
+    if (confirm('Etes-vous sûr de supprimer définitivement votre compte?')) {
+      this.userService.delete(this.authService.currentUserValue.id)
+          .pipe(first())
+          .subscribe(() =>
+              this.logout()
+          );
+    }
   }
-
 }
