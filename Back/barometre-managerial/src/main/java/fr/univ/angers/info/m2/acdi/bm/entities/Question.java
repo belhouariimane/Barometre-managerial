@@ -1,147 +1,104 @@
 package fr.univ.angers.info.m2.acdi.bm.entities;
 
-import java.io.Serializable;
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+
+import fr.univ.angers.info.m2.acdi.bm.enums.TypeQuestion;
+import fr.univ.angers.info.m2.acdi.bm.helpers.Helpers;
 
 @Entity
-public class Question implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class Question {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	private Long idQuestionnaire;
+	private String typeQuestion;
 	private String valeur;
-	private Boolean required;
-	private Boolean filter;
-	@OneToOne
-	@JoinColumn(name="TYPE_QUESTION_ID")
-	private TypeQuestion typequestion;
-	@ManyToOne
-	private Questionnaire questionnaire;
-	@OneToMany(mappedBy = "question")
-	private List<Reponse> reponses;
-	@OneToMany(mappedBy = "question")
-	private List<Proposition> propositions;
+	private Boolean isRequired;
+	private Boolean isFilter;
+	private ArrayList<String> propositions;
 
-	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
+	public Long getIdQuestionnaire() {
+		return idQuestionnaire;
 	}
 
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
+	public void setIdQuestionnaire(Long idQuestionnaire) {
+		this.idQuestionnaire = idQuestionnaire;
 	}
 
-	/**
-	 * @return the valeur
-	 */
+	public String getTypeQuestion() {
+		return typeQuestion;
+	}
+
+	public void setTypeQuestion(String typeQuestion) {
+		this.typeQuestion = typeQuestion;
+	}
+
 	public String getValeur() {
 		return valeur;
 	}
 
-	/**
-	 * @param valeur the valeur to set
-	 */
 	public void setValeur(String valeur) {
 		this.valeur = valeur;
 	}
 
-	/**
-	 * @return the required
-	 */
-	public Boolean getRequired() {
-		return required;
+	public Boolean getIsRequired() {
+		return isRequired;
 	}
 
-	/**
-	 * @param required the required to set
-	 */
-	public void setRequired(Boolean required) {
-		this.required = required;
+	public void setIsRequired(Boolean isRequired) {
+		this.isRequired = isRequired;
 	}
 
-	/**
-	 * @return the filter
-	 */
-	public Boolean getFilter() {
-		return filter;
+	public Boolean getIsFilter() {
+		return isFilter;
 	}
 
-	/**
-	 * @param filter the filter to set
-	 */
-	public void setFilter(Boolean filter) {
-		this.filter = filter;
+	public void setIsFilter(Boolean isFilter) {
+		this.isFilter = isFilter;
 	}
 
-	/**
-	 * @return the typequestion
-	 */
-	public TypeQuestion getTypequestion() {
-		return typequestion;
-	}
-
-	/**
-	 * @param typequestion the typequestion to set
-	 */
-	public void setTypequestion(TypeQuestion typequestion) {
-		this.typequestion = typequestion;
-	}
-
-	/**
-	 * @return the questionnaire
-	 */
-	public Questionnaire getQuestionnaire() {
-		return questionnaire;
-	}
-
-	/**
-	 * @param questionnaire the questionnaire to set
-	 */
-	public void setQuestionnaire(Questionnaire questionnaire) {
-		this.questionnaire = questionnaire;
-	}
-
-	/**
-	 * @return the reponses
-	 */
-	public List<Reponse> getReponses() {
-		return reponses;
-	}
-
-	/**
-	 * @param reponses the reponses to set
-	 */
-	public void setReponses(List<Reponse> reponses) {
-		this.reponses = reponses;
-	}
-
-	/**
-	 * @return the propositions
-	 */
-	public List<Proposition> getPropositions() {
-		return propositions;
-	}
-
-	/**
-	 * @param propositions the propositions to set
-	 */
-	public void setPropositions(List<Proposition> propositions) {
+	public void setPropositions(ArrayList<String> propositions) {
 		this.propositions = propositions;
 	}
 
+	public ArrayList<String> getPropositions() {
+		return propositions;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public Boolean validity() {
+		if (this.idQuestionnaire == null || Helpers.strEmpty(this.typeQuestion) || Helpers.strEmpty(this.valeur)) {
+			return false;
+		}
+
+		// Vérification de la validité du typeQuestion
+		if (!TypeQuestion.contains(this.typeQuestion)) {
+			return false;
+		}
+
+		// En fonction du type de question, vérifier
+		// la validité des propositions
+		if (TypeQuestion.CHECKBOX.toString().equals(this.typeQuestion)
+				|| TypeQuestion.COMBOBOX.toString().equals(this.typeQuestion)
+				|| TypeQuestion.EVALUATION.toString().equals(this.typeQuestion)
+				|| TypeQuestion.RADIO.toString().equals(this.typeQuestion)) {
+			if (Helpers.arrayListEmpty(this.propositions)) {
+				return false;
+			}
+		} else {
+			// Question OUVERTE
+			if (!Helpers.arrayListEmpty(this.propositions)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

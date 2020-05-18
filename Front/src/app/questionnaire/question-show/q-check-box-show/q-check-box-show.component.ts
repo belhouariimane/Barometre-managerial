@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 
 @Component({
@@ -7,7 +7,7 @@ import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
   styleUrls: ['./q-check-box-show.component.scss']
 })
 export class QCheckBoxShowComponent implements OnInit {
-
+  @Input() question;
   constructor() { }
 
   ngOnInit() {
