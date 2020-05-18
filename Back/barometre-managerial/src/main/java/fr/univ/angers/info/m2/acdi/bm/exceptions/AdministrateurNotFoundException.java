@@ -13,7 +13,7 @@ public class AdministrateurNotFoundException extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = -966093498383408990L;
-	private final Long id;
+	private Long id;
 
 	public AdministrateurNotFoundException(Long id) {
 		this.id = id;
