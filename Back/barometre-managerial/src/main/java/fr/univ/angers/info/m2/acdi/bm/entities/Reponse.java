@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package fr.univ.angers.info.m2.acdi.bm.entities;
 
@@ -15,12 +15,21 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * @author aharboul
  *
  */
-@Entity
+@Entity(name = "Reponse")
+@Table(name = "reponse")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Reponse implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -28,82 +37,66 @@ public class Reponse implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String valeur;
-	@ManyToOne
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Participant participant;
-	@ManyToOne
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Question question;
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-	@JoinColumn(name="ID_PROPOSITION")
+
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "reponse_id")
 	private List<Proposition> propositions;
 
-	/**
-	 * @return the id
-	 */
+	public Reponse() {
+		super();
+	}
+
 	public Long getId() {
 		return id;
 	}
 
-	/**
-	 * @param id the id to set
-	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	/**
-	 * @return the valeur
-	 */
 	public String getValeur() {
 		return valeur;
 	}
 
-	/**
-	 * @param valeur the valeur to set
-	 */
 	public void setValeur(String valeur) {
 		this.valeur = valeur;
 	}
 
-	/**
-	 * @return the participant
-	 */
 	public Participant getParticipant() {
 		return participant;
 	}
 
-	/**
-	 * @param participant the participant to set
-	 */
 	public void setParticipant(Participant participant) {
 		this.participant = participant;
 	}
 
-	/**
-	 * @return the question
-	 */
 	public Question getQuestion() {
 		return question;
 	}
 
-	/**
-	 * @param question the question to set
-	 */
 	public void setQuestion(Question question) {
 		this.question = question;
 	}
 
-	/**
-	 * @return the propositions
-	 */
+	@XmlTransient
 	public List<Proposition> getPropositions() {
 		return propositions;
 	}
 
-	/**
-	 * @param propositions the propositions to set
-	 */
 	public void setPropositions(List<Proposition> propositions) {
 		this.propositions = propositions;
+	}
+
+	@Override
+	public String toString() {
+		return "Reponse{" + "id=" + id + ", valeur=" + valeur + ", participant=" + participant + ", question="
+				+ question + ", propositions=" + propositions + '}';
 	}
 
 }

@@ -27,7 +27,7 @@ public class QuestionService {
 		}
 		
 		// vérification de l'existence du questionnaire
-		ResponseSingleQuestionnaire rsquestionnaire = questionnaireService.readQuestionnaireById(question.getIdQuestionnaire());
+		ResponseSingleQuestionnaire rsquestionnaire = questionnaireService.readQuestionnaireById(question.getQuestionnaire().getId());
 		if (rsquestionnaire.getQuestionnaire() == null) {
 			return new ResponseSingleQuestion("Le questionnaire associée à cette question n'existe pas", null, HttpStatus.BAD_REQUEST);
 		}
@@ -86,6 +86,6 @@ public class QuestionService {
 	}
 	
 	public List<Question> findByIdQuestionnaire(Long idQuestionnaire) {
-		return this.questionRepository.findByIdQuestionnaire(idQuestionnaire);
+		return this.questionRepository.findByQuestionnaire_Id(idQuestionnaire);
 	}
 }

@@ -1,25 +1,35 @@
 /**
- * 
+ *
  */
 package fr.univ.angers.info.m2.acdi.bm.entities;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * @author aharboul
  *
  */
-@Entity
-public class Administrateur {
+@Entity(name = "Administrateur")
+@Table(name = "administrateur")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Administrateur implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -28,15 +38,24 @@ public class Administrateur {
 	private String password;
 	private String nom;
 	private String prenom;
-	@OneToMany(mappedBy = "administrateur")
+	@OneToMany(mappedBy = "administrateur", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Questionnaire> questionnaires;
 
 	/**
-	 * 
+	 *
 	 */
 	public Administrateur() {
 		super();
-		// TODO Auto-generated constructor stub
+	}
+
+	public void addQuestionnaire(Questionnaire questionnaire) {
+		questionnaires.add(questionnaire);
+		questionnaire.setAdministrateur(this);
+	}
+
+	public void removeQuestionnaire(Questionnaire questionnaire) {
+		questionnaires.remove(questionnaire);
+		questionnaire.setAdministrateur(null);
 	}
 
 	public Long getId() {
@@ -79,74 +98,13 @@ public class Administrateur {
 		this.prenom = prenom;
 	}
 
-	/**
-	 * @return the questionnaires
-	 */
+	@XmlTransient
 	public List<Questionnaire> getQuestionnaires() {
 		return questionnaires;
 	}
 
-	/**
-	 * @param questionnaires the questionnaires to set
-	 */
 	public void setQuestionnaires(List<Questionnaire> questionnaires) {
 		this.questionnaires = questionnaires;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((nom == null) ? 0 : nom.hashCode());
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((prenom == null) ? 0 : prenom.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Administrateur other = (Administrateur) obj;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (nom == null) {
-			if (other.nom != null)
-				return false;
-		} else if (!nom.equals(other.nom))
-			return false;
-		if (password == null) {
-			if (other.password != null)
-				return false;
-		} else if (!password.equals(other.password))
-			return false;
-		if (prenom == null) {
-			if (other.prenom != null)
-				return false;
-		} else if (!prenom.equals(other.prenom))
-			return false;
-		return true;
-	}
-
-	public boolean checkNull() throws IllegalAccessException {
-		for (Field f : getClass().getDeclaredFields())
-			if (f.get(this) != null)
-				return false;
-		return true;
 	}
 
 	@Override

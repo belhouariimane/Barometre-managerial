@@ -1,33 +1,83 @@
 package fr.univ.angers.info.m2.acdi.bm.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import fr.univ.angers.info.m2.acdi.bm.enums.TypeQuestion;
 import fr.univ.angers.info.m2.acdi.bm.helpers.Helpers;
 
-@Entity
-public class Question {
+@Entity(name = "Question")
+@Table(name = "question")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Question implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Long idQuestionnaire;
 	private String typeQuestion;
 	private String valeur;
 	private Boolean isRequired;
 	private Boolean isFilter;
-	private ArrayList<String> propositions;
+	private ArrayList<String> propositionsString;
 
-	public Long getIdQuestionnaire() {
-		return idQuestionnaire;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Questionnaire questionnaire;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Proposition> propositions;
+
+	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Reponse> reponses;
+
+	public Question() {
+		super();
 	}
 
-	public void setIdQuestionnaire(Long idQuestionnaire) {
-		this.idQuestionnaire = idQuestionnaire;
+	public void addProposition(Proposition proposition) {
+		propositions.add(proposition);
+		proposition.setQuestion(this);
+	}
+
+	public void removeProposition(Proposition proposition) {
+		propositions.remove(proposition);
+		proposition.setQuestion(null);
+	}
+
+	public void addReponse(Reponse reponse) {
+		reponses.add(reponse);
+		reponse.setQuestion(this);
+	}
+
+	public void removeReponse(Reponse reponse) {
+		reponses.remove(reponse);
+		reponse.setQuestion(null);
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getTypeQuestion() {
@@ -62,20 +112,51 @@ public class Question {
 		this.isFilter = isFilter;
 	}
 
-	public void setPropositions(ArrayList<String> propositions) {
-		this.propositions = propositions;
+	public ArrayList<String> getPropositionsString() {
+		return propositionsString;
 	}
 
-	public ArrayList<String> getPropositions() {
+	public void setPropositionsString(ArrayList<String> propositionsString) {
+		this.propositionsString = propositionsString;
+	}
+
+	public Questionnaire getQuestionnaire() {
+		return questionnaire;
+	}
+
+	public void setQuestionnaire(Questionnaire questionnaire) {
+		this.questionnaire = questionnaire;
+	}
+
+	@XmlTransient
+	public List<Proposition> getPropositions() {
 		return propositions;
 	}
 
-	public Long getId() {
-		return id;
+	public void setPropositions(List<Proposition> propositions) {
+		this.propositions = propositions;
+	}
+
+	@XmlTransient
+	public List<Reponse> getReponses() {
+		return reponses;
+	}
+
+	public void setReponses(List<Reponse> reponses) {
+		this.reponses = reponses;
+	}
+
+	@Override
+	public String toString() {
+		return "Question{" + "id=" + id + ", typeQuestion=" + typeQuestion + ", valeur=" + valeur + ", isRequired="
+				+ isRequired + ", isFilter=" + isFilter + ", propositionsString=" + propositionsString
+				+ ", questionnaire=" + questionnaire + ", propositions=" + propositions + ", reponses=" + reponses
+				+ '}';
 	}
 
 	public Boolean validity() {
-		if (this.idQuestionnaire == null || Helpers.strEmpty(this.typeQuestion) || Helpers.strEmpty(this.valeur)) {
+		if (this.questionnaire == null || this.questionnaire.getId() == null || Helpers.strEmpty(this.typeQuestion)
+				|| Helpers.strEmpty(this.valeur)) {
 			return false;
 		}
 
@@ -86,19 +167,19 @@ public class Question {
 
 		// En fonction du type de question, vérifier
 		// la validité des propositions
-		if (TypeQuestion.CHECKBOX.toString().equals(this.typeQuestion)
-				|| TypeQuestion.COMBOBOX.toString().equals(this.typeQuestion)
-				|| TypeQuestion.EVALUATION.toString().equals(this.typeQuestion)
-				|| TypeQuestion.RADIO.toString().equals(this.typeQuestion)) {
-			if (Helpers.arrayListEmpty(this.propositions)) {
-				return false;
-			}
-		} else {
-			// Question OUVERTE
-			if (!Helpers.arrayListEmpty(this.propositions)) {
-				return false;
-			}
-		}
+//		if (TypeQuestion.CHECKBOX.toString().equals(this.typeQuestion)
+//				|| TypeQuestion.COMBOBOX.toString().equals(this.typeQuestion)
+//				|| TypeQuestion.EVALUATION.toString().equals(this.typeQuestion)
+//				|| TypeQuestion.RADIO.toString().equals(this.typeQuestion)) {
+//			if (Helpers.arrayListEmpty(this.propositions)) {
+//				return false;
+//			}
+//		} else {
+//			// Question OUVERTE
+//			if (!Helpers.arrayListEmpty(this.propositions)) {
+//				return false;
+//			}
+//		}
 		return true;
 	}
 }
