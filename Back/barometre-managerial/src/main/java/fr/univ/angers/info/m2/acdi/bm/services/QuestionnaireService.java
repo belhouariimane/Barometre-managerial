@@ -21,7 +21,7 @@ public class QuestionnaireService {
 	private AdministrateurService administrateurService;
 
 	public ResponseSingleQuestionnaire insertOne(Questionnaire questionnaire) {
-		
+
 		// Vérification de la validité du questionnaire,
 		// conformité des champs obligatoires
 		if (!questionnaire.validity()) {
@@ -99,6 +99,6 @@ public class QuestionnaireService {
 	}
 
 	public List<Questionnaire> findByIdAdministrateur(Long idAdministrateur) {
-		return this.questionnaireRepository.findByAdministrateur(idAdministrateur);
+		return this.questionnaireRepository.findByAdministrateur_Id(idAdministrateur);
 	}
 }

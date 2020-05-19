@@ -14,22 +14,32 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlTransient;
+
+import org.springframework.data.annotation.CreatedDate;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity(name = "Participant")
 @Table(name = "participant")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Participant implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Temporal(javax.persistence.TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreatedDate
 	private Date dateParticipation;
 	private String prenom;
 	private String nom;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Questionnaire questionnaire;
+
 	@OneToMany(mappedBy = "participant", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Reponse> reponses;
 

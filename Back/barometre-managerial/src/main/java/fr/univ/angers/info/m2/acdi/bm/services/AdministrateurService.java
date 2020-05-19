@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import fr.univ.angers.info.m2.acdi.bm.constantes.ConstantesREST;
 import fr.univ.angers.info.m2.acdi.bm.entities.Administrateur;
 import fr.univ.angers.info.m2.acdi.bm.exceptions.AdministrateurNotFoundException;
+import fr.univ.angers.info.m2.acdi.bm.helpers.Helpers;
 import fr.univ.angers.info.m2.acdi.bm.repositories.AdministrateurRepository;
 import fr.univ.angers.info.m2.acdi.bm.response.RetourGeneral;
 import fr.univ.angers.info.m2.acdi.bm.util.PasswordUtils;
@@ -33,7 +34,7 @@ public class AdministrateurService {
 		RetourGeneral retour = new RetourGeneral();
 		if (administrateur != null) {
 			try {
-				if (administrateur.checkNull()) {
+				if (Helpers.checkNull(administrateur)) {
 					retour.setDescription(ConstantesREST.EMPTY_REQUEST);
 				} else {
 					if (administrateur.getId() == null) {
@@ -85,7 +86,7 @@ public class AdministrateurService {
 	public RetourGeneral login(Administrateur administrateur) {
 		RetourGeneral retour = new RetourGeneral();
 		try {
-			if (administrateur.checkNull()) {
+			if (Helpers.checkNull(administrateur)) {
 				retour.setDescription(ConstantesREST.EMPTY_REQUEST);
 			} else {
 				if (administrateur.getEmail() == null || administrateur.getEmail().isEmpty()

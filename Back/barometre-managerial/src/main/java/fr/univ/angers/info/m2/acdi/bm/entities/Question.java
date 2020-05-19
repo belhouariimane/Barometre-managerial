@@ -15,11 +15,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import fr.univ.angers.info.m2.acdi.bm.enums.TypeQuestion;
 import fr.univ.angers.info.m2.acdi.bm.helpers.Helpers;
 
 @Entity(name = "Question")
 @Table(name = "question")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Question implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -27,16 +32,19 @@ public class Question implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Long idQuestionnaire;
 	private String typeQuestion;
 	private String valeur;
 	private Boolean isRequired;
 	private Boolean isFilter;
 	private ArrayList<String> propositionsString;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Questionnaire questionnaire;
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Proposition> propositions;
+
 	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Reponse> reponses;
 
@@ -70,14 +78,6 @@ public class Question implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Long getIdQuestionnaire() {
-		return idQuestionnaire;
-	}
-
-	public void setIdQuestionnaire(Long idQuestionnaire) {
-		this.idQuestionnaire = idQuestionnaire;
 	}
 
 	public String getTypeQuestion() {
@@ -148,14 +148,15 @@ public class Question implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Question{" + "id=" + id + ", idQuestionnaire=" + idQuestionnaire + ", typeQuestion=" + typeQuestion
-				+ ", valeur=" + valeur + ", isRequired=" + isRequired + ", isFilter=" + isFilter
-				+ ", propositionsString=" + propositionsString + ", questionnaire=" + questionnaire + ", propositions="
-				+ propositions + ", reponses=" + reponses + '}';
+		return "Question{" + "id=" + id + ", typeQuestion=" + typeQuestion + ", valeur=" + valeur + ", isRequired="
+				+ isRequired + ", isFilter=" + isFilter + ", propositionsString=" + propositionsString
+				+ ", questionnaire=" + questionnaire + ", propositions=" + propositions + ", reponses=" + reponses
+				+ '}';
 	}
 
 	public Boolean validity() {
-		if (this.idQuestionnaire == null || Helpers.strEmpty(this.typeQuestion) || Helpers.strEmpty(this.valeur)) {
+		if (this.questionnaire == null || this.questionnaire.getId() == null || Helpers.strEmpty(this.typeQuestion)
+				|| Helpers.strEmpty(this.valeur)) {
 			return false;
 		}
 
@@ -166,19 +167,19 @@ public class Question implements Serializable {
 
 		// En fonction du type de question, vérifier
 		// la validité des propositions
-//        if (TypeQuestion.CHECKBOX.toString().equals(this.typeQuestion)
-//                || TypeQuestion.COMBOBOX.toString().equals(this.typeQuestion)
-//                || TypeQuestion.EVALUATION.toString().equals(this.typeQuestion)
-//                || TypeQuestion.RADIO.toString().equals(this.typeQuestion)) {
-//            if (Helpers.arrayListEmpty(this.propositions)) {
-//                return false;
-//            }
-//        } else {
-//            // Question OUVERTE
-//            if (!Helpers.arrayListEmpty(this.propositions)) {
-//                return false;
-//            }
-//        }
+//		if (TypeQuestion.CHECKBOX.toString().equals(this.typeQuestion)
+//				|| TypeQuestion.COMBOBOX.toString().equals(this.typeQuestion)
+//				|| TypeQuestion.EVALUATION.toString().equals(this.typeQuestion)
+//				|| TypeQuestion.RADIO.toString().equals(this.typeQuestion)) {
+//			if (Helpers.arrayListEmpty(this.propositions)) {
+//				return false;
+//			}
+//		} else {
+//			// Question OUVERTE
+//			if (!Helpers.arrayListEmpty(this.propositions)) {
+//				return false;
+//			}
+//		}
 		return true;
 	}
 }

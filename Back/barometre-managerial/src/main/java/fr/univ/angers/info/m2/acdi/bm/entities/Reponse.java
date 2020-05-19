@@ -16,8 +16,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * @author aharboul
@@ -25,6 +29,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity(name = "Reponse")
 @Table(name = "reponse")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Reponse implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -32,10 +37,13 @@ public class Reponse implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String valeur;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Participant participant;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Question question;
+
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "reponse_id")
 	private List<Proposition> propositions;

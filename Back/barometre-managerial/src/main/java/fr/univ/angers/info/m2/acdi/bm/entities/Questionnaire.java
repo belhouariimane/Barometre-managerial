@@ -13,12 +13,21 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlTransient;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import fr.univ.angers.info.m2.acdi.bm.helpers.Helpers;
 
 @Entity(name = "Questionnaire")
 @Table(name = "questionnaire")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Questionnaire implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -28,12 +37,17 @@ public class Questionnaire implements Serializable {
 	private Long id;
 	private String titre;
 	private String url;
+	@Temporal(TemporalType.DATE)
 	private Date datePeremption;
 	private Boolean anonymous;
-	@ManyToOne(fetch = FetchType.LAZY)
+
+	@ManyToOne
 	private Administrateur administrateur;
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Participant> participants;
+
 	@OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Question> questions;
 

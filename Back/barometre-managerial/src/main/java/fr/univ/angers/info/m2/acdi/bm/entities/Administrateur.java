@@ -17,12 +17,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 /**
  * @author aharboul
  *
  */
 @Entity(name = "Administrateur")
 @Table(name = "administrateur")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Administrateur implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -52,13 +56,6 @@ public class Administrateur implements Serializable {
 	public void removeQuestionnaire(Questionnaire questionnaire) {
 		questionnaires.remove(questionnaire);
 		questionnaire.setAdministrateur(null);
-	}
-
-	public boolean checkNull() throws IllegalAccessException {
-		for (Field f : getClass().getDeclaredFields())
-			if (f.get(this) != null)
-				return false;
-		return true;
 	}
 
 	public Long getId() {

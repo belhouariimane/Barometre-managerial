@@ -3,8 +3,6 @@
  */
 package fr.univ.angers.info.m2.acdi.bm.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.univ.angers.info.m2.acdi.bm.entities.Participant;
-import fr.univ.angers.info.m2.acdi.bm.exceptions.ParticipantNotFoundException;
 import fr.univ.angers.info.m2.acdi.bm.response.RetourGeneral;
 import fr.univ.angers.info.m2.acdi.bm.services.ParticipantService;
 
@@ -32,7 +29,7 @@ public class ParticipantController {
 	private ParticipantService participantService;
 
 	@PostMapping("/create")
-	public ResponseEntity<RetourGeneral> creerAdministrateur(@RequestBody Participant newParticipant) {
+	public ResponseEntity<RetourGeneral> creerParticipant(@RequestBody Participant newParticipant) {
 		return traitementReponse(participantService.save(newParticipant));
 	}
 

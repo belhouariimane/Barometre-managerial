@@ -10,6 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 /**
  *
  * @author aharboul
@@ -17,6 +20,7 @@ import javax.persistence.Table;
  */
 @Entity(name = "Proposition")
 @Table(name = "proposition")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Proposition implements Serializable {
 
     private static final long serialVersionUID = 1L;
