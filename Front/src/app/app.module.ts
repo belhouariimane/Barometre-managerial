@@ -43,6 +43,10 @@ import { MyaccountComponent } from './myaccount/myaccount.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { QuestionComponent } from './questionnaire/question/question.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { ChartsModule } from 'ng2-charts';
+import { BarChartComponent } from './resultat/bar-chart/bar-chart.component';
+import { DoughnutChartComponent } from './resultat/doughnut-chart/doughnut-chart.component';
+import { PieChartComponent } from './resultat/pie-chart/pie-chart.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +71,10 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     RegisterComponent,
     MyaccountComponent,
     QuestionnaireShowComponent,
-    QuestionComponent
+    QuestionComponent,
+    BarChartComponent,
+    DoughnutChartComponent,
+    PieChartComponent
   ],
     imports: [
         BrowserModule,
@@ -91,7 +98,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
         MatNativeDateModule,
         MatListModule,
         MatSlideToggleModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        ChartsModule
     ],
   providers: [
       { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
