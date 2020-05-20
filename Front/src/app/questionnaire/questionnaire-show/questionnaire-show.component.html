@@ -1,15 +1,14 @@
 <div class="card m-3">
-    <h5 class="card-header">{{questionnaire.libelleQuestionnaire}}</h5>
+    <h5 class="card-header">{{questionnaire?.titre}}</h5>
         <div class="card-body">
             <form>
                 <div class="form">
-                    <div *ngFor="let question of questionnaire.questions">
-                        <div class="row">
-                            <div class="col-9">
-                                <app-question [question]="question"></app-question>
-                            </div>
+                    <div *ngFor="let question of questions">
+                        <div class="w-100">
+                                <app-question-show [idQuestion]="question.id"></app-question-show>
                         </div>
                     </div>
+                    <button class="btn btn-secondary float-right" [routerLink]="['/']">Retour à l'accueil</button>
                 </div>
             </form >
         </div>

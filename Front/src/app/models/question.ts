@@ -4,8 +4,10 @@ export class Question {
   titre: string;
   type: string;
   isRequired: boolean;
+  isFilter: boolean;
+  hasGraph: boolean;
   order: number;
-  typeQuestion: string;
+  idTheme: number;
   idQuestionnaire: number;
 
   constructor() {}
