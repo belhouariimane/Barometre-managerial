@@ -1,7 +1,6 @@
 package fr.univ.angers.info.m2.acdi.bm.services;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +8,15 @@ import org.springframework.stereotype.Service;
 
 import fr.univ.angers.info.m2.acdi.bm.constantes.ConstantesREST;
 import fr.univ.angers.info.m2.acdi.bm.entities.Participant;
+import fr.univ.angers.info.m2.acdi.bm.entities.Proposition;
+import fr.univ.angers.info.m2.acdi.bm.entities.Question;
 import fr.univ.angers.info.m2.acdi.bm.entities.Questionnaire;
 import fr.univ.angers.info.m2.acdi.bm.entities.Reponse;
 import fr.univ.angers.info.m2.acdi.bm.exceptions.ParticipantNotFoundException;
 import fr.univ.angers.info.m2.acdi.bm.exceptions.QuestionnaireNotFoundException;
 import fr.univ.angers.info.m2.acdi.bm.repositories.ParticipantRepository;
+import fr.univ.angers.info.m2.acdi.bm.repositories.PropositionRepository;
+import fr.univ.angers.info.m2.acdi.bm.repositories.QuestionRepository;
 import fr.univ.angers.info.m2.acdi.bm.repositories.QuestionnaireRepository;
 import fr.univ.angers.info.m2.acdi.bm.response.RetourGeneral;
 
@@ -24,6 +27,10 @@ public class ParticipantService {
 	private ParticipantRepository participantRepository;
 	@Autowired
 	private QuestionnaireRepository questionnaireRepository;
+	@Autowired
+	private PropositionRepository propositionRepository;
+	@Autowired
+	private QuestionRepository questionRepository;
 
 	public RetourGeneral save(Participant participant) {
 		RetourGeneral retour = new RetourGeneral();
@@ -36,7 +43,14 @@ public class ParticipantService {
 						.orElseThrow(() -> new QuestionnaireNotFoundException(idQuestionnaire));
 				participant.setQuestionnaire(q);
 				for (Reponse r : participant.getReponses()) {
+					Long idQuestion = r.getQuestion().getId();
+					final Question question = questionRepository.findById(idQuestion)
+							.orElseThrow(() -> new QuestionnaireNotFoundException(idQuestion));
+					r.setQuestion(question);
 					r.setParticipant(participant);
+					for (Proposition proposition : r.getPropositions()) {
+						proposition.setQuestion(question);
+					}
 				}
 				participant = participantRepository.save(participant);
 				retour.setDescription(ConstantesREST.OK);

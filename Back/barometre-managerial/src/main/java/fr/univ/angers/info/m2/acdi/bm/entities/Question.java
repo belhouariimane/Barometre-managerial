@@ -29,13 +29,13 @@ import fr.univ.angers.info.m2.acdi.bm.helpers.Helpers;
 
 @Entity(name = "Question")
 @Table(name = "question")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Question implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String typeQuestion;
 	private String valeur;
@@ -43,16 +43,10 @@ public class Question implements Serializable {
 	private Boolean isFilter;
 
 	// https://keepgrowing.in/java/springboot/how-to-get-json-response-only-with-an-id-of-the-related-entity/
-		
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "questionnaire_id", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-	@JsonIdentityReference(alwaysAsId = true)
-	@JsonProperty("questionnaire")
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Questionnaire questionnaire;
 
-	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Proposition> propositions;
 
 	@JsonIgnore
@@ -65,7 +59,7 @@ public class Question implements Serializable {
 
 	public void addProposition(Proposition proposition) {
 		propositions.add(proposition);
-		proposition.setQuestion(this.id);
+		proposition.setQuestion(this);
 	}
 
 	public void removeProposition(Proposition proposition) {
@@ -127,10 +121,10 @@ public class Question implements Serializable {
 		return questionnaire;
 	}
 
-	public void setQuestionnaire(Long questionnaire) {
-		Questionnaire quest = new Questionnaire();
-		quest.setId(questionnaire);
-		this.questionnaire = quest;
+	public void setQuestionnaire(Questionnaire questionnaire) {
+//		Questionnaire quest = new Questionnaire();
+//		quest.setId(questionnaire);
+		this.questionnaire = questionnaire;
 	}
 
 	@XmlTransient
@@ -154,7 +148,7 @@ public class Question implements Serializable {
 	@Override
 	public String toString() {
 		return "Question{" + "id=" + id + ", typeQuestion=" + typeQuestion + ", valeur=" + valeur + ", isRequired="
-				+ isRequired + ", isFilter=" + isFilter /*+ ", propositionsString=" + propositionsString*/
+				+ isRequired + ", isFilter=" + isFilter /* + ", propositionsString=" + propositionsString */
 				+ ", questionnaire=" + questionnaire + ", propositions=" + propositions + ", reponses=" + reponses
 				+ '}';
 	}

@@ -6,6 +6,7 @@ package fr.univ.angers.info.m2.acdi.bm.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ import fr.univ.angers.info.m2.acdi.bm.services.ParticipantService;
  */
 @RestController
 @RequestMapping(path = "/participant")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ParticipantController {
 
 	@Autowired
@@ -33,12 +35,12 @@ public class ParticipantController {
 		return traitementReponse(participantService.save(newParticipant));
 	}
 
-	@GetMapping("/all")
+	@GetMapping("/readall")
 	public ResponseEntity<RetourGeneral> all() {
 		return traitementReponse(participantService.findAll());
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/read/{id}")
 	public ResponseEntity<RetourGeneral> recupererParticipantParId(@PathVariable Long id) {
 		return traitementReponse(participantService.findById(id));
 	}

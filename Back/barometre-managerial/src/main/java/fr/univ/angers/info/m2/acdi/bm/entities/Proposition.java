@@ -26,23 +26,17 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
  */
 @Entity(name = "Proposition")
 @Table(name = "proposition")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Proposition implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String valeur;
     
     // https://keepgrowing.in/java/springboot/how-to-get-json-response-only-with-an-id-of-the-related-entity/
-    
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "question_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    @JsonProperty("question")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Question question;
 
     public Proposition() {
@@ -69,15 +63,9 @@ public class Proposition implements Serializable {
         return question;
     }
 
-    public void setQuestion(Long question) {
-    	Question quest = new Question();
-    	quest.setId(question);
-        this.question = quest;
+    public void setQuestion(Question question) {
+        this.question = question;
     }
-    
-    /*public void setQuestion(Question question) {
-    	this.question = question;
-    }*/
 
     @Override
     public String toString() {

@@ -32,7 +32,7 @@ public class Administrateur implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	@Column(unique = true)
 	private String email;
@@ -52,7 +52,7 @@ public class Administrateur implements Serializable {
 
 	public void addQuestionnaire(Questionnaire questionnaire) {
 		questionnaires.add(questionnaire);
-		questionnaire.setAdministrateur(this.id);
+		questionnaire.setAdministrateur(this);
 	}
 
 	public void removeQuestionnaire(Questionnaire questionnaire) {

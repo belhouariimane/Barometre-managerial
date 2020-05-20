@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -32,8 +33,9 @@ public class Reponse implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
 	private String valeur;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -42,8 +44,7 @@ public class Reponse implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Question question;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "reponse_id")
+	@ManyToMany
 	private List<Proposition> propositions;
 
 	public Reponse() {

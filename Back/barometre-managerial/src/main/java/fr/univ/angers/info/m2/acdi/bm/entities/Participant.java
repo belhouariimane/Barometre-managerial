@@ -22,15 +22,19 @@ import org.springframework.data.annotation.CreatedDate;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import fr.univ.angers.info.m2.acdi.bm.helpers.ParticipantSerializer;
 
 @Entity(name = "Participant")
 @Table(name = "participant")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonSerialize(using = ParticipantSerializer.class)
 public class Participant implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -112,7 +116,7 @@ public class Participant implements Serializable {
 		return "Participant{" + "id=" + id + ", dateParticipation=" + dateParticipation + ", prenom=" + prenom
 				+ ", nom=" + nom + ", questionnaire=" + questionnaire + ", reponses=" + reponses + '}';
 	}
-	
+
 	public boolean checkNull() throws IllegalAccessException {
 		for (Field f : this.getClass().getDeclaredFields())
 			if (f.get(this) != null)

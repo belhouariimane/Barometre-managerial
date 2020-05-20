@@ -41,11 +41,11 @@ public class QuestionService {
 		if (question.getIsRequired() == null) {
 			question.setIsRequired(false);
 		}
-		
+		question.setQuestionnaire(rsquestionnaire.getQuestionnaire());
 		// Faire une boucle, pour chaque proposition rajouter une référence à la question
-		/*for (Proposition p : question.getPropositions()) {
+		for (Proposition p : question.getPropositions()) {
 			p.setQuestion(question);
-		}*/
+		}
 		
 		Question savedQuestion = this.questionRepository.save(question);
 		

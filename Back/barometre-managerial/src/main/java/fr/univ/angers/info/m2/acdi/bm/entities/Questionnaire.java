@@ -31,13 +31,13 @@ import fr.univ.angers.info.m2.acdi.bm.helpers.Helpers;
 
 @Entity(name = "Questionnaire")
 @Table(name = "questionnaire")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Questionnaire implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String titre;
 	private String url;
@@ -46,13 +46,7 @@ public class Questionnaire implements Serializable {
 	private Boolean anonymous;
 
 	// https://keepgrowing.in/java/springboot/how-to-get-json-response-only-with-an-id-of-the-related-entity/
-	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "administrateur_id", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-	@JsonIdentityReference(alwaysAsId = true)
-	@JsonProperty("administrateur")
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Administrateur administrateur;
 
 	@JsonIgnore
@@ -79,7 +73,7 @@ public class Questionnaire implements Serializable {
 
 	public void addQuestion(Question question) {
 		questions.add(question);
-		question.setQuestionnaire(this.id);
+		question.setQuestionnaire(this);
 	}
 
 	public void removeQuestion(Question question) {
@@ -136,10 +130,10 @@ public class Questionnaire implements Serializable {
 		return administrateur;
 	}
 
-	public void setAdministrateur(Long administrateur) {
-		Administrateur admin = new Administrateur();
-		admin.setId(administrateur);
-		this.administrateur = admin;
+	public void setAdministrateur(Administrateur administrateur) {
+//		Administrateur admin = new Administrateur();
+//		admin.setId(administrateur);
+		this.administrateur = administrateur;
 	}
 
 	@XmlTransient
