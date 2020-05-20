@@ -19,7 +19,6 @@ export class ThemeService {
     }
 
     deleteAll(idQuestionnaire: number) {
-        console.log('Hey');
         return this.http.delete(`${environment.apiUrl}/themes/${idQuestionnaire}`);
     }
 }

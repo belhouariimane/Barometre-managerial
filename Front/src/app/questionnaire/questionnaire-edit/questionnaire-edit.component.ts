@@ -6,7 +6,7 @@ import {
 import {Question} from '../../models/question';
 import {Questionnaire} from '../../models/questionnaire';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {QuestionnaireService} from '../../services/questionnaire.service';
 import {AlertService} from '../../services/alert.service';
 import {AuthService} from '../../services/auth.service';
@@ -40,6 +40,7 @@ export class QuestionnaireEditComponent implements OnInit {
               private themeService: ThemeService,
               private questionService: QuestionService,
               private location: Location,
+              private router: Router,
               private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -133,20 +134,6 @@ export class QuestionnaireEditComponent implements OnInit {
   }
 
   loadAllQuestions(idQuestionnaire: number) {
-    // const q1 = new Question();
-    // q1.id = 1;
-    // q1.order = 1;
-    // q1.titre = 'Titre 1';
-    // q1.isRequired = true;
-    // q1.type = 'check';
-    // const q2 = new Question();
-    // q2.id = 2;
-    // q2.order = 2;
-    // q2.titre = 'Titre 2';
-    // q2.isRequired = false;
-    // q2.type = 'radio';
-    // this.questions.push(q1);
-    // this.questions.push(q2);
     this.questionService.readAllByIdQuestionnaire(idQuestionnaire)
         .subscribe(questions => {
           this.questions = questions;
@@ -175,7 +162,9 @@ export class QuestionnaireEditComponent implements OnInit {
   }
 
   deleteQuestion(idQuestion: number) {
-    this.questionService.delete(idQuestion);
+    this.questionService.delete(idQuestion).subscribe(() => {
+      this.loadAllQuestions(this.idQuestionnaire);
+    });
   }
 
 }
