@@ -74,6 +74,10 @@ public class Proposition implements Serializable {
     	quest.setId(question);
         this.question = quest;
     }
+    
+    /*public void setQuestion(Question question) {
+    	this.question = question;
+    }*/
 
     @Override
     public String toString() {

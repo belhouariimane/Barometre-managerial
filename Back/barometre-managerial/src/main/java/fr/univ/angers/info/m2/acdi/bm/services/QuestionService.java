@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import fr.univ.angers.info.m2.acdi.bm.constantes.ConstantesREST;
+import fr.univ.angers.info.m2.acdi.bm.entities.Proposition;
 import fr.univ.angers.info.m2.acdi.bm.entities.Question;
 import fr.univ.angers.info.m2.acdi.bm.repositories.QuestionRepository;
 import fr.univ.angers.info.m2.acdi.bm.request.response.ResponseSingleQuestion;
@@ -41,7 +42,13 @@ public class QuestionService {
 			question.setIsRequired(false);
 		}
 		
+		// Faire une boucle, pour chaque proposition rajouter une référence à la question
+		/*for (Proposition p : question.getPropositions()) {
+			p.setQuestion(question);
+		}*/
+		
 		Question savedQuestion = this.questionRepository.save(question);
+		
 		return new ResponseSingleQuestion("Question rajoutée", savedQuestion, HttpStatus.OK);
 	}
 	
