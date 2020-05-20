@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import fr.univ.angers.info.m2.acdi.bm.constantes.ConstantesREST;
 import fr.univ.angers.info.m2.acdi.bm.entities.Question;
 import fr.univ.angers.info.m2.acdi.bm.repositories.QuestionRepository;
 import fr.univ.angers.info.m2.acdi.bm.request.response.ResponseSingleQuestion;
@@ -23,13 +24,13 @@ public class QuestionService {
 	public ResponseSingleQuestion insertOne(Question question) {
 		// vérification de la validité des champs de la question
 		if (!question.validity()) {
-			return new ResponseSingleQuestion("Champs de la question invalides", null, HttpStatus.BAD_REQUEST);
+			return new ResponseSingleQuestion(ConstantesREST.QUESTION_NOT_VALIDE, null, HttpStatus.BAD_REQUEST);
 		}
 		
 		// vérification de l'existence du questionnaire
-		ResponseSingleQuestionnaire rsquestionnaire = questionnaireService.readQuestionnaireById(question.getIdQuestionnaire());
+		ResponseSingleQuestionnaire rsquestionnaire = questionnaireService.readQuestionnaireById(question.getQuestionnaire().getId());
 		if (rsquestionnaire.getQuestionnaire() == null) {
-			return new ResponseSingleQuestion("Le questionnaire associée à cette question n'existe pas", null, HttpStatus.BAD_REQUEST);
+			return new ResponseSingleQuestion(ConstantesREST.QUESTIONNAIRE_NOT_FOUND, null, HttpStatus.BAD_REQUEST);
 		}
 		
 		// Les champs isRequired et isFilter sont à FALSE par défaut
@@ -47,18 +48,18 @@ public class QuestionService {
 	public ResponseSingleQuestion readQuestionById(Long id) {
 		Optional<Question> question = this.questionRepository.findById(id);
 		if (!question.isPresent()) {
-			return new ResponseSingleQuestion("La question d'identifiant renseigné n'a pas été trouvé", null, HttpStatus.valueOf(419));
+			return new ResponseSingleQuestion(ConstantesREST.QUESTION_NOT_FOUND, null, HttpStatus.valueOf(419));
 		}
-		return new ResponseSingleQuestion("Question trouvée", question.get(), HttpStatus.OK);
+		return new ResponseSingleQuestion(ConstantesREST.QUESTION_FOUND, question.get(), HttpStatus.OK);
 	}
 	
 	public ResponseSingleQuestion updateQuestion(Question question) {
 		if (question.getId() == null) {
-			return new ResponseSingleQuestion("Il faut renseigner l'identifiant de la question à mettre à jour", null, HttpStatus.BAD_REQUEST);
+			return new ResponseSingleQuestion(ConstantesREST.QUESTION_UPDATE_ID_NULL, null, HttpStatus.BAD_REQUEST);
 		}
 		Optional<Question> lastRecord = this.questionRepository.findById(question.getId());
 		if (!lastRecord.isPresent()) {
-			return new ResponseSingleQuestion("La question n'a pas été trouvée", null, HttpStatus.valueOf(419));
+			return new ResponseSingleQuestion(ConstantesREST.QUESTION_NOT_FOUND, null, HttpStatus.valueOf(419));
 		}
 		
 		// Les champs renseignés seront modifiés
@@ -82,10 +83,10 @@ public class QuestionService {
 		
 		Question savedQuestion = this.questionRepository.save(questionToUpdate);
 		
-		return new ResponseSingleQuestion("Question mise à jour", savedQuestion, HttpStatus.OK);
+		return new ResponseSingleQuestion(ConstantesREST.QUESTION_UPDATED, savedQuestion, HttpStatus.OK);
 	}
 	
 	public List<Question> findByIdQuestionnaire(Long idQuestionnaire) {
-		return this.questionRepository.findByIdQuestionnaire(idQuestionnaire);
+		return this.questionRepository.findByQuestionnaire_Id(idQuestionnaire);
 	}
 }

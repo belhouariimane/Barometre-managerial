@@ -51,12 +51,12 @@ public class AdministrateurController {
 		administrateurService.deleteById(id);
 	}
 
-	@GetMapping("/all")
+	@GetMapping("/readAll")
 	public List<Administrateur> all() {
 		return administrateurService.findAll();
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/read/{id}")
 	public Administrateur recupererAdministrateurParId(@PathVariable Long id) {
 		Administrateur administrateur = null;
 		try {

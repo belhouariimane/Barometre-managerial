@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +37,7 @@ public class QuestionnaireController {
 	}
 	
 	@PutMapping("/update")
-	public ResponseEntity<ResponseSingleQuestionnaire> update(Questionnaire questionnaire) {
+	public ResponseEntity<ResponseSingleQuestionnaire> update(@RequestBody Questionnaire questionnaire) {
 		ResponseSingleQuestionnaire rsq = this.questionnaireService.updateQuestionnaire(questionnaire);
 		return new ResponseEntity<ResponseSingleQuestionnaire>(rsq, rsq.getStatus());
 	}
@@ -44,5 +45,10 @@ public class QuestionnaireController {
 	@GetMapping("/findByIdAdministrateur/{idAdministrateur}")
 	public List<Questionnaire> findByIdAdministrateur(@PathVariable("idAdministrateur") Long idAdministrateur) {
 		return this.questionnaireService.findByIdAdministrateur(idAdministrateur);
+	}
+	
+	@DeleteMapping("/delete/{id}")
+	public void delete(@PathVariable("id") Long id) {
+		this.questionnaireService.deleteById(id);
 	}
 }
