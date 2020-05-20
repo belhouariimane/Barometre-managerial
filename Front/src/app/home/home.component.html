@@ -1,29 +1,28 @@
 <h3>Bonjour {{currentUser.firstName}} !</h3>
-<h3>Liste des utilisateurs inscrits :</h3>
-<ul class="list-group">
-    <li *ngFor="let user of users" class="list-group-item m-3 rounded border border-primary">
-        {{user.username}} ({{user.firstName}} {{user.lastName}})
-        <button class="btn btn-danger float-right " (click)="deleteUser(user.id)" >Supprimer</button>
-    </li>
-</ul>
-<h3>Liste des questionnaires :</h3>
+<!--<h3>Liste des utilisateurs inscrits :</h3>-->
+<!--<ul class="list-group">-->
+<!--    <li *ngFor="let user of users" class="list-group-item m-3 rounded border border-primary">-->
+<!--        {{user.username}} ({{user.firstName}} {{user.lastName}})-->
+<!--        <button class="btn btn-danger float-right " (click)="deleteUser(user.id)" >Supprimer</button>-->
+<!--    </li>-->
+<!--</ul>-->
+<h4>Liste des questionnaires</h4>
 <ul class="list-group">
     <div *ngFor="let questionnaire of questionnaires" class="list-group-item m-3 rounded border border-info">
         <div [routerLink]="['/edit-questionnaire', questionnaire.id]">
-        <h4>{{questionnaire.id}} : {{questionnaire.titre}}</h4>
+        <h4>{{questionnaire.titre}}</h4>
         <h5>{{questionnaire.description}} </h5>
         <div>Anonyme : {{ questionnaire.isAnonymous ? "oui" : "non" }} </div>
         <div>Nombre de questions : 20</div>
         <div>Nombre de participations : 32</div>
         </div>
-        <button class="btn btn-danger float-right " (click)="deleteQuestionnaire(questionnaire.id)" >Supprimer</button>
+        <button class="float-right mx-2" mat-button mat-raised-button color="warn" (click)="deleteQuestionnaire(questionnaire.id)"><mat-icon>delete</mat-icon> </button>
+        <button class="float-right mx-2" mat-button mat-raised-button color="primary" [routerLink]="['/show-questionnaire', questionnaire.id]"><mat-icon>slideshow</mat-icon> </button>
+        <button class="float-right mx-2" mat-button mat-raised-button color="accent" [routerLink]="['/edit-questionnaire', questionnaire.id]"><mat-icon>update</mat-icon> </button>
     </div>
 </ul>
 <div class="text-center mt-3">
     <button class="btn btn-primary mx-3" routerLink="/edit-questionnaire">
         Nouveau questionnaire
-    </button>
-    <button class="btn btn-primary mx-3" routerLink="/show-questionnaire">
-        Afficher les questionnaires
     </button>
 </div>
