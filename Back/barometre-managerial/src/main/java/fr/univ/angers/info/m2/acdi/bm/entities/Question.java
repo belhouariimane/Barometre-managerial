@@ -15,11 +15,13 @@ public class Question {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Long idQuestionnaire;
+	private Long idQuestionnaire; // TODO : mettre objet Questionnaire (voir ex. dans Questionnaire.java)
 	private String typeQuestion;
 	private String valeur;
 	private Boolean isRequired;
 	private Boolean isFilter;
+	
+	// Mettre une liste de proposition (voir exemple sur participant)
 	private ArrayList<String> propositions;
 
 	public Long getIdQuestionnaire() {

@@ -99,6 +99,7 @@ public class QuestionnaireService {
 	}
 
 	public List<Questionnaire> findByIdAdministrateur(Long idAdministrateur) {
+		
 		return this.questionnaireRepository.findByAdministrateur(idAdministrateur);
 	}
 }
