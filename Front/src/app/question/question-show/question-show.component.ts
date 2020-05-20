@@ -2,6 +2,9 @@ import {Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {QuestionService} from '../../services/question.service';
 import {PropositionService} from '../../services/proposition.service';
+import {Question} from '../../models/question';
+import {Proposition} from '../../models/proposition';
+
 @Component({
     selector: 'app-question-show',
     templateUrl: './question-show.component.html',
@@ -38,21 +41,8 @@ export class QuestionShowComponent implements OnInit {
     }
 
     loadAllPropositions() {
-        const p1 = new Proposition();
-        p1.id = 1;
-        p1.idQuestion = this.idQuestion;
-        p1.libelle = 'Première proposition';
-        const p2 = new Proposition();
-        p2.id = 2;
-        p2.idQuestion = this.idQuestion;
-        p2.libelle = 'Deuxième proposition';
-        this.propositions.push(p1);
-        this.propositions.push(p2);
-        // this.propositionService.readAllByIdQuestion(this.idQuestion)
-        //     .subscribe(propositions => this.propositions = propositions);
+        this.propositionService.readAllByIdQuestion(this.idQuestion)
+            .subscribe(propositions => this.propositions = propositions);
     }
 
 }
-
-import {Question} from '../../models/question';
-import {Proposition} from '../../models/proposition';

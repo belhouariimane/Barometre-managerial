@@ -33,9 +33,9 @@
 <!--        </div>-->
 <!--        {{this.questionnaireForm.value | json}}-->
 
-        <button class="float-right" (click)="addTheme('')" mat-raised-button  mat-mini-fab color="primary">
-            <mat-icon>add_circle</mat-icon>
-        </button>
+<!--        <button class="float-right" (click)="addTheme('')" mat-raised-button  mat-mini-fab color="primary">-->
+<!--            <mat-icon>add_circle</mat-icon>-->
+<!--        </button>-->
         <br/>
         <br/>
         <div class="form-group">
@@ -57,16 +57,19 @@
 <div class="container border rounded border-info mb-4 p-3">
     <h3>Liste des questions</h3>
     <ul class="list-group">
-        <div *ngFor="let question of questions" class="list-group-item m-3 rounded border"
-             [routerLink]="['/edit-question',idQuestionnaire, question.id]">
-            <div>Question n°{{question.id}} : {{question.titre}}</div>
-            <div>Type : {{question.type}}</div>
-            <div>IDQuestionnaire : {{question.idQuestionnaire}}</div>
+        <div *ngFor="let question of questions" class="list-group-item m-3 rounded border">
+            <div [routerLink]="['/edit-question',idQuestionnaire, question.id]">
+                <div>Question n°{{question.id}} : {{question.titre}}</div>
+                <div>Type : {{question.type}}</div>
+                <div>IDQuestionnaire : {{question.idQuestionnaire}}</div>
+                <div *ngIf="question.isFilter">Filtre : {{question.isFilter}}</div>
+                <div *ngIf="question.hasGraph">Graphe : {{question.hasGraph}}</div>
+                <div *ngIf="question.isRequired">Obligatoire : {{question.isRequired}}</div>
+            </div>
             <div class="float-right ">
                 <button class="mx-2" mat-button mat-raised-button color="accent" [routerLink]="['/edit-question',idQuestionnaire, question.id]"><mat-icon>update</mat-icon> </button>
                 <button class="mx-2" mat-button mat-raised-button color="primary"  [routerLink]="['/show-question',idQuestionnaire, question.id]"><mat-icon>slideshow</mat-icon> </button>
-                <button class="mx-2" mat-button mat-raised-button color="warn" (click)="deleteQuestion(question.id)"><mat-icon>delete</mat-icon> </button>
-
+                <button class="mx-2" mat-button mat-raised-button color="warn" [routerLink]="['/edit-questionnaire', idQuestionnaire]" (click)="deleteQuestion(question.id)"><mat-icon>delete</mat-icon> </button>
             </div>
         </div>
     </ul>

@@ -70,7 +70,7 @@
         <div *ngIf="type==='check' || type==='radio' || type==='select'">
             <div>
                 <div formArrayName="propositions">
-                    <div *ngFor="let proposition of questionForm.controls.propositions.controls; let i = index;">
+                    <div *ngFor="let proposition of propositions.controls; let i = index;">
                         <div class="container border rounded border-info mb-4 pb-4 pt-2 px-4" [formGroupName]="i">
                                 <label>Proposition {{i+1}} : </label>
                                 <input type="text" class='form-control m-2' formControlName="libelle" placeholder="{{proposition?.value.libelle}}" />
@@ -109,7 +109,7 @@
         </div>
         <br/>
         <div class="form-group text-center">
-            <button (click)="onNewQuestion()" [disabled]="loading" class="btn btn-primary">
+            <button type=button (click)="onNewQuestion()" [disabled]="loading" class="btn btn-primary">
                 <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                 Valider les informations
             </button>

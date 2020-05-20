@@ -6,6 +6,7 @@ export class Questionnaire {
     dateCreation: Date;
     datePeremption: Date;
     idUser: number;
+    nbQuestions: number;
 
     constructor() { }
 }

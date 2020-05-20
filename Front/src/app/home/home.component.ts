@@ -6,6 +6,7 @@ import {first} from 'rxjs/operators';
 import {QuestionnaireService} from '../services/questionnaire.service';
 import {Questionnaire} from '../models/questionnaire';
 import {Router} from '@angular/router';
+import {QuestionService} from '../services/question.service';
 
 @Component({
   selector: 'app-home',
@@ -23,6 +24,7 @@ export class HomeComponent implements OnInit {
       private authService: AuthService,
       private userService: UserService,
       private questionnaireService: QuestionnaireService,
+      private questionService: QuestionService,
       private router: Router
   ) {
     this.currentUser = this.authService.currentUserValue;
@@ -50,12 +52,26 @@ export class HomeComponent implements OnInit {
   private loadAllQuestionnaires() {
     this.questionnaireService.getAllByIdUser(this.currentUser.id)
         .pipe(first())
-        .subscribe(questionnaires => this.questionnaires = questionnaires);
+        .subscribe(questionnaires => {
+          this.questionnaires = questionnaires;
+          this.loadNbQuestions();
+        });
   }
 
   deleteQuestionnaire(id: number) {
     this.questionnaireService.delete(id)
         .pipe(first())
         .subscribe(() => this.loadAllQuestionnaires());
+  }
+
+  // @ts-ignore
+  loadNbQuestions() {
+    for (const questionnaire of this.questionnaires) {
+      this.questionService.readAllByIdQuestionnaire(questionnaire.id)
+          .subscribe(questions => {
+            console.log(questions.length);
+            questionnaire.nbQuestions = questions.length;
+          });
+    }
   }
 }

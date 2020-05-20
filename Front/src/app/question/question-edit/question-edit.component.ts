@@ -3,7 +3,7 @@ import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@a
 import {QuestionService} from '../../services/question.service';
 import {AlertService} from '../../services/alert.service';
 import {AuthService} from '../../services/auth.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Question} from '../../models/question';
 import {Proposition} from '../../models/proposition';
 import {PropositionService} from '../../services/proposition.service';
@@ -32,6 +32,7 @@ export class QuestionEditComponent implements OnInit {
               private alertService: AlertService,
               private authService: AuthService,
               private route: ActivatedRoute,
+              private router: Router,
               private location: Location) { }
 
   ngOnInit() {
@@ -58,8 +59,8 @@ export class QuestionEditComponent implements OnInit {
       this.modification = true;
       this.questionService.read(this.idQuestion)
           .subscribe(question => {
-            this.loadAllPropositions(question.id);
             this.question = question;
+            this.type = question.type;
             this.questionForm = this.formBuilder.group({
               idQuestionnaire: [this.idQuestionnaire],
               titre: [question.titre, Validators.required],
@@ -70,6 +71,7 @@ export class QuestionEditComponent implements OnInit {
               hasGraph: [question.hasGraph, Validators.required],
               propositions: this.formBuilder.array([])
             });
+            this.loadAllPropositions(question.id);
           });
     }
   }
@@ -92,19 +94,23 @@ export class QuestionEditComponent implements OnInit {
   }
 
   loadAllPropositions(idQuestion: number) {
-    const p1 = new Proposition();
-    p1.id = 1;
-    p1.idQuestion = this.idQuestion;
-    p1.libelle = 'Première proposition';
-    const p2 = new Proposition();
-    p2.id = 2;
-    p2.idQuestion = this.idQuestion;
-    p2.libelle = 'Deuxième proposition';
-    this.addPropositions(p1.libelle);
-    this.addPropositions(p2.libelle);
-    // this.propositionService.readAllByIdQuestion(this.idQuestion)
-    //     .pipe(first())
-    //     .subscribe(propositions => this.propositions = propositions);
+    // const p1 = new Proposition();
+    // p1.id = 1;
+    // p1.idQuestion = this.idQuestion;
+    // p1.libelle = 'Première proposition';
+    // const p2 = new Proposition();
+    // p2.id = 2;
+    // p2.idQuestion = this.idQuestion;
+    // p2.libelle = 'Deuxième proposition';
+    // this.addPropositions(p1.libelle);
+    // this.addPropositions(p2.libelle);
+    this.propositionService.readAllByIdQuestion(this.idQuestion)
+        .pipe(first())
+        .subscribe(propositions => {
+            for (const proposition of propositions) {
+                this.addPropositions(proposition.libelle);
+            }
+        });
   }
 
   loadAllThemes(idQuestionnaire: number) {
@@ -131,40 +137,30 @@ export class QuestionEditComponent implements OnInit {
     // enregistre le nouveau questionnaire
     if (this.modification) {
       this.questionService.update(this.idQuestion, this.questionForm.value)
-          .pipe(first())
-          .subscribe(
-              data => {
-                  this.propositionService.deleteAll(this.idQuestion).subscribe();
-                  for (let i = 1; i <= this.propositions.length; i++) {
-                      // const p = new Proposition();
-                      // p.idQuestion = this.idQuestion;
-                      // p.libelle = this.questionForm.controls.propositions[i].libelle; // .controls.libelle.value;
-                      // p.order = i;
-                      // this.propositionService.create(p);
-                  }
-                  this.alertService.success('Question enregistrée', true);
+          .subscribe(data => {
+                this.alertService.success('Question enregistrée', true);
               }, error => {
-                this.alertService.error(error);
+                  this.alertService.error(error);
               }
           );
     } else {
       this.questionService.create(this.questionForm.value)
-          // .pipe(first())
-          .subscribe(
-              data => {
-                  for (let i = 1; i <= this.propositions.length; i++) {
-                    // const p = new Proposition();
-                    // p.idQuestion = 0;
-                    // p.libelle = this.propositions[i].libelle;
-                    // p.order = i;
-                    // this.propositionService.create(p);
-                  }
+          .subscribe(data => {
                   this.alertService.success('Question enregistrée', true);
               }, error => {
                 this.alertService.error(error);
               }
           );
     }
+    this.propositionService.deleteAll(this.idQuestion).subscribe();
+    for (let i = 0; i < this.propositions.length; i++) {
+      const p = new Proposition();
+      p.idQuestion = this.idQuestion;
+      p.libelle = this.propositions.value[i].libelle;
+      p.order = i + 1;
+      this.propositionService.create(p).subscribe();
+    }
+    this.router.navigate(['/edit-questionnaire', this.idQuestionnaire]);
     this.loading = false;
   }
 

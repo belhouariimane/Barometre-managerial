@@ -27,7 +27,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             .pipe(dematerialize());
 
         function handleRoute() {
-            console.log(url);
+            console.log(method + ' : ' + url);
             switch (true) {
                 // USERS
                 case url.endsWith('/users/authenticate') && method === 'POST':
@@ -165,8 +165,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // Récupère tous les questionnaires créés par l'utilisateur en cours
         function getQuestionnairesByIdUser() {
             checkLog();
-            return ok(questionnaires.filter(x => x.idUser === idFromUrl()));
-            // return ok(questionnaires.filter(x => x.idUser === idFromUrl()));
+            return ok(questionnaires.filter(x => x.idUser == idFromUrl()));
         }
 
         // Récupère le questionnaire à partir de son id
@@ -227,7 +226,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // Supprime un questionnaire
         function deleteQuestionnaire() {
             checkLog();
+            // supprime le questionnaire et les questions associées
             questionnaires = questionnaires.filter(x => x.id !== idFromUrl());
+            questions = questions.filter(x => x.idQuestionnaire !== idFromUrl());
+            localStorage.setItem('questions', JSON.stringify(questions));
             localStorage.setItem('questionnaires', JSON.stringify(questionnaires));
             return ok();
         }
@@ -290,6 +292,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         function deleteQuestion() {
             checkLog();
             questions = questions.filter(x => x.id !== idFromUrl());
+            propositions = propositions.filter(x => x.idQuestion !== idFromUrl());
+            // supprime la question ainsi que les propositions associées
+            localStorage.setItem('propositions', JSON.stringify(propositions));
             localStorage.setItem('questions', JSON.stringify(questions));
             return ok();
         }
@@ -299,14 +304,13 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         function getQuestionsByIdQuestionnaire() {
-            return ok(questions.filter(x => x.idQuestionnaire <= 1 && x.idQuestionnaire >= 1));
-            // return ok(questions.filter(x => x.idQuestionnaire === idFromUrl()));
+            return ok(questions.filter(x => x.idQuestionnaire == idFromUrl()));
         }
 
         // FONCTIONS PROPOSITIONS
 
         function getPropositions() {
-            return ok(propositions.filter(x => x.idQuestion === idFromUrl()));
+            return ok(propositions.filter(x => x.idQuestion == idFromUrl()));
         }
 
         function createProposition() {
@@ -325,7 +329,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         function deletePropositions() {
             checkLog();
-            propositions = propositions.filter(x => x.idQuestion !== idFromUrl());
+            propositions = propositions.filter(x => x.idQuestion != idFromUrl());
             localStorage.setItem('propositions', JSON.stringify(propositions));
             return ok();
         }
@@ -334,7 +338,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // FONCTIONS THEMES
 
         function getThemes() {
-            return ok(themes.filter(x => x.idQuestionnaire === idFromUrl()));
+            return ok(themes.filter(x => x.idQuestionnaire == idFromUrl()));
         }
 
         function createTheme() {
