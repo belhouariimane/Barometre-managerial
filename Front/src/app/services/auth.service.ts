@@ -5,6 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 
+
 @Injectable({ providedIn: 'root' })
 
 /* Le service d'authentification est utilisé pour se connecter et se déconnecter de l'application.
@@ -24,6 +25,7 @@ export class AuthService {
     }
 
     login(username, password) {
+        // return this.http.post<any>(`${environment.apiUrl}/admin/login`, { username, password })
         return this.http.post<any>(`${environment.apiUrl}/users/authenticate`, { username, password })
             .pipe(map(user => {
                // stocke les détails de l'utilisateur + le jeton jwt dans le stockaqe local pour conserver

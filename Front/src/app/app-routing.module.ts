@@ -10,6 +10,8 @@ import {QuestionnaireShowComponent} from './questionnaire/questionnaire-show/que
 import {BarChartComponent} from './resultat/bar-chart/bar-chart.component';
 import {PieChartComponent} from './resultat/pie-chart/pie-chart.component';
 import {DoughnutChartComponent} from './resultat/doughnut-chart/doughnut-chart.component';
+import {QuestionEditComponent} from './question/question-edit/question-edit.component';
+import {QuestionShowComponent} from './question/question-show/question-show.component';
 
 
 const routes: Routes = [
@@ -19,7 +21,10 @@ const routes: Routes = [
   { path: 'myaccount', component: MyaccountComponent },
   { path: 'edit-questionnaire/:id', component: QuestionnaireEditComponent },
   { path: 'edit-questionnaire', component: QuestionnaireEditComponent },
-  { path: 'show-questionnaire', component: QuestionnaireShowComponent },
+  { path: 'show-questionnaire/:id', component: QuestionnaireShowComponent },
+  { path: 'edit-question/:idQuestionnaire/:idQuestion', component: QuestionEditComponent },
+  { path: 'edit-question/:idQuestionnaire', component: QuestionEditComponent },
+  { path: 'show-question/:idQuestionnaire/:idQuestion', component: QuestionShowComponent },
   { path: 'resultat/bar-chart', component: BarChartComponent },
   { path: 'resultat/pie-chart', component: PieChartComponent },
   { path: 'resultat/doughnut-chart', component: DoughnutChartComponent },
