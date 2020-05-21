@@ -47,6 +47,7 @@ import { ChartsModule } from 'ng2-charts';
 import { BarChartComponent } from './resultat/bar-chart/bar-chart.component';
 import { DoughnutChartComponent } from './resultat/doughnut-chart/doughnut-chart.component';
 import { PieChartComponent } from './resultat/pie-chart/pie-chart.component';
+import { ResultatComponent } from './resultat/resultat.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { PieChartComponent } from './resultat/pie-chart/pie-chart.component';
     QuestionComponent,
     BarChartComponent,
     DoughnutChartComponent,
-    PieChartComponent
+    PieChartComponent,
+    ResultatComponent
   ],
     imports: [
         BrowserModule,
