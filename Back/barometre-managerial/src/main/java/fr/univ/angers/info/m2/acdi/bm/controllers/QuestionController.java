@@ -46,4 +46,6 @@ public class QuestionController {
 	public List<Question> findByIdQuestionnaire(@PathVariable("idQuestionnaire") Long idQuestionnaire) {
 		return this.questionService.findByIdQuestionnaire(idQuestionnaire);
 	}
+	
+	// TODO : implémenter la suppression d'une question
 }

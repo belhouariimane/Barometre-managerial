@@ -88,6 +88,8 @@ public class QuestionService {
 			questionToUpdate.setPropositions(question.getPropositions());
 		}
 		
+		// TODO : Rajouter l'update des propositions
+		
 		Question savedQuestion = this.questionRepository.save(questionToUpdate);
 		
 		return new ResponseSingleQuestion(ConstantesREST.QUESTION_UPDATED, savedQuestion, HttpStatus.OK);
