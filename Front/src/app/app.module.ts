@@ -37,6 +37,7 @@ import { PieChartComponent } from './resultat/pie-chart/pie-chart.component';
 import { ResultatComponent } from './resultat/resultat.component';
 import { QuestionEditComponent } from './question/question-edit/question-edit.component';
 import { QuestionShowComponent } from './question/question-show/question-show.component';
+import { QuestionnaireAnswerComponent } from './questionnaire/questionnaire-answer/questionnaire-answer.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { QuestionShowComponent } from './question/question-show/question-show.co
     PieChartComponent,
     ResultatComponent,
     QuestionEditComponent,
-    QuestionShowComponent
+    QuestionShowComponent,
+    QuestionnaireAnswerComponent
   ],
     imports: [
         BrowserModule,

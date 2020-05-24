@@ -32,6 +32,7 @@ export class AuthService {
                // la connexion de l'utilisateur entre le rafraîchissement des pages
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 this.currentUserSubject.next(user);
+                console.log(user);
                 return user;
             }));
     }
