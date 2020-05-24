@@ -10,16 +10,16 @@ export class PropositionService {
     constructor(private http: HttpClient) { }
 
     readAllByIdQuestion(idQuestion: number) {
-        // return this.http.get<Proposition[]>(`${environment.apiUrl}/proposition/findByIdQuestion/${idQuestion}`);
-        return this.http.get<Proposition[]>(`${environment.apiUrl}/propositions/${idQuestion}`);
+        return this.http.get<Proposition[]>(`/proposition/findByIdQuestion/${idQuestion}`);
+        //return this.http.get<Proposition[]>(`/propositions/${idQuestion}`);
     }
 
     create(proposition: Proposition) {
-        // return this.http.post(`${environment.apiUrl}/proposition/create`, proposition);
-        return this.http.post(`${environment.apiUrl}/propositions/`, proposition);
+         return this.http.post(`/proposition/create`, proposition);
+        //return this.http.post(`/propositions/`, proposition);
     }
 
     deleteAll(idQuestion: number) {
-        return this.http.delete(`${environment.apiUrl}/propositions/${idQuestion}`);
+        return this.http.delete(`/propositions/${idQuestion}`);
     }
 }
