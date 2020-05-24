@@ -35,7 +35,7 @@ public class ParticipantController {
 		return traitementReponse(participantService.save(newParticipant));
 	}
 
-	@GetMapping("/readall")
+	@GetMapping("/readAll")
 	public ResponseEntity<RetourGeneral> all() {
 		return traitementReponse(participantService.findAll());
 	}

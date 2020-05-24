@@ -54,7 +54,7 @@ public class QuestionnaireService {
 		Optional<Questionnaire> questionnaire = this.questionnaireRepository.findById(id);
 		if (!questionnaire.isPresent()) {
 			return new ResponseSingleQuestionnaire(ConstantesREST.QUESTIONNAIRE_NOT_FOUND, null,
-					HttpStatus.valueOf(419));
+					HttpStatus.NOT_FOUND);
 		}
 		return new ResponseSingleQuestionnaire(ConstantesREST.QUESTIONNAIRE_FOUND, questionnaire.get(), HttpStatus.OK);
 	}
@@ -71,7 +71,7 @@ public class QuestionnaireService {
 		Optional<Questionnaire> lastRecord = this.questionnaireRepository.findById(questionnaire.getId());
 		if (!lastRecord.isPresent()) {
 			return new ResponseSingleQuestionnaire(ConstantesREST.QUESTIONNAIRE_NOT_FOUND, null,
-					HttpStatus.valueOf(419));
+					HttpStatus.NOT_FOUND);
 		}
 
 		// Seront modifiés les champs qui ont été renseignés
