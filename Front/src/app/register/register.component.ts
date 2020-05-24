@@ -35,9 +35,9 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      username: ['', Validators.required],
+      prenom: ['', Validators.required],
+      nom: ['', Validators.required],
+      email: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(6)]]
     }, { validators: this.checkPasswords});
@@ -46,7 +46,7 @@ export class RegisterComponent implements OnInit {
   checkPasswords: ValidatorFn = (group: FormGroup): ValidationErrors | null => {
       const pass = group.get('password').value;
       const confirmPass = group.get('confirmPassword').value;
-      return pass === confirmPass ? null : { 'notSame': true }
+      return pass === confirmPass ? null : { 'notSame': true };
   }
 
   // accès simplifié aux champs du formulaire
@@ -72,7 +72,7 @@ export class RegisterComponent implements OnInit {
         .subscribe(
             data => {
               this.alertService.success('Inscription enregistrée', true);
-              this.authService.login(this.f.username.value, this.f.password.value)
+              this.authService.login(this.f.email.value, this.f.password.value)
                   .pipe(first())
                   .subscribe(
                       date => {

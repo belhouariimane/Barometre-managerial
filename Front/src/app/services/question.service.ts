@@ -10,27 +10,27 @@ export class QuestionService {
     constructor(private http: HttpClient) { }
 
     readAllByIdQuestionnaire(idQuestionnaire: number) {
-        // return this.http.get<Question[]>(`${environment.apiUrl}/question/findByIdQuestionnaire/${idQuestionnaire}`);
-        return this.http.get<Question[]>(`${environment.apiUrl}/questions/all/${idQuestionnaire}`);
+        return this.http.get<Question[]>(`question/findByIdQuestionnaire/${idQuestionnaire}`);
+        //return this.http.get<Question[]>(`${environment.apiUrl}/questions/all/${idQuestionnaire}`);
     }
 
     read(idQuestion: number): Observable<Question> {
-        // return this.http.get<Question>(`${environment.apiUrl}/question/read/${idQuestion}`);
-        return this.http.get<Question>(`${environment.apiUrl}/questions/read/${idQuestion}`);
+        return this.http.get<Question>(`/question/read/${idQuestion}`);
+        // return this.http.get<Question>(`${environment.apiUrl}/questions/read/${idQuestion}`);
     }
 
     create(question: Question) {
-        // return this.http.post(`${environment.apiUrl}/question/create`, question);
-        return this.http.post(`${environment.apiUrl}/questions/create`, question);
+        return this.http.post(`/question/create`, question);
+        // return this.http.post(`${environment.apiUrl}/questions/create`, question);
     }
 
     update(id: number, question: Question) {
-        // return this.http.post(`${environment.apiUrl}/question/update/${id}`, question);
-        return this.http.post(`${environment.apiUrl}/questions/update/${id}`, question);
+        return this.http.post(`/question/update/${id}`, question);
+        // return this.http.post(`${environment.apiUrl}/questions/update/${id}`, question);
     }
 
     delete(id: number) {
-        // return this.http.delete(`${environment.apiUrl}/question/delete/${id}`);
-        return this.http.delete(`${environment.apiUrl}/questions/${id}`);
+         return this.http.delete(`/question/delete/${id}`);
+        // return this.http.delete(`${environment.apiUrl}/questions/${id}`);
     }
 }

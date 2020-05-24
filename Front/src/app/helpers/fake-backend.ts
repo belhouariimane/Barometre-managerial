@@ -95,16 +95,16 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         // Valide ou non l'authentification
         function authenticate() {
-            const { username, password } = body;
-            const user = users.find( x => x.username === username && x.password === password);
+            const { email, password } = body;
+            const user = users.find( x => x.email === email && x.password === password);
             if (!user) {
                 return error('Le nom d\'utilisateur ou le mot de passe est incorrect.');
             }
             return ok({
                 id: user.id,
-                username: user.username,
-                firstName: user.firstName,
-                lastName: user.lastName,
+                email: user.email,
+                prenom: user.prenom,
+                nom: user.nom,
                 token: 'fake-jwt-token'
             });
         }
@@ -112,8 +112,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // Enregistre l'utilisateur
         function registerUser() {
             const user = body;
-            if (users.find(x => x.username === user.username)) {
-                return error('Le nom d\'utilisateur "' + user.username + '" est déjà pris. Veuillez en choisir un autre.');
+            if (users.find(x => x.email === user.email)) {
+                return error('Le nom d\'utilisateur "' + user.email + '" est déjà pris. Veuillez en choisir un autre.');
             }
             user.id = users.length ? Math.max(...users.map(x => x.id)) + 1 : 1;
             users.push(user);
@@ -131,10 +131,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
             // pour chacun de ses champs (sauf id) on met à jour seulement si une valeur est renseignée dans le formulaire
             user.id = idFromUrl();
-            user.firstName = user.firstName.length ? user.firstName : updatedUser.firstName;
-            user.lastName = user.lastName.length ? user.lastName : updatedUser.lastName;
-            user.username = user.username.length ? user.username : updatedUser.username;
-            user.password = user.username.password ? user.password : updatedUser.password;
+            user.prenom = user.prenom.length ? user.prenom : updatedUser.prenom;
+            user.nom = user.nom.length ? user.nom : updatedUser.nom;
+            user.email = user.email.length ? user.email : updatedUser.email;
+            user.password = user.email.password ? user.password : updatedUser.password;
 
             // puis on ajoute ce même utilisateur modifié en gardant le même id
             users.push(user);
@@ -184,6 +184,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             console.log('idUser : ' + questionnaire.idUser);
             console.log('titre : ' + questionnaire.titre);
             console.log('description : ' + questionnaire.description);
+            console.log('merci : ' + questionnaire.msgMerci);
             console.log('isAnonymous : ' + questionnaire.isAnonymous);
             console.log('dateCreation : ' + questionnaire.dateCreation);
             console.log('datePeremption : ' + questionnaire.datePeremption);
@@ -205,6 +206,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             questionnaire.id = idFromUrl();
             questionnaire.titre = questionnaire.titre.length ? questionnaire.titre : updatedQuestionnaire.titre;
             questionnaire.description = questionnaire.description.length ? questionnaire.description : updatedQuestionnaire.description;
+            console.log('1 : ' + questionnaire.merci);
+            questionnaire.merci = questionnaire.merci.length ? questionnaire.merci : updatedQuestionnaire.merci;
+            console.log('1 : ' + questionnaire.merci);
             questionnaire.idUser = questionnaire.idUser !== undefined ? questionnaire.idUser : updatedQuestionnaire.idUser;
             questionnaire.isAnonymous = questionnaire.isAnonymous;
 
@@ -213,6 +217,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             console.log('idUser : ' + questionnaire.idUser);
             console.log('titre : ' + questionnaire.titre);
             console.log('description : ' + questionnaire.description);
+            console.log('merci : ' + questionnaire.merci);
             console.log('isAnonymous : ' + questionnaire.isAnonymous);
             console.log('dateCreation : ' + questionnaire.dateCreation);
             console.log('datePeremption : ' + questionnaire.datePeremption);

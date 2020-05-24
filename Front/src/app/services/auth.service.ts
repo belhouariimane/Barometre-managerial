@@ -24,14 +24,15 @@ export class AuthService {
         return this.currentUserSubject.value;
     }
 
-    login(username, password) {
-        // return this.http.post<any>(`${environment.apiUrl}/admin/login`, { username, password })
-        return this.http.post<any>(`${environment.apiUrl}/users/authenticate`, { username, password })
+    login(email, password) {
+         return this.http.post<any>(`/admin/login`, { email, password })
+        //return this.http.post<any>(`/users/authenticate`, { email, password })
             .pipe(map(user => {
                // stocke les détails de l'utilisateur + le jeton jwt dans le stockaqe local pour conserver
                // la connexion de l'utilisateur entre le rafraîchissement des pages
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 this.currentUserSubject.next(user);
+                console.log(user);
                 return user;
             }));
     }

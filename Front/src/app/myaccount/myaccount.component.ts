@@ -36,9 +36,9 @@ export class MyaccountComponent implements OnInit {
 
   ngOnInit() {
     this.updateUserForm = this.formBuilder.group({
-      firstName: [this.authService.currentUserValue.firstName],
-      lastName: [this.authService.currentUserValue.lastName],
-      username: [this.authService.currentUserValue.username],
+      prenom: [this.authService.currentUserValue.prenom],
+      nom: [this.authService.currentUserValue.nom],
+      email: [this.authService.currentUserValue.email],
       password: ['', Validators.minLength(6)],
       confirmPassword: ['', Validators.minLength(6)]
     }, { validators: this.checkPasswords});

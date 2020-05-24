@@ -11,14 +11,14 @@ export class ThemeService {
     constructor(private http: HttpClient) { }
 
     readAllByIdQuestionnaire(idQuestionnaire: number) {
-        return this.http.get<Theme[]>(`${environment.apiUrl}/themes/${idQuestionnaire}`);
+        return this.http.get<Theme[]>(`/themes/${idQuestionnaire}`);
     }
 
     create(theme: Theme) {
-        return this.http.post(`${environment.apiUrl}/themes/`, theme);
+        return this.http.post(`/themes/`, theme);
     }
 
     deleteAll(idQuestionnaire: number) {
-        return this.http.delete(`${environment.apiUrl}/themes/${idQuestionnaire}`);
+        return this.http.delete(`/themes/${idQuestionnaire}`);
     }
 }

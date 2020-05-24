@@ -47,6 +47,7 @@ export class QuestionnaireEditComponent implements OnInit {
     this.questionnaireForm = this.fb.group({
       titre: ['', Validators.required],
       description: ['', Validators.required],
+      merci: ['', Validators.required],
       isAnonymous: [false],
       idUser: [this.authService.currentUserValue.id],
       // themes: this.fb.array([])
@@ -58,15 +59,22 @@ export class QuestionnaireEditComponent implements OnInit {
       this.modification = true;
       this.questionnaireService.getById(this.idQuestionnaire)
           .subscribe(questionnaire => {
-            this.loadAllQuestions(this.idQuestionnaire);
-            this.loadAllThemes(this.idQuestionnaire);
-            this.questionnaireForm = this.fb.group({
-              titre: [questionnaire.titre, Validators.required],
-              description: [questionnaire.description, Validators.required],
-              isAnonymous: [questionnaire.isAnonymous],
-              idUser: [this.authService.currentUserValue.id],
-              // themes: this.fb.array([])
-            });
+            if (questionnaire !== null) {
+              this.loadAllQuestions(this.idQuestionnaire);
+              this.loadAllThemes(this.idQuestionnaire);
+              this.questionnaireForm = this.fb.group({
+                titre: [questionnaire.titre, Validators.required],
+                description: [questionnaire.description, Validators.required],
+                merci: [questionnaire.merci, Validators.required],
+                isAnonymous: [questionnaire.isAnonymous],
+                idUser: [this.authService.currentUserValue.id],
+                // themes: this.fb.array([])
+              });
+            } else {
+              this.alertService.clear();
+              this.alertService.error('Le questionnaire demandé n\'existe pas. Retour au menu principal.', true);
+              this.router.navigate(['/']);
+            }
           });
     }
   }
@@ -106,14 +114,14 @@ export class QuestionnaireEditComponent implements OnInit {
           .pipe(first())
           .subscribe(
               data => {
-                this.themeService.deleteAll(this.idQuestionnaire).subscribe();
-                for (let i = 1; i <= this.themes.length; i++) {
-                  const t = new Theme();
-                  t.idQuestionnaire = this.idQuestionnaire;
-                  t.theme = this.themes.at(i).value;
-                  t.order = i;
-                  this.themeService.create(t);
-                }
+                // this.themeService.deleteAll(this.idQuestionnaire).subscribe();
+                // for (let i = 1; i <= this.themes.length; i++) {
+                //   const t = new Theme();
+                //   t.idQuestionnaire = this.idQuestionnaire;
+                //   t.theme = this.themes.at(i).value;
+                //   t.order = i;
+                //   this.themeService.create(t);
+                // }
                 this.alertService.success('Questionnaire enregistré', true);
               }, error => {
                 this.alertService.error(error);

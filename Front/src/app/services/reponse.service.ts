@@ -10,27 +10,27 @@ export class ReponseService {
     constructor(private http: HttpClient) { }
 
     readAllByIdQuestionAndIdUser(idQuestion: number, idUser: number) {
-        // return this.http.get<Reponse[]>(`${environment.apiUrl}/reponse/findByIdQuestion/${idQuestion}`);
-        return this.http.get<Reponse[]>(`${environment.apiUrl}/reponses/all/${idQuestion}&${idUser}`);
+         return this.http.get<Reponse[]>(`/reponse/findByIdQuestion/${idQuestion}`);
+        //return this.http.get<Reponse[]>(`${environment.apiUrl}/reponses/all/${idQuestion}&${idUser}`);
     }
 
     read(idReponse: number): Observable<Reponse> {
-        // return this.http.get<Reponse>(`${environment.apiUrl}/reponse/read/${idReponse}`);
-        return this.http.get<Reponse>(`${environment.apiUrl}/reponses/read/${idReponse}`);
+         return this.http.get<Reponse>(`/reponse/read/${idReponse}`);
+        //return this.http.get<Reponse>(`${environment.apiUrl}/reponses/read/${idReponse}`);
     }
 
     create(reponse: Reponse) {
-        // return this.http.post(`${environment.apiUrl}/reponse/create`, reponse);
-        return this.http.post(`${environment.apiUrl}/reponses/create`, reponse);
+         return this.http.post(`/reponse/create`, reponse);
+        //return this.http.post(`${environment.apiUrl}/reponses/create`, reponse);
     }
 
     update(id: number, reponse: Reponse) {
-        // return this.http.post(`${environment.apiUrl}/reponse/update/${id}`, reponse);
-        return this.http.post(`${environment.apiUrl}/reponses/update/${id}`, reponse);
+         return this.http.post(`/reponse/update/${id}`, reponse);
+        //return this.http.post(`${environment.apiUrl}/reponses/update/${id}`, reponse);
     }
 
     delete(id: number) {
-        // return this.http.delete(`${environment.apiUrl}/reponse/delete/${id}`);
-        return this.http.delete(`${environment.apiUrl}/reponses/${id}`);
+         return this.http.delete(`/reponse/delete/${id}`);
+        //return this.http.delete(`${environment.apiUrl}/reponses/${id}`);
     }
 }

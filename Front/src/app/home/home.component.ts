@@ -7,6 +7,7 @@ import {QuestionnaireService} from '../services/questionnaire.service';
 import {Questionnaire} from '../models/questionnaire';
 import {Router} from '@angular/router';
 import {QuestionService} from '../services/question.service';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +20,7 @@ export class HomeComponent implements OnInit {
   currentUser: User;
   users = [];
   questionnaires = [];
+  apiUrl: string;
 
   constructor(
       private authService: AuthService,
@@ -28,6 +30,7 @@ export class HomeComponent implements OnInit {
       private router: Router
   ) {
     this.currentUser = this.authService.currentUserValue;
+    this.apiUrl = environment.apiUrl;
   }
 
   ngOnInit() {
@@ -69,7 +72,6 @@ export class HomeComponent implements OnInit {
     for (const questionnaire of this.questionnaires) {
       this.questionService.readAllByIdQuestionnaire(questionnaire.id)
           .subscribe(questions => {
-            console.log(questions.length);
             questionnaire.nbQuestions = questions.length;
           });
     }

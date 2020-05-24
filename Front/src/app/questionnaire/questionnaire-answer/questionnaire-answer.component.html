@@ -1,0 +1,96 @@
+<div class="card m-3">
+    <h2 class="card-header">{{questionnaire?.titre}}</h2>
+    <div *ngIf="!done" class="card-body">
+        <p>Bonjour, merci de prendre quelques minutes afin de répondre à ce questionnaire.</p>
+        <form [formGroup]="answerForm" (ngSubmit)="onSubmit()">
+            <div class="form">
+                <div *ngIf="questionnaire?.isAnonymous">Ce questionnaire est anonyme.</div>
+                <div *ngIf="!questionnaire?.isAnonymous">Veuillez saisir votre nom et prénom, répondre aux questions
+                ci-dessous puis valider votre participation en cliquant sur le bouton en bas de page.</div><br/>
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" formControlName="firstName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+                    <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+                        <div *ngIf="f.firstName.errors.required">Veuillez renseigner votre prénom</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" formControlName="lastName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+                    <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                        <div *ngIf="f.lastName.errors.required">Veuillez renseigner votre nom</div>
+                    </div>
+                </div>
+<!--                <div class="form-group">-->
+<!--                    <h3>Question titre</h3><br/>-->
+<!--                    <div formControlName="prop" class="container border rounded border-info p-4">-->
+<!--                        <mat-checkbox value="a">Proposition A</mat-checkbox><br/>-->
+<!--                        <mat-checkbox value="b">Proposition B</mat-checkbox>-->
+<!--                        <mat-checkbox value="c">Proposition C</mat-checkbox>-->
+<!--                        <mat-checkbox value="d">Proposition D</mat-checkbox>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <div *ngFor="let question of questions">
+                    <div class="w-100">
+                        <app-question-show [idQuestion]="question.id"></app-question-show>
+<!--                        <ng-container [ngSwitch]="question?.type" >-->
+<!--                            <h3>{{question?.titre}}</h3><br/>-->
+<!--                            <div *ngSwitchCase="'check'" class="container border rounded border-info p-4">-->
+<!--                                <div *ngFor="let proposition of propositions">-->
+<!--                                    <br/>-->
+<!--                                    <mat-checkbox formControlName="{{proposition.libelle}}">{{proposition.libelle}}</mat-checkbox>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div *ngSwitchCase="'radio'" class="container border rounded border-info p-4">-->
+<!--                                <mat-radio-group-->
+<!--                                        aria-labelledby="example-radio-group-label"-->
+<!--                                        class="example-radio-group"-->
+<!--                                        [(ngModel)]="chosenResponse">-->
+<!--                                    <div *ngFor="let proposition of propositions">-->
+<!--                                        <mat-radio-button class="example-radio-button">{{proposition.libelle}}</mat-radio-button><br/>-->
+<!--                                    </div>-->
+<!--                                    <br/>-->
+<!--                                </mat-radio-group>-->
+<!--                            </div>-->
+<!--                            <div *ngSwitchCase="'select'" class="container border rounded border-info p-4">-->
+<!--                                <mat-form-field class="w-50">-->
+<!--                                    <mat-label>Choisissez une valeur</mat-label>-->
+<!--                                    <mat-select class="text-center" matNativeControl required>-->
+<!--                                        <div *ngFor="let proposition of propositions">-->
+<!--                                            <mat-option value="{{proposition.libelle}}">{{proposition.libelle}}</mat-option>-->
+<!--                                        </div>-->
+<!--                                    </mat-select>-->
+<!--                                </mat-form-field>-->
+<!--                            </div>-->
+<!--                            <div *ngSwitchCase="'date'" class="container border rounded border-info p-4">-->
+<!--                                <mat-form-field>-->
+<!--                                    <mat-label>Choisissez une date</mat-label>-->
+<!--                                    <input matInput [matDatepicker]="picker">-->
+<!--                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>-->
+<!--                                    <mat-datepicker #picker></mat-datepicker>-->
+<!--                                </mat-form-field>-->
+<!--                            </div>-->
+<!--                            <div *ngSwitchCase="'input'" class="container border rounded border-info p-4">-->
+<!--                                <mat-form-field class="w-100" >-->
+<!--                                    <mat-label>Veuillez saisir votre réponse</mat-label>-->
+<!--                                    <textarea matInput></textarea>-->
+<!--                                </mat-form-field>-->
+<!--                            </div>-->
+<!--                        </ng-container>-->
+<!--                    </div>-->
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <button [disabled]="loading" class="btn btn-success ">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                    Valider
+                </button>
+            </div>
+<!--            {{this.answerForm.value | json}}-->
+            </div>
+        </form >
+    </div>
+    <div *ngIf="done" class="card-body">
+        <p>{{questionnaire.merci}}</p>
+    </div>
+</div>

@@ -34,8 +34,10 @@ import { ChartsModule } from 'ng2-charts';
 import { BarChartComponent } from './resultat/bar-chart/bar-chart.component';
 import { DoughnutChartComponent } from './resultat/doughnut-chart/doughnut-chart.component';
 import { PieChartComponent } from './resultat/pie-chart/pie-chart.component';
+import { ResultatComponent } from './resultat/resultat.component';
 import { QuestionEditComponent } from './question/question-edit/question-edit.component';
 import { QuestionShowComponent } from './question/question-show/question-show.component';
+import { QuestionnaireAnswerComponent } from './questionnaire/questionnaire-answer/questionnaire-answer.component';
 
 @NgModule({
   declarations: [
@@ -51,8 +53,10 @@ import { QuestionShowComponent } from './question/question-show/question-show.co
     BarChartComponent,
     DoughnutChartComponent,
     PieChartComponent,
+    ResultatComponent,
     QuestionEditComponent,
-    QuestionShowComponent
+    QuestionShowComponent,
+    QuestionnaireAnswerComponent
   ],
     imports: [
         BrowserModule,

@@ -9,6 +9,7 @@ import {Proposition} from '../../models/proposition';
 import {PropositionService} from '../../services/proposition.service';
 import {first} from 'rxjs/operators';
 import {Location} from '@angular/common';
+import {QuestionnaireService} from '../../services/questionnaire.service';
 
 @Component({
   selector: 'app-question-edit',
@@ -28,6 +29,7 @@ export class QuestionEditComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private questionService: QuestionService,
+              private questionnaireService: QuestionnaireService,
               private propositionService: PropositionService,
               private alertService: AlertService,
               private authService: AuthService,
@@ -40,6 +42,15 @@ export class QuestionEditComponent implements OnInit {
     // Récupère les identifiants du questionnaire et de la question via l'url
     this.idQuestionnaire = this.route.snapshot.params.idQuestionnaire;
     this.idQuestion = this.route.snapshot.params.idQuestion;
+
+    this.questionnaireService.getById(this.idQuestionnaire)
+        .subscribe( questionnaire => {
+            if (questionnaire === null) {
+                this.alertService.clear();
+                this.alertService.error('Le questionnaire demandé n\'existe pas. Retour au menu principal.', true);
+                this.router.navigate(['/']);
+            }
+        });
 
     this.questionForm = this.formBuilder.group({
         idQuestionnaire: [this.idQuestionnaire],
@@ -59,19 +70,25 @@ export class QuestionEditComponent implements OnInit {
       this.modification = true;
       this.questionService.read(this.idQuestion)
           .subscribe(question => {
-            this.question = question;
-            this.type = question.type;
-            this.questionForm = this.formBuilder.group({
-              idQuestionnaire: [this.idQuestionnaire],
-              titre: [question.titre, Validators.required],
-              type: [question.type, Validators.required],
-              idTheme: [question.idTheme, Validators.required],
-              isRequired: [question.isRequired, Validators.required],
-              isFilter: [question.isFilter, Validators.required],
-              hasGraph: [question.hasGraph, Validators.required],
-              propositions: this.formBuilder.array([])
-            });
-            this.loadAllPropositions(question.id);
+            if (question !== null) {
+                this.question = question;
+                this.type = question.type;
+                this.questionForm = this.formBuilder.group({
+                  idQuestionnaire: [this.idQuestionnaire],
+                  titre: [question.titre, Validators.required],
+                  type: [question.type, Validators.required],
+                  idTheme: [question.idTheme, Validators.required],
+                  isRequired: [question.isRequired, Validators.required],
+                  isFilter: [question.isFilter, Validators.required],
+                  hasGraph: [question.hasGraph, Validators.required],
+                  propositions: this.formBuilder.array([])
+                });
+                this.loadAllPropositions(question.id);
+            } else {
+                this.alertService.clear();
+                this.alertService.error('La question demandée n\'existe pas. Retour au questionnaire.', true);
+                this.router.navigate(['/edit-questionnaire', this.idQuestionnaire]);
+            }
           });
     }
   }

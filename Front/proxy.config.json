@@ -1,0 +1,8 @@
+{
+  "*": {
+    "target": "http://barometre-managerial.leria-etud.univ-angers.fr",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}
