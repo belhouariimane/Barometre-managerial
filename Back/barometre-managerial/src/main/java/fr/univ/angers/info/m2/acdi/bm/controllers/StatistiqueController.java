@@ -14,7 +14,7 @@ import fr.univ.angers.info.m2.acdi.bm.services.StatistiqueService;
 
 @RestController
 @RequestMapping("/statistique")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin( origins = {"http://localhost:4200"} )
 public class StatistiqueController {
 
 	@Autowired

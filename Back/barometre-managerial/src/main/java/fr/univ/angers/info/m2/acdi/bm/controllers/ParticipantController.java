@@ -24,7 +24,7 @@ import fr.univ.angers.info.m2.acdi.bm.services.ParticipantService;
  */
 @RestController
 @RequestMapping(path = "/participant")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin( origins = {"http://localhost:4200"} )
 public class ParticipantController {
 
 	@Autowired

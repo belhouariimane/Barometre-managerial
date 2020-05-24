@@ -29,7 +29,7 @@ import fr.univ.angers.info.m2.acdi.bm.services.AdministrateurService;
  */
 @RestController
 @RequestMapping(path = "/admin")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin( origins = {"http://localhost:4200"} )
 public class AdministrateurController {
 
 	@Autowired
@@ -41,7 +41,7 @@ public class AdministrateurController {
 		return traitementReponse(retour);
 	}
 
-	@PutMapping("/update/{id}")
+	@PostMapping("/update/{id}")
 	public ResponseEntity<RetourGeneral> updateAdministrateur(@RequestBody Administrateur administrateur,
 			@PathVariable Long id) {
 		RetourGeneral retour = administrateurService.update(administrateur, id);
