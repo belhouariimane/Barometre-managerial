@@ -20,6 +20,10 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import fr.univ.angers.info.m2.acdi.bm.helpers.AdministrateurSerializer;
+import fr.univ.angers.info.m2.acdi.bm.helpers.ParticipantSerializer;
 
 /**
  * @author aharboul
@@ -28,6 +32,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity(name = "Administrateur")
 @Table(name = "administrateur")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonSerialize(using = AdministrateurSerializer.class)
 public class Administrateur implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -114,7 +119,7 @@ public class Administrateur implements Serializable {
 		return "Administrateur [id=" + id + ", email=" + email + ", password=" + password + ", nom=" + nom + ", prenom="
 				+ prenom + "]";
 	}
-	
+
 	public boolean checkNull() throws IllegalAccessException {
 		for (Field f : this.getClass().getDeclaredFields())
 			if (f.get(this) != null)

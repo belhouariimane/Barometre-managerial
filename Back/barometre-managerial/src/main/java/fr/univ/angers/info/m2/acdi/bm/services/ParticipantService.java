@@ -1,6 +1,7 @@
 package fr.univ.angers.info.m2.acdi.bm.services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import fr.univ.angers.info.m2.acdi.bm.entities.Questionnaire;
 import fr.univ.angers.info.m2.acdi.bm.entities.Reponse;
 import fr.univ.angers.info.m2.acdi.bm.exceptions.ParticipantNotFoundException;
 import fr.univ.angers.info.m2.acdi.bm.exceptions.QuestionnaireNotFoundException;
+import fr.univ.angers.info.m2.acdi.bm.helpers.Helpers;
 import fr.univ.angers.info.m2.acdi.bm.repositories.ParticipantRepository;
 import fr.univ.angers.info.m2.acdi.bm.repositories.PropositionRepository;
 import fr.univ.angers.info.m2.acdi.bm.repositories.QuestionRepository;
@@ -41,17 +43,30 @@ public class ParticipantService {
 				Long idQuestionnaire = participant.getQuestionnaire().getId();
 				Questionnaire q = questionnaireRepository.findById(idQuestionnaire)
 						.orElseThrow(() -> new QuestionnaireNotFoundException(idQuestionnaire));
+				if(q.getDatePeremption().before(new Date())) {
+					retour.setDescription(ConstantesREST.DATE_PEREMPTION_DEPASSE);
+					return retour;
+				}
 				participant.setQuestionnaire(q);
 				for (Reponse r : participant.getReponses()) {
 					Long idQuestion = r.getQuestion().getId();
 					final Question question = questionRepository.findById(idQuestion)
 							.orElseThrow(() -> new QuestionnaireNotFoundException(idQuestion));
+					boolean reponseNonSaisiQuestionObligatoire = question.getIsRequired()
+							&& (Helpers.strEmpty(r.getValeur()).booleanValue()
+									&& (r.getPropositions() == null || r.getPropositions().isEmpty()));
+					if (reponseNonSaisiQuestionObligatoire) {
+						retour.setDescription(ConstantesREST.REPONSE_REQUIRED_ERROR);
+						return retour;
+					}
 					r.setQuestion(question);
 					r.setParticipant(participant);
-					for (Proposition proposition : r.getPropositions()) {
-						proposition.setQuestion(question);
-					}
+					if (r.getPropositions() != null && !r.getPropositions().isEmpty())
+						for (Proposition proposition : r.getPropositions()) {
+							proposition.setQuestion(question);
+						}
 				}
+				participant.setDateParticipation(new Date());
 				participant = participantRepository.save(participant);
 				retour.setDescription(ConstantesREST.OK);
 				retour.setRetour(participant);
