@@ -49,8 +49,8 @@
         <div class="form-group">
             <mat-slide-toggle
                     class="example-margin"
-                    formControlName="isAnonymous"
-                    checked="{{questionnaire?.isAnonymous}}">
+                    formControlName="anonymous"
+                    checked="{{questionnaire?.anonymous}}">
                 Questionnaire anonyme
             </mat-slide-toggle>
         </div>
@@ -66,10 +66,9 @@
     <h3>Liste des questions</h3>
     <ul class="list-group">
         <div *ngFor="let question of questions" class="list-group-item m-3 rounded border">
-            <div [routerLink]="['/edit-question',idQuestionnaire, question.id]">
-                <div>Question n°{{question.id}} : {{question.titre}}</div>
-                <div>Type : {{question.type}}</div>
-                <div>IDQuestionnaire : {{question.idQuestionnaire}}</div>
+            <div class="zero-border" [routerLink]="['/edit-question',idQuestionnaire, question.id]">
+                <div>Question n°{{question.id}} : {{question.valeur}}</div>
+                <div>Type : {{question.typeQuestion}}</div>
                 <div *ngIf="question.isFilter">Filtre : {{question.isFilter}}</div>
                 <div *ngIf="question.hasGraph">Graphe : {{question.hasGraph}}</div>
                 <div *ngIf="question.isRequired">Obligatoire : {{question.isRequired}}</div>

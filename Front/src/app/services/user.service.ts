@@ -13,22 +13,23 @@ export class UserService {
 
     getAll() {
          return this.http.get<User[]>(`/admin/readAll`);
-        //return this.http.get<User[]>(`${environment.apiUrl}/users`);
+        // return this.http.get<User[]>(`${environment.apiUrl}/users`);
     }
 
     register(user: User) {
         console.log(user);
-         return this.http.post(`/admin/create`, user);
-        //return this.http.post(`${environment.apiUrl}/users/register`, user);
+        return this.http.post(`/admin/create`, user);
+        // return this.http.post(`${environment.apiUrl}/users/register`, user);
     }
 
     delete(id: number) {
-         return this.http.delete(`/admin/delete/${id}`);
-        //return this.http.delete(`${environment.apiUrl}/users/${id}`);
+        return this.http.delete(`/admin/delete/${id}`);
+        // return this.http.delete(`${environment.apiUrl}/users/${id}`);
     }
 
     update(id: number, user: User) {
-         return this.http.post(`/admin/update/${id}`, user);
-        //return this.http.post(`${environment.apiUrl}/users/update/${id}`, user);
+        delete user.id;
+        return this.http.post(`/admin/update/${id}`, user);
+        // return this.http.post(`${environment.apiUrl}/users/update/${id}`, user);
     }
 }

@@ -3,25 +3,25 @@
     <form class="m-3" [formGroup]="questionForm" >
         <div class="form-group ">
             <label>Question</label>
-            <input type="text" formControlName="titre" class="form-control"
-                   [ngClass]="{ 'is-invalid': submitted && f.titre.errors } " placeholder="{{question?.titre}}"/>
-            <div *ngIf="submitted && f.titre.errors" class="invalid-feedback">
-                <div *ngIf="f.titre.errors.required">Veuillez renseigner la question</div>
+            <input type="text" formControlName="valeur" class="form-control"
+                   [ngClass]="{ 'is-invalid': submitted && f.valeur.errors } " placeholder="{{question?.valeur}}"/>
+            <div *ngIf="submitted && f.valeur.errors" class="invalid-feedback">
+                <div *ngIf="f.valeur.errors.required">Veuillez renseigner la question</div>
             </div>
         </div>
-        <div class="form-group">
-            <label>Thème</label>
-            <select formControlName="idTheme" class="form-control browser-default custom-select"
-                [ngClass]=" { 'is-invalid': submitted && f.idTheme.errors }">
-                <option [ngValue]="null" disabled>Choisissez le thème associé à cette question</option>
-                <option *ngFor="let theme of themes; let i = index" [ngValue]=i+1>
-                    {{ theme }}
-                </option>
-            </select>
-            <div *ngIf="submitted && f.idTheme.errors" class="invalid-feedback">
-                <div *ngIf="f.idTheme.errors.required">Veuillez sélectionner un thème</div>
-            </div>
-        </div>
+<!--        <div class="form-group">-->
+<!--            <label>Thème</label>-->
+<!--            <select formControlName="idTheme" class="form-control browser-default custom-select"-->
+<!--                [ngClass]=" { 'is-invalid': submitted && f.idTheme.errors }">-->
+<!--                <option [ngValue]="null" disabled>Choisissez le thème associé à cette question</option>-->
+<!--                <option *ngFor="let theme of themes; let i = index" [ngValue]=i+1>-->
+<!--                    {{ theme }}-->
+<!--                </option>-->
+<!--            </select>-->
+<!--            <div *ngIf="submitted && f.idTheme.errors" class="invalid-feedback">-->
+<!--                <div *ngIf="f.idTheme.errors.required">Veuillez sélectionner un thème</div>-->
+<!--            </div>-->
+<!--        </div>-->
         <div class="form-group">
             <mat-slide-toggle
                     class="example-margin"
@@ -46,49 +46,50 @@
                 Cette question doit-elle être représentée par un graphe dans la synthèse ?
             </mat-slide-toggle>
         </div>
-        <div class="form-group" [ngClass]="{ 'is-invalid': submitted && type===undefined }">
+        <div class="form-group" [ngClass]="{ 'is-invalid': submitted && typeQuestion===undefined }">
             <label>Type</label><br/>
-            <button class="mx-3" [ngClass]="(type==='check')?'button-custom' : ''" mat-raised-button  mat-mini-fab color="accent" (click)="addCheckBox()">
+            <button class="mx-3" [ngClass]="(typeQuestion==='CHECKBOX')?'button-custom' : ''" mat-raised-button  mat-mini-fab color="accent" (click)="addCheckBox()">
                 <mat-icon>check_box</mat-icon>
             </button>
-            <button class="mx-3" [ngClass]="(type==='radio')?'button-custom' : ''" mat-raised-button  mat-mini-fab color="accent" (click)="addRadioBtn()">
+            <button class="mx-3" [ngClass]="(typeQuestion==='RADIO')?'button-custom' : ''" mat-raised-button  mat-mini-fab color="accent" (click)="addRadioBtn()">
                 <mat-icon>radio_button_checked</mat-icon>
             </button>
-            <button class="mx-3" [ngClass]="(type==='select')?'button-custom' : ''" mat-raised-button  mat-mini-fab color="accent" (click)="addSelect()">
+            <button class="mx-3" [ngClass]="(typeQuestion==='COMBOBOX')?'button-custom' : ''" mat-raised-button  mat-mini-fab color="accent" (click)="addSelect()">
                 <mat-icon>list</mat-icon>
             </button>
-            <button class="mx-3" [ngClass]="(type==='input')?'button-custom' : ''" mat-raised-button  mat-mini-fab color="accent" (click)="addInput()">
+            <button class="mx-3" [ngClass]="(typeQuestion==='OUVERT')?'button-custom' : ''" mat-raised-button  mat-mini-fab color="accent" (click)="addInput()">
                 <mat-icon>notes</mat-icon>
             </button>
-            <button  class="mx-3" [ngClass]="(type==='date')?'button-custom' : ''" mat-raised-button  mat-mini-fab color="accent" (click)="addDatePicker()">
+            <button  class="mx-3" [ngClass]="(typeQuestion==='DATE')?'button-custom' : ''" mat-raised-button  mat-mini-fab color="accent" (click)="addDatePicker()">
                 <mat-icon>date_range</mat-icon>
             </button>
         </div>
-        <div *ngIf="submitted && type===undefined" class="invalid-feedback float-right">
-            <div *ngIf="type===undefined">Veuillez sélectionner un type</div><br/>
+        <div *ngIf="submitted && typeQuestion===undefined" class="invalid-feedback float-right">
+            <div *ngIf="typeQuestion===undefined">Veuillez sélectionner un typeQuestion</div><br/>
         </div>
-        <div *ngIf="type==='check' || type==='radio' || type==='select'">
-            <div>
-                <div formArrayName="propositions">
-                    <div *ngFor="let proposition of propositions.controls; let i = index;">
-                        <div class="container border rounded border-info mb-4 pb-4 pt-2 px-4" [formGroupName]="i">
-                                <label>Proposition {{i+1}} : </label>
-                                <input type="text" class='form-control m-2' formControlName="libelle" placeholder="{{proposition?.value.libelle}}" />
-                                <button class="float-right" (click)="removeProposition(i)" mat-raised-button  mat-mini-fab color="warn">
-                                    <mat-icon>remove_circle</mat-icon>
-                                </button>
-                                <br/>
+        <div *ngIf="typeQuestion==='CHECKBOX' || typeQuestion==='RADIO' || typeQuestion==='COMBOBOX'">
+            <div formArrayName="propositions">
+                <div *ngFor="let proposition of propositions.controls; let i = index;">
+                    <div class="container border rounded border-info mb-2 pt-2 px-4" [formGroupName]="i">
+                        <label>Proposition {{i+1}} : </label>
+                        <div class="input-group">
+                            <input type="text" class='form-control mx-2 ' formControlName="valeur" placeholder="{{proposition?.value.valeur}}" />
+                            <div class="input-group-prepend">
+                            <button class="float-right" (click)="removeProposition(i)" mat-raised-button  mat-mini-fab color="warn">
+                                <mat-icon>remove_circle</mat-icon>
+                            </button>
+                            </div>
                         </div>
+                            <br/>
                     </div>
                 </div>
-                <button class="float-right" (click)="addPropositions('')" mat-raised-button  mat-mini-fab color="primary">
-                    <mat-icon>add_circle</mat-icon>
-                </button>
-                {{this.questionForm.value | json}}
             </div>
+            <button class="float-right" (click)="addPropositions('')" mat-raised-button  mat-mini-fab color="primary">
+                <mat-icon>add_circle</mat-icon>
+            </button>
         </div>
 
-        <div *ngIf="type==='input'">
+        <div *ngIf="typeQuestion==='OUVERT'">
             <div class="container border rounded border-info mb-4 pb-4 pt-2 px-4">
                 <mat-form-field class="w-100" >
                     <mat-label>Veuillez saisir votre réponse</mat-label>
@@ -97,7 +98,7 @@
             </div>
         </div>
 
-        <div *ngIf="type==='date'">
+        <div *ngIf="typeQuestion==='DATE'">
             <div class="container border rounded border-info mb-4 pb-4 pt-2 px-4">
                 <mat-form-field>
                     <mat-label>Choisissez une date</mat-label>
