@@ -184,6 +184,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             console.log('idUser : ' + questionnaire.idUser);
             console.log('titre : ' + questionnaire.titre);
             console.log('description : ' + questionnaire.description);
+            console.log('merci : ' + questionnaire.msgMerci);
             console.log('isAnonymous : ' + questionnaire.isAnonymous);
             console.log('dateCreation : ' + questionnaire.dateCreation);
             console.log('datePeremption : ' + questionnaire.datePeremption);
@@ -205,6 +206,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             questionnaire.id = idFromUrl();
             questionnaire.titre = questionnaire.titre.length ? questionnaire.titre : updatedQuestionnaire.titre;
             questionnaire.description = questionnaire.description.length ? questionnaire.description : updatedQuestionnaire.description;
+            console.log('1 : ' + questionnaire.merci);
+            questionnaire.merci = questionnaire.merci.length ? questionnaire.merci : updatedQuestionnaire.merci;
+            console.log('1 : ' + questionnaire.merci);
             questionnaire.idUser = questionnaire.idUser !== undefined ? questionnaire.idUser : updatedQuestionnaire.idUser;
             questionnaire.isAnonymous = questionnaire.isAnonymous;
 
@@ -213,6 +217,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             console.log('idUser : ' + questionnaire.idUser);
             console.log('titre : ' + questionnaire.titre);
             console.log('description : ' + questionnaire.description);
+            console.log('merci : ' + questionnaire.merci);
             console.log('isAnonymous : ' + questionnaire.isAnonymous);
             console.log('dateCreation : ' + questionnaire.dateCreation);
             console.log('datePeremption : ' + questionnaire.datePeremption);

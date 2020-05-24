@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {QuestionService} from '../../services/question.service';
 import {PropositionService} from '../../services/proposition.service';
@@ -10,7 +10,7 @@ import {Proposition} from '../../models/proposition';
     templateUrl: './question-show.component.html',
     styleUrls: ['./question-show.component.scss']
 })
-export class QuestionShowComponent implements OnInit {
+export class QuestionShowComponent implements OnInit, OnChanges {
     @Input() idQuestion;
     chosenResponse: string;
     idQuestionnaire: number;
@@ -38,6 +38,10 @@ export class QuestionShowComponent implements OnInit {
                     this.loadAllPropositions();
                 }
             });
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        console.log(changes);
     }
 
     loadAllPropositions() {
