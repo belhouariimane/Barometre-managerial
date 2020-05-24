@@ -55,7 +55,7 @@ public class QuestionService {
 	public ResponseSingleQuestion readQuestionById(Long id) {
 		Optional<Question> question = this.questionRepository.findById(id);
 		if (!question.isPresent()) {
-			return new ResponseSingleQuestion(ConstantesREST.QUESTION_NOT_FOUND, null, HttpStatus.valueOf(419));
+			return new ResponseSingleQuestion(ConstantesREST.QUESTION_NOT_FOUND, null, HttpStatus.NOT_FOUND);
 		}
 		return new ResponseSingleQuestion(ConstantesREST.QUESTION_FOUND, question.get(), HttpStatus.OK);
 	}
@@ -66,7 +66,7 @@ public class QuestionService {
 		}
 		Optional<Question> lastRecord = this.questionRepository.findById(question.getId());
 		if (!lastRecord.isPresent()) {
-			return new ResponseSingleQuestion(ConstantesREST.QUESTION_NOT_FOUND, null, HttpStatus.valueOf(419));
+			return new ResponseSingleQuestion(ConstantesREST.QUESTION_NOT_FOUND, null, HttpStatus.NOT_FOUND);
 		}
 		
 		// Les champs renseignés seront modifiés
@@ -87,8 +87,14 @@ public class QuestionService {
 		if (question.getPropositions() != null) {
 			questionToUpdate.setPropositions(question.getPropositions());
 		}
-		
-		// TODO : Rajouter l'update des propositions
+		if (question.getPropositions() != null) {
+			questionToUpdate.setPropositions(null);
+			questionToUpdate.setPropositions(question.getPropositions());
+			/*for (Proposition p : questionToUpdate.getPropositions()) {
+				p.setQuestion(questionToUpdate);
+			}*/
+			//questionToUpdate.setPropositions(question.getPropositions());
+		}
 		
 		Question savedQuestion = this.questionRepository.save(questionToUpdate);
 		
@@ -97,5 +103,9 @@ public class QuestionService {
 	
 	public List<Question> findByIdQuestionnaire(Long idQuestionnaire) {
 		return this.questionRepository.findByQuestionnaire_Id(idQuestionnaire);
+	}
+	
+	public void deleteById(Long id) {
+		this.questionRepository.deleteById(id);
 	}
 }
