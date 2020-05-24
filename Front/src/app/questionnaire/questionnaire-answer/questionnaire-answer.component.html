@@ -1,5 +1,5 @@
 <div class="card m-3">
-    <h2 class="card-header">{{questionnaire?.titre}}</h2>
+    <h1 class="card-header text-center">{{questionnaire?.titre}}</h1>
     <div *ngIf="!done" class="card-body">
         <p>Bonjour, merci de prendre quelques minutes afin de répondre à ce questionnaire.</p>
         <form [formGroup]="answerForm" (ngSubmit)="onSubmit()">

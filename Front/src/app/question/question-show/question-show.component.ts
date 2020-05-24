@@ -2,7 +2,6 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 import {ActivatedRoute} from '@angular/router';
 import {QuestionService} from '../../services/question.service';
 import {Question} from '../../models/question';
-import {Proposition} from '../../models/proposition';
 
 @Component({
     selector: 'app-question-show',
@@ -33,7 +32,7 @@ export class QuestionShowComponent implements OnInit, OnChanges {
             .subscribe(question => {
                 this.question = question;
                 console.log(question.typeQuestion);
-                if (question.typeQuestion === 'radio' || question.typeQuestion === 'check' || question.typeQuestion === 'select') {
+                if (question.typeQuestion === 'COMBOBOX' || question.typeQuestion === 'CHECKBOX' || question.typeQuestion === 'RADIO') {
                     this.propositions = question.propositions;
                 }
             });
