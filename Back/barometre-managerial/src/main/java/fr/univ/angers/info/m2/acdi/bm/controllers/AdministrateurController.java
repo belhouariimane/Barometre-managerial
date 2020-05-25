@@ -1,9 +1,4 @@
-/**
- * 
- */
 package fr.univ.angers.info.m2.acdi.bm.controllers;
-
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,15 +13,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import fr.univ.angers.info.m2.acdi.bm.entities.Administrateur;
-import fr.univ.angers.info.m2.acdi.bm.exceptions.AdministrateurNotFoundException;
-import fr.univ.angers.info.m2.acdi.bm.response.RetourGeneral;
+import fr.univ.angers.info.m2.acdi.bm.dto.AdministrateurCreateDTO;
+import fr.univ.angers.info.m2.acdi.bm.dto.AdministrateurUpdateDTO;
+import fr.univ.angers.info.m2.acdi.bm.dto.LoginDTO;
+import fr.univ.angers.info.m2.acdi.bm.dto.RetourGeneral;
 import fr.univ.angers.info.m2.acdi.bm.services.AdministrateurService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
+ * 
  * @author aharboul
  *
  */
+@Api("API pour la gestion des administrateurs.")
 @RestController
 @RequestMapping(path = "/admin")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -35,45 +35,41 @@ public class AdministrateurController {
 	@Autowired
 	private AdministrateurService administrateurService;
 
+	@ApiOperation(value = "Création d'un nouveau administrateur")
 	@PostMapping("/create")
-	public ResponseEntity<RetourGeneral> creerAdministrateur(@RequestBody Administrateur newAdministrateur) {
-		RetourGeneral retour = administrateurService.save(newAdministrateur);
-		return traitementReponse(retour);
+	public ResponseEntity<RetourGeneral> creerAdministrateur(@RequestBody AdministrateurCreateDTO newAdministrateur) {
+		return traitementReponse(administrateurService.save(newAdministrateur));
 	}
 
+	@ApiOperation(value = "Mise à jour d'un administrateur")
 	@PutMapping("/update/{id}")
-	public ResponseEntity<RetourGeneral> updateAdministrateur(@RequestBody Administrateur administrateur,
+	public ResponseEntity<RetourGeneral> updateAdministrateur(@RequestBody AdministrateurUpdateDTO administrateur,
 			@PathVariable Long id) {
-		RetourGeneral retour = administrateurService.update(administrateur, id);
-		return traitementReponse(retour);
+		return traitementReponse(administrateurService.update(administrateur, id));
 	}
 
+	@ApiOperation(value = "Suppression d'un administrateur")
 	@DeleteMapping("/delete/{id}")
 	public void deleteAdministrateur(@PathVariable Long id) {
 		administrateurService.deleteById(id);
 	}
 
+	@ApiOperation(value = "Récupérer tous les administrateurs")
 	@GetMapping("/readAll")
-	public List<Administrateur> all() {
-		return administrateurService.findAll();
+	public ResponseEntity<RetourGeneral> all() {
+		return traitementReponse(administrateurService.findAll());
 	}
 
+	@ApiOperation(value = "Récupérer un administrateur en renseignant son identifiant")
 	@GetMapping("/read/{id}")
-	public Administrateur recupererAdministrateurParId(@PathVariable Long id) {
-		Administrateur administrateur = null;
-		try {
-			administrateur = administrateurService.findById(id);
-		} catch (AdministrateurNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return administrateur;
+	public ResponseEntity<RetourGeneral> recupererAdministrateurParId(@PathVariable Long id) {
+		return traitementReponse(administrateurService.findById(id));
 	}
 
+	@ApiOperation(value = "Authentification de l'administrateur en renseignant son email et mot de passe")
 	@PostMapping("/login")
-	public ResponseEntity<RetourGeneral> authentification(@RequestBody Administrateur administrateur) {
-		RetourGeneral retour = administrateurService.login(administrateur);
-		return traitementReponse(retour);
+	public ResponseEntity<RetourGeneral> authentification(@RequestBody LoginDTO loginDTO) {
+		return traitementReponse(administrateurService.login(loginDTO));
 	}
 
 	private ResponseEntity<RetourGeneral> traitementReponse(RetourGeneral retour) {

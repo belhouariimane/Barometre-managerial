@@ -23,7 +23,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import fr.univ.angers.info.m2.acdi.bm.helpers.AdministrateurSerializer;
-import fr.univ.angers.info.m2.acdi.bm.helpers.ParticipantSerializer;
 
 /**
  * @author aharboul

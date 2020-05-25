@@ -8,29 +8,22 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fr.univ.angers.info.m2.acdi.bm.constantes.ConstantesREST;
+import fr.univ.angers.info.m2.acdi.bm.dto.RetourGeneral;
 import fr.univ.angers.info.m2.acdi.bm.dto.StatistiqueDTO;
 import fr.univ.angers.info.m2.acdi.bm.dto.StatistiqueItemDTO;
 import fr.univ.angers.info.m2.acdi.bm.dto.WrapperStatistiqueItemsDTO;
-import fr.univ.angers.info.m2.acdi.bm.entities.Administrateur;
 import fr.univ.angers.info.m2.acdi.bm.entities.Participant;
 import fr.univ.angers.info.m2.acdi.bm.entities.Proposition;
 import fr.univ.angers.info.m2.acdi.bm.entities.Question;
 import fr.univ.angers.info.m2.acdi.bm.entities.Questionnaire;
 import fr.univ.angers.info.m2.acdi.bm.entities.Reponse;
 import fr.univ.angers.info.m2.acdi.bm.exceptions.ResourceNotFoundException;
-import fr.univ.angers.info.m2.acdi.bm.repositories.QuestionRepository;
 import fr.univ.angers.info.m2.acdi.bm.repositories.QuestionnaireRepository;
-import fr.univ.angers.info.m2.acdi.bm.response.RetourGeneral;
 
 @Service
 public class StatistiqueService {
 
-	@Autowired
-	private QuestionRepository questionRepository;
 	@Autowired
 	private QuestionnaireRepository questionnaireRepository;
 
@@ -185,19 +178,18 @@ public class StatistiqueService {
 		for (Participant participant : participants) {
 			if (participant.getReponses() != null && participant.getReponses().size() > 1) {
 				for (Reponse reponseFilter : participant.getReponses()) {
-					if (reponseFilter.getQuestion().equals(filter) && reponseFilter.getPropositions() != null
-							&& !reponseFilter.getPropositions().isEmpty()) {
-						for (Proposition propositionFilter : reponseFilter.getPropositions()) {
-							for (Reponse reponse : participant.getReponses()) {
-								if (reponse.getQuestion().equals(question) && reponse.getPropositions() != null
-										&& !reponse.getPropositions().isEmpty()) {
-									for (Proposition proposition : reponse.getPropositions()) {
-										Integer compteurActuel = map.get(propositionFilter).get(proposition);
-										map.get(propositionFilter).put(proposition, ++compteurActuel);
-									}
-								}
+					if (reponseFilter.getQuestion().equals(filter) && reponseFilter.getProposition() != null) {
+						// for (Proposition propositionFilter : reponseFilter.getPropositions()) {
+						for (Reponse reponse : participant.getReponses()) {
+							if (reponse.getQuestion().equals(question) && reponse.getProposition() != null) {
+								// for (Proposition proposition : reponse.getPropositions()) {
+								Integer compteurActuel = map.get(reponseFilter.getProposition())
+										.get(reponse.getProposition());
+								map.get(reponseFilter.getProposition()).put(reponse.getProposition(), ++compteurActuel);
+								// }
 							}
 						}
+						// }
 					}
 				}
 			}
