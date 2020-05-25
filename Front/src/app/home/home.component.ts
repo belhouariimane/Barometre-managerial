@@ -67,7 +67,6 @@ export class HomeComponent implements OnInit {
         .subscribe(() => this.loadAllQuestionnaires());
   }
 
-  // @ts-ignore
   loadNbQuestions() {
     for (const questionnaire of this.questionnaires) {
       this.questionService.readAllByIdQuestionnaire(questionnaire.id)
