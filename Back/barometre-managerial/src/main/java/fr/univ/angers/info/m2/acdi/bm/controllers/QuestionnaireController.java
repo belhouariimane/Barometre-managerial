@@ -20,7 +20,7 @@ import fr.univ.angers.info.m2.acdi.bm.services.QuestionnaireService;
 
 @RestController
 @RequestMapping("/questionnaire")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin( origins = {"http://localhost:4200"} )
 public class QuestionnaireController {
 	
 	@Autowired
@@ -38,7 +38,7 @@ public class QuestionnaireController {
 		return new ResponseEntity<ResponseSingleQuestionnaire>(rsq, rsq.getStatus());
 	}
 	
-	@PutMapping("/update")
+	@PostMapping("/update")
 	public ResponseEntity<ResponseSingleQuestionnaire> update(@RequestBody Questionnaire questionnaire) {
 		ResponseSingleQuestionnaire rsq = this.questionnaireService.updateQuestionnaire(questionnaire);
 		return new ResponseEntity<ResponseSingleQuestionnaire>(rsq, rsq.getStatus());
