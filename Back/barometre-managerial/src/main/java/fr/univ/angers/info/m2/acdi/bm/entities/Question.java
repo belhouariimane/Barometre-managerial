@@ -37,7 +37,7 @@ public class Question implements Serializable {
 	private Boolean isFilter;
 
 	// https://keepgrowing.in/java/springboot/how-to-get-json-response-only-with-an-id-of-the-related-entity/
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Questionnaire questionnaire;
 
 	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL/*, orphanRemoval = true*/)

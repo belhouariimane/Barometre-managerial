@@ -90,10 +90,6 @@ public class QuestionService {
 		if (question.getPropositions() != null) {
 			questionToUpdate.setPropositions(null);
 			questionToUpdate.setPropositions(question.getPropositions());
-			/*for (Proposition p : questionToUpdate.getPropositions()) {
-				p.setQuestion(questionToUpdate);
-			}*/
-			//questionToUpdate.setPropositions(question.getPropositions());
 		}
 		
 		Question savedQuestion = this.questionRepository.save(questionToUpdate);
