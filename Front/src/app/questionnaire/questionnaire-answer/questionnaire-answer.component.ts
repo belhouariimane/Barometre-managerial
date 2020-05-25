@@ -73,6 +73,7 @@ export class QuestionnaireAnswerComponent implements OnInit {
       typeQuestion: [question.typeQuestion],
       isRequired: [question.isRequired],
       order: [''],
+      valeurReponse: [''],
       propositions: this.formBuilder.array([])
     });
   }
@@ -80,7 +81,8 @@ export class QuestionnaireAnswerComponent implements OnInit {
   initProposition(proposition: Proposition) {
     return this.formBuilder.group({
       idProp: [proposition.id],
-      valeurProp: [proposition.valeur]
+      valeurProp: [proposition.valeur],
+      chosen: false,
     });
   }
 
@@ -105,64 +107,11 @@ export class QuestionnaireAnswerComponent implements OnInit {
     return question.get('propositions').controls;
   }
 
-
-  // ngOnInit(): void {
-  //   this.questionnaireService.getById(this.route.snapshot.params.id)
-  //       .subscribe(questionnaire => {
-  //         if (questionnaire !== null) {
-  //           this.questionnaire = questionnaire;
-  //         } else {
-  //           this.alertService.clear();
-  //           this.alertService.error('Le questionnaire demandé n\'existe pas.', true);
-  //           this.router.navigate(['/login']);
-  //         }
-  //       });
-  //   this.questionService.readAllByIdQuestionnaire(this.route.snapshot.params.id)
-  //       .subscribe(questions => {
-  //         questions.forEach( (item) => {
-  //           this.addQuestion(item);
-  //           item.propositions.forEach((item2) => {
-  //             this.addProposition(item2);
-  //           });
-  //         });
-  //       });
-  //   this.answerForm = this.formBuilder.group({
-  //     firstName: ['', Validators.required],
-  //     lastName: ['', Validators.required],
-  //     questions: this.formBuilder.array([])
-  //   });
-  // }
-  //
   // accès simplifié aux champs du formulaire
   get f() {
     return this.answerForm.controls;
   }
-  //
-  // get questions(): FormArray {
-  //   return this.answerForm.get('questions') as FormArray;
-  // }
-  //
-  // addQuestion(question: Question) {
-  //     this.questions.push(this.formBuilder.group({
-  //       valeur: question.valeur,
-  //       typeQuestion: question.typeQuestion,
-  //       isRequired : question.isRequired,
-  //       order: question.order === null ? 0 : question.order,
-  //       propositions: this.formBuilder.array(question.propositions)
-  //     }));
-  // }
-  //
-  // get propositions(): FormArray {
-  //   return this.answerForm.get('questions').get('propositions') as FormArray;
-  // }
-  //
-  // addProposition(proposition: Proposition) {
-  //     this.propositions.push(this.formBuilder.group({
-  //       valeur: proposition.valeur,
-  //       id: proposition.id
-  //     }));
-  // }
-  //
+
   onSubmit(formGroup: FormGroup) {
     this.submitted = true;
 
@@ -175,6 +124,34 @@ export class QuestionnaireAnswerComponent implements OnInit {
     }
 
     this.prenom = this.answerForm.value.firstName;
+
+
+    this.answerForm.value.questions.forEach((item, index) => {
+      switch (item.typeQuestion) {
+        case 'OUVERT':
+        case 'DATE':
+          console.log('La réponse à la question : ' + item.valeurQuestion + ' est : ' + item.valeurReponse);
+          break;
+        case 'RADIO':
+        case 'COMBOBOX':
+        case 'CHECKBOX':
+          console.log(this.questions.get('0'));
+          console.log(this.questions.get('1'));
+          console.log(this.questions.get('2'));
+          console.log(this.questions.get('3'));
+          console.log(this.questions.get('propositions'));
+          console.log('La réponse à la question : ' + item.valeurQuestion + ' est : ' + item.id);
+          break;
+      }
+      console.log('index : ' + index);
+      console.log('reponse : ' + item.valeurReponse);
+      console.log('type : ' + item.typeQuestion);
+      console.log(this.questions.controls[index].value.valeurReponse);
+    });
+
+    console.log(this.questions.controls[0].value.valeurReponse);
+
+    console.log(this.answerForm.value.textfin);
 
     // enregistre le nouvel utilisateur puis le connecte immédiatement
     // this.loading = true;
@@ -190,5 +167,29 @@ export class QuestionnaireAnswerComponent implements OnInit {
     //         }
     //     );
     this.done = true;
+  }
+
+  onChangeSelect(event: any, index: number) {
+    console.log(event.value);
+    this.questions.controls[index].value.valeurReponse = event.value;
+    console.log(this.questions.controls[index]);
+    console.log('SELECT');
+  }
+
+  onChangeCheckbox(values: any, question: Question,  proposition: Proposition) {
+    console.log('values: ' + values.currentTarget.id);
+    console.log('valuesIndex: ' + values.currentIndex);
+    console.log('à changer : ' + this.getPropositions(question)[values.currentTarget.id].controls.chosen);
+    console.log('à changer : ' + this.getPropositions(question)[values.currentTarget.id].value.chosen);
+    console.log('à changer : ' + this.getPropositions(question)[values.currentTarget.id].chosen);
+    console.log('Nouvelle valeur : ' + values.currentTarget.checked);
+    console.log(this.getPropositions(question).forEach((item) => {
+      console.log(item.value.valeurProp + ' = ? ' + proposition.valeur);
+      if (item.value.valeurProp === proposition.valeur) {
+        console.log('checked or not? : ' + values.currentTarget.checked);
+        item.chosen = values.currentTarget.checked;
+        console.log(item.chosen);
+      }
+    }));
   }
 }

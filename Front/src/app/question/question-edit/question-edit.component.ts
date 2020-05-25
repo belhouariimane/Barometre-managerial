@@ -78,7 +78,7 @@ export class QuestionEditComponent implements OnInit {
                         hasGraph: [question.hasGraph, Validators.required],
                         propositions: this.formBuilder.array([])
                     });
-                    this.question.propositions.forEach( (item) => {
+                    this.question.propositions.forEach((item) => {
                         this.addPropositions(item.valeur);
                     });
                 } else {
@@ -87,11 +87,11 @@ export class QuestionEditComponent implements OnInit {
                     this.router.navigate(['/edit-questionnaire', this.idQuestionnaire]);
                 }
             });
-    // sinon, on charge deux propositions vides pour commencer
-    } else {
-        this.addPropositions('');
-        this.addPropositions('');
-    }
+        // sinon, on charge deux propositions vides pour commencer
+    }// } else {
+    //     this.addPropositions('');
+    //     this.addPropositions('');
+    // }
   }
 
   // accès simplifié aux champs du formulaire
@@ -104,11 +104,14 @@ export class QuestionEditComponent implements OnInit {
   }
 
   addPropositions(value: string) {
-      this.propositions.push(this.formBuilder.group({valeur: value === null ? '' : value}));
+      this.submitted = false;
+      this.propositions.push(this.formBuilder.group({valeur: [value, [Validators.required]]}));
   }
 
   removeProposition(i: number) {
-      this.propositions.removeAt(i);
+      if (this.propositions.length > 2) {
+          this.propositions.removeAt(i);
+      }
   }
 
 
@@ -190,12 +193,12 @@ export class QuestionEditComponent implements OnInit {
 
   addDatePicker() {
       this.typeQuestion = 'DATE';
-      this.propositions.clear();
+      // this.propositions.clear();
   }
 
   addInput() {
       this.typeQuestion = 'OUVERT';
-      this.propositions.clear();
+      // this.propositions.clear();
   }
 
   backClicked() {

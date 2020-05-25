@@ -48,14 +48,14 @@ export class QuestionnaireService {
             }
             return value;
         }
-        questionnaire.administrateur = new User();
-        questionnaire.administrateur.id = questionnaire.idUser;
+        // questionnaire.administrateur = new User();
+        // questionnaire.administrateur.id = questionnaire.idUser;
         questionnaire.dateCreation = new Date(Date.now());
         questionnaire.datePeremption = new Date(2020, 12, 15);
         questionnaire.url = environment.apiUrl + '/answer/' + id;
         questionnaire.id = id;
         const questStr = JSON.stringify(questionnaire, replacer);
-        return this.http.post(`/questionnaire/update/${id}`, JSON.parse(questStr));
+        return this.http.post(`/questionnaire/update`, JSON.parse(questStr));
         // return this.http.post(`${environment.apiUrl}/questionnaires/update/${id}`, questionnaire);
     }
 

@@ -14,7 +14,9 @@ export class QuestionService {
     constructor(private http: HttpClient) { }
 
     readAllByIdQuestionnaire(idQuestionnaire: number) {
-        return this.http.get<Question[]>(`question/findByIdQuestionnaire/${idQuestionnaire}`);
+        const questionnaire = new Questionnaire();
+        questionnaire.id = idQuestionnaire;
+        return this.http.get<Question[]>(`/question/findByIdQuestionnaire/${idQuestionnaire}`);
         // return this.http.get<Question[]>(`${environment.apiUrl}/questions/all/${idQuestionnaire}`);
     }
 
