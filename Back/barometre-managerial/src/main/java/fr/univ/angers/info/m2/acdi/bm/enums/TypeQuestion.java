@@ -13,6 +13,7 @@ public enum TypeQuestion {
 		this.typeQuestion = typeQuestion;
 	}
 	
+	@Override
 	public String toString() {
 		return this.typeQuestion;
 	}

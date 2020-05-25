@@ -4,8 +4,6 @@
 package fr.univ.angers.info.m2.acdi.bm.dto;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author aharboul

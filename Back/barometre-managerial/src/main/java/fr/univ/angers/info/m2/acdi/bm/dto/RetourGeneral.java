@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.univ.angers.info.m2.acdi.bm.response;
+package fr.univ.angers.info.m2.acdi.bm.dto;
 
 import java.io.Serializable;
 
