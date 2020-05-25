@@ -9,18 +9,20 @@
 <h4>Liste des questionnaires</h4>
 <ul class="list-group">
     <div *ngFor="let questionnaire of questionnaires" class="list-group-item m-3 rounded border border-info">
-        <div [routerLink]="['/edit-questionnaire', questionnaire.id]">
+        <div class="zero-border" [routerLink]="['/edit-questionnaire', questionnaire.id]">
         <h4>{{questionnaire.titre}}</h4>
         <h5>{{questionnaire.description}} </h5>
-            <div>Lien : <a href="{{apiUrl}}/answer/{{questionnaire.id}}">{{apiUrl}}/answer/{{questionnaire.id}}</a></div>
-        <div>Anonyme : {{ questionnaire.isAnonymous ? "oui" : "non" }} </div>
+            <div>Lien : <a [routerLink]="['/answer', questionnaire.id]">{{apiUrl}}/answer/{{questionnaire.id}}</a></div>
+        <div>Anonyme : {{ questionnaire.anonymous ? "oui" : "non" }} </div>
         <div>Nombre de questions : {{questionnaire.nbQuestions}}</div>
         <div>Nombre de participations : 32</div>
         </div>
         <button class="float-right mx-2" mat-button mat-raised-button color="warn" (click)="deleteQuestionnaire(questionnaire.id)"><mat-icon>delete</mat-icon> </button>
         <button class="float-right mx-2" mat-button mat-raised-button color="accent" [routerLink]="['/edit-questionnaire', questionnaire.id]"><mat-icon>update</mat-icon> </button>
         <button class="float-right mx-2" mat-button mat-raised-button color="primary" [routerLink]="['/show-questionnaire', questionnaire.id]"><mat-icon>slideshow</mat-icon> </button>
-        <button class="float-right mx-2" mat-button mat-raised-button color="primary" [routerLink]="['/resultat', questionnaire.id]"><mat-icon>equalizer</mat-icon> </button>
+        <button class="float-right mx-2" mat-button mat-raised-button color="primary" [routerLink]="['/statistiques', questionnaire.id]"><mat-icon>equalizer</mat-icon> </button>
+        <button class="float-right mx-2" mat-button mat-raised-button color="white" ><mat-icon>arrow_downward</mat-icon> </button>
+        <button class="float-right mx-2" mat-button mat-raised-button color="black" ><mat-icon>arrow_upward</mat-icon> </button>
     </div>
 </ul>
 <div class="text-center mt-3">

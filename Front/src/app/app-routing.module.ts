@@ -25,7 +25,7 @@ const routes: Routes = [
   { path: 'edit-question/:idQuestionnaire/:idQuestion', component: QuestionEditComponent, canActivate: [AuthGuard] },
   { path: 'edit-question/:idQuestionnaire', component: QuestionEditComponent, canActivate: [AuthGuard] },
   { path: 'show-question/:idQuestionnaire/:idQuestion', component: QuestionShowComponent, canActivate: [AuthGuard] },
-  { path: 'statistique/:id', component: ResultatComponent, canActivate: [AuthGuard] },
+  { path: 'statistiques/:id', component: ResultatComponent, canActivate: [AuthGuard] },
 
 
   // sinon, redirige vers la page d'accueil

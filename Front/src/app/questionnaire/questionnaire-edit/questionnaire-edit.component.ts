@@ -48,8 +48,8 @@ export class QuestionnaireEditComponent implements OnInit {
       titre: ['', Validators.required],
       description: ['', Validators.required],
       merci: ['', Validators.required],
-      isAnonymous: [false],
-      idUser: [this.authService.currentUserValue.id],
+      anonymous: [false],
+      idUser: [this.authService.currentUserValue.id]
       // themes: this.fb.array([])
     });
 
@@ -66,7 +66,7 @@ export class QuestionnaireEditComponent implements OnInit {
                 titre: [questionnaire.titre, Validators.required],
                 description: [questionnaire.description, Validators.required],
                 merci: [questionnaire.merci, Validators.required],
-                isAnonymous: [questionnaire.isAnonymous],
+                anonymous: [questionnaire.anonymous],
                 idUser: [this.authService.currentUserValue.id],
                 // themes: this.fb.array([])
               });
@@ -173,6 +173,29 @@ export class QuestionnaireEditComponent implements OnInit {
     this.questionService.delete(idQuestion).subscribe(() => {
       this.loadAllQuestions(this.idQuestionnaire);
     });
+  }
+
+
+  getRealType(typeQuestion: string): string {
+    let returnStr = '';
+    switch (typeQuestion) {
+      case 'OUVERT':
+        returnStr = 'question ouverte';
+        break;
+      case 'DATE':
+        returnStr = 'date';
+        break;
+      case 'RADIO':
+        returnStr = 'question à choix unique (boutons)';
+        break;
+      case 'CHECKBOX':
+        returnStr = 'question à choix multiples';
+        break;
+      case 'COMBOBOX':
+        returnStr = 'question à choix unique (sélection)';
+        break;
+    }
+    return returnStr;
   }
 
 }

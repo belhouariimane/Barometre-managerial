@@ -4,9 +4,11 @@ import {QuestionService} from '../../services/question.service';
 import {QuestionnaireService} from '../../services/questionnaire.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {first} from 'rxjs/operators';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {AlertService} from '../../services/alert.service';
 import {ReponseService} from '../../services/reponse.service';
+import {Question} from '../../models/question';
+import {Proposition} from '../../models/proposition';
 
 @Component({
   selector: 'app-questionnaire-answer',
@@ -14,10 +16,9 @@ import {ReponseService} from '../../services/reponse.service';
   styleUrls: ['./questionnaire-answer.component.scss']
 })
 export class QuestionnaireAnswerComponent implements OnInit {
-  public questionnaire: Questionnaire;
-  questions = [];
-  submitted = false;
   answerForm: FormGroup;
+  public questionnaire: Questionnaire;
+  submitted = false;
   loading = false;
   done = false;
   prenom: string;
@@ -32,6 +33,13 @@ export class QuestionnaireAnswerComponent implements OnInit {
               private router: Router) {}
 
   ngOnInit(): void {
+    this.answerForm = this.formBuilder.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      questions: this.formBuilder.array([])
+    });
+
+    // permet la redirection en cas d'identifiant inexistant
     this.questionnaireService.getById(this.route.snapshot.params.id)
         .subscribe(questionnaire => {
           if (questionnaire !== null) {
@@ -42,15 +50,61 @@ export class QuestionnaireAnswerComponent implements OnInit {
             this.router.navigate(['/login']);
           }
         });
+    // permet de récupérer l'ensemble des questions et des propositions liées à ce questionnaire
     this.questionService.readAllByIdQuestionnaire(this.route.snapshot.params.id)
         .subscribe(questions => {
-          this.questions = questions;
+          questions.forEach( (item, index) => {
+            console.log(item.valeur);
+            this.addQuestion(item);
+            item.propositions.forEach((item2) => {
+              this.addProposition(index, item2);
+            });
+          });
         });
-    this.answerForm = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+  }
 
+  initQuestion(question: Question) {
+    const prop = new Proposition();
+    prop.valeur = 'OUIII';
+    prop.id = 54;
+    return this.formBuilder.group({
+      idQuestion: [question.id],
+      valeurQuestion: [question.valeur],
+      typeQuestion: [question.typeQuestion],
+      isRequired: [question.isRequired],
+      order: [''],
+      valeurReponse: [''],
+      propositions: this.formBuilder.array([])
     });
+  }
+
+  initProposition(proposition: Proposition) {
+    return this.formBuilder.group({
+      idProp: [proposition.id],
+      valeurProp: [proposition.valeur],
+      chosen: false,
+    });
+  }
+
+  get questions(): FormArray {
+    return this.answerForm.get('questions') as FormArray;
+  }
+
+  addQuestion(question: Question) {
+    this.questions.push(this.initQuestion(question));
+  }
+
+  addProposition(j, proposition: Proposition) {
+    const control = this.questions.controls[j].get('propositions') as FormArray;
+    control.push(this.initProposition(proposition));
+  }
+
+  getQuestions(form) {
+    return form.controls.questions.controls;
+  }
+
+  getPropositions(question) {
+    return question.get('propositions').controls;
   }
 
   // accès simplifié aux champs du formulaire
@@ -58,7 +112,7 @@ export class QuestionnaireAnswerComponent implements OnInit {
     return this.answerForm.controls;
   }
 
-  onSubmit() {
+  onSubmit(formGroup: FormGroup) {
     this.submitted = true;
 
     // réinitialise les alertes lors de la soumission du formulaire
@@ -70,6 +124,34 @@ export class QuestionnaireAnswerComponent implements OnInit {
     }
 
     this.prenom = this.answerForm.value.firstName;
+
+
+    this.answerForm.value.questions.forEach((item, index) => {
+      switch (item.typeQuestion) {
+        case 'OUVERT':
+        case 'DATE':
+          console.log('La réponse à la question : ' + item.valeurQuestion + ' est : ' + item.valeurReponse);
+          break;
+        case 'RADIO':
+        case 'COMBOBOX':
+        case 'CHECKBOX':
+          console.log(this.questions.get('0'));
+          console.log(this.questions.get('1'));
+          console.log(this.questions.get('2'));
+          console.log(this.questions.get('3'));
+          console.log(this.questions.get('propositions'));
+          console.log('La réponse à la question : ' + item.valeurQuestion + ' est : ' + item.id);
+          break;
+      }
+      console.log('index : ' + index);
+      console.log('reponse : ' + item.valeurReponse);
+      console.log('type : ' + item.typeQuestion);
+      console.log(this.questions.controls[index].value.valeurReponse);
+    });
+
+    console.log(this.questions.controls[0].value.valeurReponse);
+
+    console.log(this.answerForm.value.textfin);
 
     // enregistre le nouvel utilisateur puis le connecte immédiatement
     // this.loading = true;
@@ -85,5 +167,29 @@ export class QuestionnaireAnswerComponent implements OnInit {
     //         }
     //     );
     this.done = true;
+  }
+
+  onChangeSelect(event: any, index: number) {
+    console.log(event.value);
+    this.questions.controls[index].value.valeurReponse = event.value;
+    console.log(this.questions.controls[index]);
+    console.log('SELECT');
+  }
+
+  onChangeCheckbox(values: any, question: Question,  proposition: Proposition) {
+    console.log('values: ' + values.currentTarget.id);
+    console.log('valuesIndex: ' + values.currentIndex);
+    console.log('à changer : ' + this.getPropositions(question)[values.currentTarget.id].controls.chosen);
+    console.log('à changer : ' + this.getPropositions(question)[values.currentTarget.id].value.chosen);
+    console.log('à changer : ' + this.getPropositions(question)[values.currentTarget.id].chosen);
+    console.log('Nouvelle valeur : ' + values.currentTarget.checked);
+    console.log(this.getPropositions(question).forEach((item) => {
+      console.log(item.value.valeurProp + ' = ? ' + proposition.valeur);
+      if (item.value.valeurProp === proposition.valeur) {
+        console.log('checked or not? : ' + values.currentTarget.checked);
+        item.chosen = values.currentTarget.checked;
+        console.log(item.chosen);
+      }
+    }));
   }
 }

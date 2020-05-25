@@ -1,24 +1,28 @@
 package fr.univ.angers.info.m2.acdi.bm.services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fr.univ.angers.info.m2.acdi.bm.constantes.ConstantesREST;
+import fr.univ.angers.info.m2.acdi.bm.dto.ParticipantCreateDTO;
+import fr.univ.angers.info.m2.acdi.bm.dto.ParticipantRetourDTO;
+import fr.univ.angers.info.m2.acdi.bm.dto.RetourGeneral;
 import fr.univ.angers.info.m2.acdi.bm.entities.Participant;
 import fr.univ.angers.info.m2.acdi.bm.entities.Proposition;
 import fr.univ.angers.info.m2.acdi.bm.entities.Question;
 import fr.univ.angers.info.m2.acdi.bm.entities.Questionnaire;
 import fr.univ.angers.info.m2.acdi.bm.entities.Reponse;
-import fr.univ.angers.info.m2.acdi.bm.exceptions.ParticipantNotFoundException;
-import fr.univ.angers.info.m2.acdi.bm.exceptions.QuestionnaireNotFoundException;
+import fr.univ.angers.info.m2.acdi.bm.exceptions.ResourceNotFoundException;
+import fr.univ.angers.info.m2.acdi.bm.helpers.Helpers;
+import fr.univ.angers.info.m2.acdi.bm.mapper.ParticipantMapper;
 import fr.univ.angers.info.m2.acdi.bm.repositories.ParticipantRepository;
 import fr.univ.angers.info.m2.acdi.bm.repositories.PropositionRepository;
 import fr.univ.angers.info.m2.acdi.bm.repositories.QuestionRepository;
 import fr.univ.angers.info.m2.acdi.bm.repositories.QuestionnaireRepository;
-import fr.univ.angers.info.m2.acdi.bm.response.RetourGeneral;
 
 @Service
 public class ParticipantService {
@@ -31,33 +35,54 @@ public class ParticipantService {
 	private PropositionRepository propositionRepository;
 	@Autowired
 	private QuestionRepository questionRepository;
+	@Autowired
+	private ParticipantMapper participantMapper;
 
-	public RetourGeneral save(Participant participant) {
+	public RetourGeneral save(ParticipantCreateDTO dto) {
 		RetourGeneral retour = new RetourGeneral();
 		try {
-			if (participant.checkNull()) {
+			if (dto.checkNull()) {
 				retour.setDescription(ConstantesREST.EMPTY_REQUEST);
 			} else {
-				Long idQuestionnaire = participant.getQuestionnaire().getId();
+				Participant newParticipant = participantMapper.createDtoToEntity(dto);
+				Long idQuestionnaire = newParticipant.getQuestionnaire().getId();
 				Questionnaire q = questionnaireRepository.findById(idQuestionnaire)
-						.orElseThrow(() -> new QuestionnaireNotFoundException(idQuestionnaire));
-				participant.setQuestionnaire(q);
-				for (Reponse r : participant.getReponses()) {
+						.orElseThrow(() -> new ResourceNotFoundException(Questionnaire.class.getSimpleName(), "id",
+								idQuestionnaire));
+				if (q.getDatePeremption().before(new Date())) {
+					retour.setDescription(ConstantesREST.DATE_PEREMPTION_DEPASSE);
+					return retour;
+				}
+				newParticipant.setQuestionnaire(q);
+				for (Reponse r : newParticipant.getReponses()) {
 					Long idQuestion = r.getQuestion().getId();
-					final Question question = questionRepository.findById(idQuestion)
-							.orElseThrow(() -> new QuestionnaireNotFoundException(idQuestion));
+					final Question question = questionRepository.findById(idQuestion).orElseThrow(
+							() -> new ResourceNotFoundException(Question.class.getSimpleName(), "id", idQuestion));
+					boolean reponseNonSaisiQuestionObligatoire = question.getIsRequired()
+							&& (Helpers.strEmpty(r.getValeur()).booleanValue() && (r.getProposition() == null));
+
+					if (reponseNonSaisiQuestionObligatoire) {
+						retour.setDescription(ConstantesREST.REPONSE_REQUIRED_ERROR);
+						return retour;
+					}
 					r.setQuestion(question);
-					r.setParticipant(participant);
-					for (Proposition proposition : r.getPropositions()) {
-						proposition.setQuestion(question);
+					r.setParticipant(newParticipant);
+					if (r.getProposition() != null && r.getProposition().getId() != null) {
+						Long idProposition = r.getProposition().getId();
+						final Proposition proposition = propositionRepository.findById(idProposition)
+								.orElseThrow(() -> new ResourceNotFoundException(Proposition.class.getSimpleName(),
+										"id", idProposition));
+						r.setProposition(proposition);
 					}
 				}
-				participant = participantRepository.save(participant);
+				newParticipant.setDateParticipation(new Date());
+				newParticipant = participantRepository.save(newParticipant);
+				ParticipantRetourDTO participantRetourDTO = participantMapper.EntityToRetourDto(newParticipant);
 				retour.setDescription(ConstantesREST.OK);
-				retour.setRetour(participant);
+				retour.setRetour(participantRetourDTO);
 			}
-		} catch (QuestionnaireNotFoundException e) {
-			retour.setDescription(ConstantesREST.ID_NOT_FOUND);
+		} catch (ResourceNotFoundException e) {
+			retour.setDescription(e.getMessage());
 		} catch (Exception e) {
 			retour.setDescription(ConstantesREST.CREATE_ERROR);
 		}
@@ -67,15 +92,22 @@ public class ParticipantService {
 
 	public RetourGeneral findAll() {
 		RetourGeneral retour = new RetourGeneral();
-
-		Iterable<Participant> it = participantRepository.findAll();
-		List<Participant> participants = new ArrayList<Participant>();
-		it.forEach(participants::add);
-		if (participants == null || participants.isEmpty()) {
-			retour.setDescription(ConstantesREST.objectNotFound(participants));
-		} else {
-			retour.setDescription(ConstantesREST.OK);
-			retour.setRetour(participants);
+		try {
+			Iterable<Participant> it = participantRepository.findAll();
+			List<Participant> participants = new ArrayList<>();
+			it.forEach(participants::add);
+			if (participants.isEmpty()) {
+				retour.setDescription(ConstantesREST.objectNotFound(participants));
+			} else {
+				List<ParticipantRetourDTO> retourlist = new ArrayList<>();
+				for (Participant participant : participants) {
+					retourlist.add(participantMapper.EntityToRetourDto(participant));
+				}
+				retour.setDescription(ConstantesREST.OK);
+				retour.setRetour(retourlist);
+			}
+		} catch (Exception e) {
+			retour.setDescription(ConstantesREST.UNKNOWN_ERROR);
 		}
 		return retour;
 	}
@@ -87,11 +119,12 @@ public class ParticipantService {
 		} else {
 			Participant found = null;
 			try {
-				found = participantRepository.findById(id).orElseThrow(() -> new ParticipantNotFoundException(id));
+				found = participantRepository.findById(id)
+						.orElseThrow(() -> new ResourceNotFoundException(Participant.class.getSimpleName(), "id", id));
 				retour.setRetour(found);
 				retour.setDescription(ConstantesREST.OK);
-			} catch (ParticipantNotFoundException e) {
-				retour.setDescription(ConstantesREST.objectNotFound(found));
+			} catch (ResourceNotFoundException e) {
+				retour.setDescription(e.getMessage());
 			}
 		}
 		return retour;

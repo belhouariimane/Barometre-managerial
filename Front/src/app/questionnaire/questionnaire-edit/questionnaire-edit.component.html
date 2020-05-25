@@ -49,8 +49,8 @@
         <div class="form-group">
             <mat-slide-toggle
                     class="example-margin"
-                    formControlName="isAnonymous"
-                    checked="{{questionnaire?.isAnonymous}}">
+                    formControlName="anonymous"
+                    checked="{{questionnaire?.anonymous}}">
                 Questionnaire anonyme
             </mat-slide-toggle>
         </div>
@@ -66,15 +66,16 @@
     <h3>Liste des questions</h3>
     <ul class="list-group">
         <div *ngFor="let question of questions" class="list-group-item m-3 rounded border">
-            <div [routerLink]="['/edit-question',idQuestionnaire, question.id]">
-                <div>Question n°{{question.id}} : {{question.titre}}</div>
-                <div>Type : {{question.type}}</div>
-                <div>IDQuestionnaire : {{question.idQuestionnaire}}</div>
+            <div class="zero-border" [routerLink]="['/edit-question',idQuestionnaire, question.id]">
+                <div>Question : {{question.valeur}}</div>
+                <div>Type : {{getRealType(question.typeQuestion)}}</div>
                 <div *ngIf="question.isFilter">Filtre : {{question.isFilter}}</div>
                 <div *ngIf="question.hasGraph">Graphe : {{question.hasGraph}}</div>
                 <div *ngIf="question.isRequired">Obligatoire : {{question.isRequired}}</div>
             </div>
             <div class="float-right ">
+                <button class="mx-2" mat-button mat-raised-button><mat-icon>arrow_upward</mat-icon> </button>
+                <button class="mx-2" mat-button mat-raised-button><mat-icon>arrow_downward</mat-icon> </button>
                 <button class="mx-2" mat-button mat-raised-button color="primary"  [routerLink]="['/show-question',idQuestionnaire, question.id]"><mat-icon>slideshow</mat-icon> </button>
                 <button class="mx-2" mat-button mat-raised-button color="accent" [routerLink]="['/edit-question',idQuestionnaire, question.id]"><mat-icon>update</mat-icon> </button>
                 <button class="mx-2" mat-button mat-raised-button color="warn" [routerLink]="['/edit-questionnaire', idQuestionnaire]" (click)="deleteQuestion(question.id)"><mat-icon>delete</mat-icon> </button>

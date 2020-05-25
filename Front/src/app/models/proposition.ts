@@ -1,7 +1,7 @@
 export class Proposition {
 
     id: number;
-    libelle: string;
+    valeur: string;
     idQuestion: number;
     order: number;
 

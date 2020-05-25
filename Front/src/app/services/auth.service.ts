@@ -26,14 +26,13 @@ export class AuthService {
 
     login(email, password) {
          return this.http.post<any>(`/admin/login`, { email, password })
-        //return this.http.post<any>(`/users/authenticate`, { email, password })
+         // return this.http.post<any>(`/users/authenticate`, { email, password })
             .pipe(map(user => {
                // stocke les détails de l'utilisateur + le jeton jwt dans le stockaqe local pour conserver
                // la connexion de l'utilisateur entre le rafraîchissement des pages
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                this.currentUserSubject.next(user);
-                console.log(user);
-                return user;
+                localStorage.setItem('currentUser', JSON.stringify(user.retour));
+                this.currentUserSubject.next(user.retour);
+                return user.retour;
             }));
     }
 
@@ -41,5 +40,19 @@ export class AuthService {
         // supprime l'utilisateur du stockage local et définit l'utilisateur actuel à null
         localStorage.removeItem('currentUser');
         this.currentUserSubject.next(null);
+    }
+
+    update(user: User) {
+        user.email = user.email.length === 0 ? this.currentUserValue.email : user.email;
+        user.password = user.password.length === 0 ? this.currentUserValue.password : user.password;
+        user.nom = user.nom.length === 0 ? this.currentUserValue.nom : user.nom;
+        user.prenom = user.prenom.length === 0 ? this.currentUserValue.prenom : user.prenom;
+        user.id = this.currentUserValue.id;
+        console.log(user.email);
+        console.log(user.password);
+        console.log(user.nom);
+        console.log(user.prenom);
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        this.currentUserSubject.next(user);
     }
 }

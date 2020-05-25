@@ -1,4 +1,4 @@
-package fr.univ.angers.info.m2.acdi.bm.util;
+package fr.univ.angers.info.m2.acdi.bm.helpers;
 
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;

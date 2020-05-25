@@ -67,12 +67,11 @@ export class HomeComponent implements OnInit {
         .subscribe(() => this.loadAllQuestionnaires());
   }
 
-  // @ts-ignore
   loadNbQuestions() {
     for (const questionnaire of this.questionnaires) {
       this.questionService.readAllByIdQuestionnaire(questionnaire.id)
           .subscribe(questions => {
-            questionnaire.nbQuestions = questions.length;
+            questionnaire.nbQuestions = questions !== undefined ? questions.length : 0;
           });
     }
   }
