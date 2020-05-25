@@ -48,8 +48,8 @@ export class QuestionnaireEditComponent implements OnInit {
       titre: ['', Validators.required],
       description: ['', Validators.required],
       merci: ['', Validators.required],
-      isAnonymous: [false],
-      idUser: [this.authService.currentUserValue.id],
+      anonymous: [false],
+      idUser: [this.authService.currentUserValue.id]
       // themes: this.fb.array([])
     });
 
@@ -66,7 +66,7 @@ export class QuestionnaireEditComponent implements OnInit {
                 titre: [questionnaire.titre, Validators.required],
                 description: [questionnaire.description, Validators.required],
                 merci: [questionnaire.merci, Validators.required],
-                isAnonymous: [questionnaire.isAnonymous],
+                anonymous: [questionnaire.anonymous],
                 idUser: [this.authService.currentUserValue.id],
                 // themes: this.fb.array([])
               });

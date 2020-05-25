@@ -48,8 +48,7 @@ export class QuestionnaireAnswerComponent implements OnInit {
         });
     this.answerForm = this.formBuilder.group({
       firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-
+      lastName: ['', Validators.required]
     });
   }
 

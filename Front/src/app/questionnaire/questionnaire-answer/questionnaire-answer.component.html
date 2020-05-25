@@ -1,11 +1,11 @@
 <div class="card m-3">
-    <h2 class="card-header">{{questionnaire?.titre}}</h2>
+    <h1 class="card-header text-center">{{questionnaire?.titre}}</h1>
     <div *ngIf="!done" class="card-body">
         <p>Bonjour, merci de prendre quelques minutes afin de répondre à ce questionnaire.</p>
         <form [formGroup]="answerForm" (ngSubmit)="onSubmit()">
             <div class="form">
-                <div *ngIf="questionnaire?.isAnonymous">Ce questionnaire est anonyme.</div>
-                <div *ngIf="!questionnaire?.isAnonymous">Veuillez saisir votre nom et prénom, répondre aux questions
+                <div *ngIf="questionnaire?.anonymous">Ce questionnaire est anonyme.</div>
+                <div *ngIf="!questionnaire?.anonymous">Veuillez saisir votre nom et prénom, répondre aux questions
                 ci-dessous puis valider votre participation en cliquant sur le bouton en bas de page.</div><br/>
                 <div class="form-group">
                     <label>Prénom</label>
@@ -38,7 +38,7 @@
 <!--                            <div *ngSwitchCase="'check'" class="container border rounded border-info p-4">-->
 <!--                                <div *ngFor="let proposition of propositions">-->
 <!--                                    <br/>-->
-<!--                                    <mat-checkbox formControlName="{{proposition.libelle}}">{{proposition.libelle}}</mat-checkbox>-->
+<!--                                    <mat-checkbox formControlName="{{proposition.valeur}}">{{proposition.valeur}}</mat-checkbox>-->
 <!--                                </div>-->
 <!--                            </div>-->
 <!--                            <div *ngSwitchCase="'radio'" class="container border rounded border-info p-4">-->
@@ -47,7 +47,7 @@
 <!--                                        class="example-radio-group"-->
 <!--                                        [(ngModel)]="chosenResponse">-->
 <!--                                    <div *ngFor="let proposition of propositions">-->
-<!--                                        <mat-radio-button class="example-radio-button">{{proposition.libelle}}</mat-radio-button><br/>-->
+<!--                                        <mat-radio-button class="example-radio-button">{{proposition.valeur}}</mat-radio-button><br/>-->
 <!--                                    </div>-->
 <!--                                    <br/>-->
 <!--                                </mat-radio-group>-->
@@ -57,7 +57,7 @@
 <!--                                    <mat-label>Choisissez une valeur</mat-label>-->
 <!--                                    <mat-select class="text-center" matNativeControl required>-->
 <!--                                        <div *ngFor="let proposition of propositions">-->
-<!--                                            <mat-option value="{{proposition.libelle}}">{{proposition.libelle}}</mat-option>-->
+<!--                                            <mat-option value="{{proposition.valeur}}">{{proposition.valeur}}</mat-option>-->
 <!--                                        </div>-->
 <!--                                    </mat-select>-->
 <!--                                </mat-form-field>-->

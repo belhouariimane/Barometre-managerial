@@ -1,9 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {QuestionService} from '../../services/question.service';
-import {PropositionService} from '../../services/proposition.service';
 import {Question} from '../../models/question';
-import {Proposition} from '../../models/proposition';
 
 @Component({
     selector: 'app-question-show',
@@ -20,8 +18,7 @@ export class QuestionShowComponent implements OnInit, OnChanges {
     apercuQuestion: boolean;
 
     constructor(private route: ActivatedRoute,
-                private questionService: QuestionService,
-                private propositionService: PropositionService) { }
+                private questionService: QuestionService) { }
 
     ngOnInit() {
         this.idQuestionnaire = this.route.snapshot.params.idQuestionnaire;
@@ -34,19 +31,15 @@ export class QuestionShowComponent implements OnInit, OnChanges {
         this.questionService.read(this.idQuestion)
             .subscribe(question => {
                 this.question = question;
-                if (question.type === 'radio' || question.type === 'check' || question.type === 'select') {
-                    this.loadAllPropositions();
+                console.log(question.typeQuestion);
+                if (question.typeQuestion === 'COMBOBOX' || question.typeQuestion === 'CHECKBOX' || question.typeQuestion === 'RADIO') {
+                    this.propositions = question.propositions;
                 }
             });
     }
 
     ngOnChanges(changes: SimpleChanges) {
         console.log(changes);
-    }
-
-    loadAllPropositions() {
-        this.propositionService.readAllByIdQuestion(this.idQuestion)
-            .subscribe(propositions => this.propositions = propositions);
     }
 
 }

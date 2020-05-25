@@ -36,9 +36,9 @@ export class MyaccountComponent implements OnInit {
 
   ngOnInit() {
     this.updateUserForm = this.formBuilder.group({
-      prenom: [this.authService.currentUserValue.prenom],
-      nom: [this.authService.currentUserValue.nom],
-      email: [this.authService.currentUserValue.email],
+      prenom: [this.currentUser.prenom],
+      nom: [this.currentUser.nom],
+      email: [this.currentUser.email],
       password: ['', Validators.minLength(6)],
       confirmPassword: ['', Validators.minLength(6)]
     }, { validators: this.checkPasswords});
@@ -47,8 +47,8 @@ export class MyaccountComponent implements OnInit {
         .subscribe(questionnaires => {
           this.nbQuestionnairesCrees = questionnaires.length;
           for (const questionnaire of questionnaires) {
-            // tslint:disable-next-line:max-line-length
-            this.questionService.readAllByIdQuestionnaire(questionnaire.id).subscribe(questions => this.nbQuestionsCreees += questions.length);
+            this.questionService.readAllByIdQuestionnaire(questionnaire.id)
+                .subscribe(questions => this.nbQuestionsCreees += questions.length);
           }
         });
   }
@@ -76,6 +76,8 @@ export class MyaccountComponent implements OnInit {
     if (this.updateUserForm.invalid) {
       return;
     }
+
+    delete this.updateUserForm.value.confirmPassword;
 
     // modifie l'utilisateur actuel
     this.userService.update(this.currentUser.id, this.updateUserForm.value)
