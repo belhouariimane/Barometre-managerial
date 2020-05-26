@@ -1,9 +1,11 @@
 <h3>Bonjour {{currentUser.prenom}} !</h3>
-<!--<h3>Liste des utilisateurs inscrits :</h3>-->
+<!--<h3>Liste des participations:</h3>-->
 <!--<ul class="list-group">-->
-<!--    <li *ngFor="let user of users" class="list-group-item m-3 rounded border border-primary">-->
-<!--        {{user.email}} ({{user.prenom}} {{user.nom}})-->
-<!--        <button class="btn btn-danger float-right " (click)="deleteUser(user.id)" >Supprimer</button>-->
+<!--    <li *ngFor="let participant of participants" class="list-group-item m-3 rounded border border-primary">-->
+<!--        idQuestionnaire : {{participant.idQuestionnaire}} ({{participant?.prenom}} {{participant?.nom}})-->
+<!--        <div *ngFor="let reponse of participant.reponses" class="list-group-item m-3 rounded border border-primary">-->
+<!--            idQuestion : {{reponse.idQuestion}} ; valeur : ({{reponse?.valeur}} {{reponse.idsProposition[0]}})-->
+<!--        </div>-->
 <!--    </li>-->
 <!--</ul>-->
 <h4>Liste des questionnaires</h4>
