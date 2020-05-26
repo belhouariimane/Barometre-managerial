@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiOperation;
 
 @Api("API pour la gestion des statistiques.")
 @RestController
-@RequestMapping("/api/statistique")
+@RequestMapping("/statistique")
 public class StatistiqueController {
 
 	@Autowired
