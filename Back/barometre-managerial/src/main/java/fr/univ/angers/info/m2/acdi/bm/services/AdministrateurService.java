@@ -1,13 +1,18 @@
 package fr.univ.angers.info.m2.acdi.bm.services;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import fr.univ.angers.info.m2.acdi.bm.constantes.ConstantesREST;
@@ -17,19 +22,30 @@ import fr.univ.angers.info.m2.acdi.bm.dto.AdministrateurUpdateDTO;
 import fr.univ.angers.info.m2.acdi.bm.dto.LoginDTO;
 import fr.univ.angers.info.m2.acdi.bm.entities.Administrateur;
 import fr.univ.angers.info.m2.acdi.bm.exceptions.ResourceNotFoundException;
-import fr.univ.angers.info.m2.acdi.bm.helpers.Helpers;
-import fr.univ.angers.info.m2.acdi.bm.helpers.PasswordUtils;
+import fr.univ.angers.info.m2.acdi.bm.helpers.JwtUtil;
 import fr.univ.angers.info.m2.acdi.bm.mapper.AdministrateurMapper;
 import fr.univ.angers.info.m2.acdi.bm.repositories.AdministrateurRepository;
 import fr.univ.angers.info.m2.acdi.bm.request.response.RetourGeneral;
 
 @Service
-public class AdministrateurService {
+public class AdministrateurService implements UserDetailsService {
 
 	@Autowired
 	private AdministrateurRepository administrateurRepository;
 	@Autowired
 	private AdministrateurMapper administrateurMapper;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private JwtUtil jwtUtil;
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		Administrateur administrateur = administrateurRepository.findByEmail(username);
+		return new User(administrateur.getEmail(), administrateur.getPassword(), new ArrayList<>());
+	}
 
 	public RetourGeneral findAll() {
 		RetourGeneral retour = new RetourGeneral();
@@ -52,8 +68,7 @@ public class AdministrateurService {
 				if (administrateurDto.checkNull()) {
 					retour.setDescription(ConstantesREST.EMPTY_REQUEST);
 				} else {
-					String hashedPassword = PasswordUtils.generateStorngPasswordHash(administrateurDto.getPassword());
-					administrateurDto.setPassword(hashedPassword);
+					administrateurDto.setPassword(passwordEncoder.encode(administrateurDto.getPassword()));
 					Administrateur toSave = administrateurMapper.createDtoToEntity(administrateurDto);
 					toSave.setDateParticipation(new Date());
 					Administrateur saved = administrateurRepository.save(toSave);
@@ -116,32 +131,12 @@ public class AdministrateurService {
 	public RetourGeneral login(LoginDTO loginDTO) {
 		RetourGeneral retour = new RetourGeneral();
 		try {
-			if (loginDTO.checkNull()) {
-				retour.setDescription(ConstantesREST.EMPTY_REQUEST);
-			} else {
-				if (Helpers.strEmpty(loginDTO.getEmail()) || Helpers.strEmpty(loginDTO.getPassword())) {
-					retour.setDescription(ConstantesREST.EMAIL_OR_PASSWORD_NOT_SEND);
-				} else {
-					List<Administrateur> administrateurs = administrateurRepository.findByEmail(loginDTO.getEmail());
-					if (administrateurs != null && !administrateurs.isEmpty()) {
-						Administrateur returnedAdmin = administrateurs.get(0);
-						boolean isPasswordValid = PasswordUtils.validatePassword(loginDTO.getPassword(),
-								returnedAdmin.getPassword());
-						if (isPasswordValid) {
-							AdministrateurRetourDTO retourAdministrateurDto = administrateurMapper
-									.entityToRetour(returnedAdmin);
-							retour.setDescription(ConstantesREST.OK);
-							retour.setRetour(retourAdministrateurDto);
-						} else {
-							retour.setDescription(ConstantesREST.PASSWORD_INVALID);
-						}
-					}
-				}
-			}
-		} catch (NoSuchAlgorithmException | InvalidKeySpecException e1) {
-			retour.setDescription(ConstantesREST.PASSWORD_VALIDATION_ERROR);
+			authenticationManager
+					.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
+			retour.setRetour(jwtUtil.generateToken(loginDTO.getEmail()));
+			retour.setDescription(ConstantesREST.OK);
 		} catch (Exception e) {
-			retour.setDescription(ConstantesREST.UNKNOWN_ERROR);
+			retour.setDescription(ConstantesREST.CREDANTIALS_INVALID);
 		}
 		return retour;
 	}
@@ -156,6 +151,9 @@ public class AdministrateurService {
 		if (from.getEmail() != null) {
 			to.setEmail(from.getEmail());
 		}
-		// TODO handle password change
+		if (from.getPassword() != null) {
+			to.setPassword(passwordEncoder.encode(from.getPassword()));
+		}
 	}
+
 }
