@@ -12,12 +12,12 @@ export class QuestionnaireService {
     constructor(private http: HttpClient) { }
 
     getAllByIdUser(idUser: number) {
-        return this.http.get<Questionnaire[]>(`/questionnaire/findByIdAdministrateur/${idUser}`);
+        return this.http.get<Questionnaire[]>(`${environment.apiUrl}/questionnaire/findByIdAdministrateur/${idUser}`);
         // return this.http.get<Questionnaire[]>(`${environment.apiUrl}/questionnaires/all/${idUser}`);
     }
 
     getById(idQuestionnaire: number): Observable<Questionnaire> {
-        return this.http.get<any>(`/questionnaire/read/${idQuestionnaire}`)
+        return this.http.get<any>(`${environment.apiUrl}/questionnaire/read/${idQuestionnaire}`)
             .pipe(map(data => {
                 return data.questionnaire;
                 }));
@@ -37,7 +37,7 @@ export class QuestionnaireService {
         questionnaire.datePeremption = new Date(2020, 12, 15);
         questionnaire.url = environment.apiUrl + '/answer/' + questionnaire.id;
         const questStr = JSON.stringify(questionnaire, replacer);
-        return this.http.post(`/questionnaire/create`, JSON.parse(questStr));
+        return this.http.post(`${environment.apiUrl}/questionnaire/create`, JSON.parse(questStr));
         // return this.http.post(`${environment.apiUrl}/questionnaires/register`, questionnaire);
     }
 
@@ -48,19 +48,19 @@ export class QuestionnaireService {
             }
             return value;
         }
-        questionnaire.administrateur = new User();
-        questionnaire.administrateur.id = questionnaire.idUser;
+        // questionnaire.administrateur = new User();
+        // questionnaire.administrateur.id = questionnaire.idUser;
         questionnaire.dateCreation = new Date(Date.now());
         questionnaire.datePeremption = new Date(2020, 12, 15);
         questionnaire.url = environment.apiUrl + '/answer/' + id;
         questionnaire.id = id;
         const questStr = JSON.stringify(questionnaire, replacer);
-        return this.http.post(`/questionnaire/update/${id}`, JSON.parse(questStr));
+        return this.http.post(`${environment.apiUrl}/questionnaire/update`, JSON.parse(questStr));
         // return this.http.post(`${environment.apiUrl}/questionnaires/update/${id}`, questionnaire);
     }
 
     delete(id: number) {
-        return this.http.delete(`/questionnaire/delete/${id}`);
+        return this.http.delete(`${environment.apiUrl}/questionnaire/delete/${id}`);
         // return this.http.delete(`${environment.apiUrl}/questionnaires/${id}`);
     }
 }

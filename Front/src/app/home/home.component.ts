@@ -8,6 +8,8 @@ import {Questionnaire} from '../models/questionnaire';
 import {Router} from '@angular/router';
 import {QuestionService} from '../services/question.service';
 import {environment} from '../../environments/environment';
+import {ParticipantService} from '../services/participant.service';
+import {Participant} from '../models/participant';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +21,7 @@ import {environment} from '../../environments/environment';
 export class HomeComponent implements OnInit {
   currentUser: User;
   users = [];
+  participants = [];
   questionnaires = [];
   apiUrl: string;
 
@@ -27,7 +30,7 @@ export class HomeComponent implements OnInit {
       private userService: UserService,
       private questionnaireService: QuestionnaireService,
       private questionService: QuestionService,
-      private router: Router
+      private participantService: ParticipantService
   ) {
     this.currentUser = this.authService.currentUserValue;
     this.apiUrl = environment.apiUrl;
@@ -35,6 +38,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.loadAllUsers();
+    this.loadAllParticipants();
     this.loadAllQuestionnaires();
   }
 
@@ -43,6 +47,12 @@ export class HomeComponent implements OnInit {
     this.userService.getAll()
         .pipe(first())
         .subscribe(users => this.users = users);
+  }
+
+  // provisoire, à supprimer par la suite
+  private loadAllParticipants() {
+    // this.participantService.readAll()
+    //     .subscribe(participants => this.participants = participants);
   }
 
   deleteUser(id: number) {
@@ -71,7 +81,7 @@ export class HomeComponent implements OnInit {
     for (const questionnaire of this.questionnaires) {
       this.questionService.readAllByIdQuestionnaire(questionnaire.id)
           .subscribe(questions => {
-            questionnaire.nbQuestions = questions.length;
+            questionnaire.nbQuestions = questions !== undefined ? questions.length : 0;
           });
     }
   }

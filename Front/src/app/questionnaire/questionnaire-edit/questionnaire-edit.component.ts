@@ -175,4 +175,27 @@ export class QuestionnaireEditComponent implements OnInit {
     });
   }
 
+
+  getRealType(typeQuestion: string): string {
+    let returnStr = '';
+    switch (typeQuestion) {
+      case 'OUVERT':
+        returnStr = 'question ouverte';
+        break;
+      case 'DATE':
+        returnStr = 'date';
+        break;
+      case 'RADIO':
+        returnStr = 'question à choix unique (boutons)';
+        break;
+      case 'CHECKBOX':
+        returnStr = 'question à choix multiples';
+        break;
+      case 'COMBOBOX':
+        returnStr = 'question à choix unique (sélection)';
+        break;
+    }
+    return returnStr;
+  }
+
 }

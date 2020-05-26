@@ -2,7 +2,6 @@
     <h3>{{question?.valeur}}</h3><br/>
     <div *ngSwitchCase="'CHECKBOX'" class="container border rounded border-info px-4 py-2">
         <div *ngFor="let proposition of propositions">
-            <br/>
             <mat-checkbox>{{proposition.valeur}}</mat-checkbox>
         </div>
     </div>
