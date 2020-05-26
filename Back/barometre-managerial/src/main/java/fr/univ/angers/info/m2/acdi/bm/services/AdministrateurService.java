@@ -14,13 +14,13 @@ import fr.univ.angers.info.m2.acdi.bm.dto.AdministrateurCreateDTO;
 import fr.univ.angers.info.m2.acdi.bm.dto.AdministrateurRetourDTO;
 import fr.univ.angers.info.m2.acdi.bm.dto.AdministrateurUpdateDTO;
 import fr.univ.angers.info.m2.acdi.bm.dto.LoginDTO;
-import fr.univ.angers.info.m2.acdi.bm.dto.RetourGeneral;
 import fr.univ.angers.info.m2.acdi.bm.entities.Administrateur;
 import fr.univ.angers.info.m2.acdi.bm.exceptions.ResourceNotFoundException;
 import fr.univ.angers.info.m2.acdi.bm.helpers.Helpers;
 import fr.univ.angers.info.m2.acdi.bm.helpers.PasswordUtils;
 import fr.univ.angers.info.m2.acdi.bm.mapper.AdministrateurMapper;
 import fr.univ.angers.info.m2.acdi.bm.repositories.AdministrateurRepository;
+import fr.univ.angers.info.m2.acdi.bm.request.response.RetourGeneral;
 
 @Service
 public class AdministrateurService {

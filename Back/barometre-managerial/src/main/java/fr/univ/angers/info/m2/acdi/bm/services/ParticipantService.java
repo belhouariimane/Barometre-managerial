@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import fr.univ.angers.info.m2.acdi.bm.constantes.ConstantesREST;
 import fr.univ.angers.info.m2.acdi.bm.dto.ParticipantCreateDTO;
 import fr.univ.angers.info.m2.acdi.bm.dto.ParticipantRetourDTO;
-import fr.univ.angers.info.m2.acdi.bm.dto.RetourGeneral;
 import fr.univ.angers.info.m2.acdi.bm.entities.Participant;
 import fr.univ.angers.info.m2.acdi.bm.entities.Proposition;
 import fr.univ.angers.info.m2.acdi.bm.entities.Question;
@@ -23,6 +22,7 @@ import fr.univ.angers.info.m2.acdi.bm.repositories.ParticipantRepository;
 import fr.univ.angers.info.m2.acdi.bm.repositories.PropositionRepository;
 import fr.univ.angers.info.m2.acdi.bm.repositories.QuestionRepository;
 import fr.univ.angers.info.m2.acdi.bm.repositories.QuestionnaireRepository;
+import fr.univ.angers.info.m2.acdi.bm.request.response.RetourGeneral;
 
 @Service
 public class ParticipantService {

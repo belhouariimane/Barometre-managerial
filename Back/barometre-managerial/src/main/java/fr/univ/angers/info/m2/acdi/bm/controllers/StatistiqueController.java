@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import fr.univ.angers.info.m2.acdi.bm.dto.RetourGeneral;
+import fr.univ.angers.info.m2.acdi.bm.request.response.RetourGeneral;
 import fr.univ.angers.info.m2.acdi.bm.services.StatistiqueService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
