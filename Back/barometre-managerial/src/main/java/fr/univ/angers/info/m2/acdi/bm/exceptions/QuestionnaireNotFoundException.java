@@ -9,6 +9,7 @@ package fr.univ.angers.info.m2.acdi.bm.exceptions;
  */
 public class QuestionnaireNotFoundException extends Exception {
 
+	private static final long serialVersionUID = 1L;
 	private Long id;
 
 	public QuestionnaireNotFoundException(Long id) {

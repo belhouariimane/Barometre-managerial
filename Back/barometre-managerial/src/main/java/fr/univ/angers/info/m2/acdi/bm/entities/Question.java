@@ -9,19 +9,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import fr.univ.angers.info.m2.acdi.bm.enums.TypeQuestion;
@@ -42,11 +36,10 @@ public class Question implements Serializable {
 	private Boolean isRequired;
 	private Boolean isFilter;
 
-	// https://keepgrowing.in/java/springboot/how-to-get-json-response-only-with-an-id-of-the-related-entity/
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Questionnaire questionnaire;
 
-	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL/* , orphanRemoval = true */)
 	private List<Proposition> propositions;
 
 	@JsonIgnore

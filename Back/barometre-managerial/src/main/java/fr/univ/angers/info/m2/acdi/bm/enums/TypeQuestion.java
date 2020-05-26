@@ -4,7 +4,7 @@ public enum TypeQuestion {
 	RADIO ("RADIO"),
 	CHECKBOX ("CHECKBOX"),
 	COMBOBOX ("COMBOBOX"),
-	EVALUATION ("EVALUATION"),
+	DATE ("DATE"),
 	OUVERT ("OUVERT");
 	
 	private String typeQuestion = "";
@@ -13,6 +13,7 @@ public enum TypeQuestion {
 		this.typeQuestion = typeQuestion;
 	}
 	
+	@Override
 	public String toString() {
 		return this.typeQuestion;
 	}

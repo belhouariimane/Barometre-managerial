@@ -11,6 +11,8 @@ import fr.univ.angers.info.m2.acdi.bm.entities.Participant;
 
 public class ParticipantSerializer extends StdSerializer<Participant> {
 
+	private static final long serialVersionUID = 4134507204943400701L;
+
 	public ParticipantSerializer() {
 		this(null);
 	}

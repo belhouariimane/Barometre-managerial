@@ -29,7 +29,7 @@ export class UserService {
 
     update(id: number, user: User) {
         delete user.id;
-        return this.http.post(`/admin/update/${id}`, user);
+        return this.http.put(`/admin/update/${id}`, user);
         // return this.http.post(`${environment.apiUrl}/users/update/${id}`, user);
     }
 }

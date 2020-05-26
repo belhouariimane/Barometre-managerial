@@ -10,7 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -18,13 +17,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import fr.univ.angers.info.m2.acdi.bm.helpers.Helpers;
@@ -44,6 +38,10 @@ public class Questionnaire implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date datePeremption;
 	private Boolean anonymous;
+	private String description;
+	private String remerciement;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateCreation;
 
 	// https://keepgrowing.in/java/springboot/how-to-get-json-response-only-with-an-id-of-the-related-entity/
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -131,14 +129,36 @@ public class Questionnaire implements Serializable {
 	}
 
 	public void setAdministrateur(Administrateur administrateur) {
-//		Administrateur admin = new Administrateur();
-//		admin.setId(administrateur);
 		this.administrateur = administrateur;
 	}
 
 	@XmlTransient
 	public List<Participant> getParticipants() {
 		return participants;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getRemerciement() {
+		return remerciement;
+	}
+
+	public void setRemerciement(String remerciement) {
+		this.remerciement = remerciement;
+	}
+
+	public Date getDateCreation() {
+		return dateCreation;
+	}
+
+	public void setDateCreation(Date dateCreation) {
+		this.dateCreation = dateCreation;
 	}
 
 	public void setParticipants(List<Participant> participants) {
@@ -158,7 +178,8 @@ public class Questionnaire implements Serializable {
 	public String toString() {
 		return "Questionnaire{" + "id=" + id + ", titre=" + titre + ", url=" + url + ", datePeremption="
 				+ datePeremption + ", anonymous=" + anonymous + ", administrateur=" + administrateur + ", participants="
-				+ participants + ", questions=" + questions + '}';
+				+ participants + ", questions=" + questions + ", description" + description + ", remerciement" + remerciement
+				+ ", dateCreation" + dateCreation + "}";
 	}
 
 }

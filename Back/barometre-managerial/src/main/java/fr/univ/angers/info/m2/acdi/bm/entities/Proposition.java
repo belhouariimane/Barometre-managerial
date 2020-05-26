@@ -7,16 +7,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
@@ -29,47 +23,46 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Proposition implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String valeur;
-    
-    // https://keepgrowing.in/java/springboot/how-to-get-json-response-only-with-an-id-of-the-related-entity/
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Question question;
+	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+	private String valeur;
 
-    public Proposition() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Question question;
+
+	public Proposition() {
 		super();
-    }
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getValeur() {
-        return valeur;
-    }
+	public String getValeur() {
+		return valeur;
+	}
 
-    public void setValeur(String valeur) {
-        this.valeur = valeur;
-    }
+	public void setValeur(String valeur) {
+		this.valeur = valeur;
+	}
 
-    public Question getQuestion() {
-        return question;
-    }
+	public Question getQuestion() {
+		return question;
+	}
 
-    public void setQuestion(Question question) {
-        this.question = question;
-    }
+	public void setQuestion(Question question) {
+		this.question = question;
+	}
 
-    @Override
-    public String toString() {
-        return "Proposition{" + "id=" + id + ", valeur=" + valeur + ", question=" + question + '}';
-    }
+	@Override
+	public String toString() {
+		return "Proposition{" + "id=" + id + ", valeur=" + valeur + ", question=" + question + '}';
+	}
 
 }

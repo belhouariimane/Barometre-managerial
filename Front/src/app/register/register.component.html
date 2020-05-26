@@ -15,10 +15,11 @@
         </div>
     </div>
     <div class="form-group">
-        <label>Nom d'utilisateur</label>
+        <label>Email</label>
         <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
         <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-            <div *ngIf="f.email.errors.required">Veuillez renseigner votre nom d'utilisateur</div>
+            <div *ngIf="f.email.errors.required">Veuillez renseigner votre email</div>
+            <div *ngIf="f.email.errors.pattern">Le format email n'est pas reconnu</div>
         </div>
     </div>
     <div class="form-group">

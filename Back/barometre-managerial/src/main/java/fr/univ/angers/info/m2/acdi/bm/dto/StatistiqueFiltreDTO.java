@@ -3,11 +3,11 @@ package fr.univ.angers.info.m2.acdi.bm.dto;
 import java.io.Serializable;
 import java.util.List;
 
-public class StatistiqueItemDTO implements Serializable {
+public class StatistiqueFiltreDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String filter;
 	private String question;
 	private String questionFilter;
+	private String filter;
 	private List<String> labels;
 	private List<Integer> data;
 
@@ -17,7 +17,7 @@ public class StatistiqueItemDTO implements Serializable {
 	 * @param labels
 	 * @param data
 	 */
-	public StatistiqueItemDTO(String question, String questionFilter, String filter, List<String> labels,
+	public StatistiqueFiltreDTO(String question, String questionFilter, String filter, List<String> labels,
 			List<Integer> data) {
 		super();
 		this.filter = filter;

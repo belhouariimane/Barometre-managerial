@@ -1,47 +1,51 @@
-<div class="card m-3">
+<div class="card m-3" xmlns="http://www.w3.org/1999/html">
     <h1 class="card-header text-center">{{questionnaire?.titre}}</h1>
     <div *ngIf="!done" class="card-body">
         <p>Bonjour, merci de prendre quelques minutes afin de répondre à ce questionnaire.</p>
-        <form [formGroup]="answerForm" (ngSubmit)="onSubmit(answerForm)">
+        <form *ngIf="answerForm" [formGroup]="answerForm" (ngSubmit)="onSubmit(answerForm)">
             <div class="form">
-                <div *ngIf="questionnaire?.anonymous">Ce questionnaire est anonyme.</div>
-                <div *ngIf="!questionnaire?.anonymous">Veuillez saisir votre nom et prénom, répondre aux questions
+                <div *ngIf="anonymous">Ce questionnaire est anonyme.</div>
+                <div *ngIf="!anonymous">Veuillez saisir votre nom et prénom, répondre aux questions
                 ci-dessous puis valider votre participation en cliquant sur le bouton en bas de page.</div><br/>
-                <div class="input-group">
-                <div class="form-group px-2 w-50">
-                    <label>Prénom</label>
-                    <input type="text" formControlName="firstName" class="form-control mx-2" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
-                    <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
-                        <div *ngIf="f.firstName.errors.required">Veuillez renseigner votre prénom</div>
+                <div *ngIf="!anonymous">
+
+                    <div class="input-group">
+                        <div class="form-group px-2 w-50">
+                            <label>Prénom</label>
+                            <input type="text" formControlName="firstName" class="form-control mx-2" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+                            <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+                                <div *ngIf="f.firstName.errors.required">Veuillez renseigner votre prénom</div>
+                            </div>
+                        </div>
+                        <div class="form-group px-2 w-50 float-right">
+                            <label>Nom</label>
+                            <input type="text" formControlName="lastName" class="form-control input-group-prepend mx-2" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+                            <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                                <div *ngIf="f.lastName.errors.required">Veuillez renseigner votre nom</div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group px-2 w-50 float-right">
-                    <label>Nom</label>
-                    <input type="text" formControlName="lastName" class="form-control input-group-prepend mx-2" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
-                    <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
-                        <div *ngIf="f.lastName.errors.required">Veuillez renseigner votre nom</div>
-                    </div>
-                </div>
                 </div>
                 <div formArrayName="questions">
                     <div class="form-group" [formGroupName]="i" *ngFor="let question of getQuestions(answerForm); let i = index">
                         <div class="w-100">
-                            <h5>{{question.value.valeurQuestion}}</h5>
+                            <h5>{{question.value.valeurQuestion}} <span *ngIf="question.value.isRequired" class="text-danger">*</span></h5>
                             <ng-container [ngSwitch]="question?.value.typeQuestion" >
                                 <div *ngSwitchCase="'CHECKBOX'" class="container border rounded border-info p-4">
                                     <div formArrayName="propositions">
                                         <div [formGroupName]="j" *ngFor="let proposition of getPropositions(question); let j = index">
-                                            <mat-checkbox>{{proposition?.value.valeurProp}}</mat-checkbox>
+                                            <mat-checkbox (change)="onChangeCheckbox($event, question)" id="{{j}}" type="checkbox" value="angular">{{proposition?.value.valeurProp}}</mat-checkbox>
                                         </div>
                                     </div>
                                 </div>
                                 <div *ngSwitchCase="'RADIO'" class="container border rounded border-info p-4">
                                     <mat-radio-group
                                             aria-labelledby="example-radio-group-label"
-                                            class="example-radio-group">
+                                            class="example-radio-group"
+                                            (change)="onChangeSelect($event, question)">
                                         <div formArrayName="propositions">
                                             <div [formGroupName]="j" *ngFor="let proposition of getPropositions(question); let j = index">
-                                                <mat-radio-button class="example-radio-button">{{proposition?.value.valeurProp}}</mat-radio-button><br/>
+                                                <mat-radio-button value="{{j}}" class="example-radio-button">{{proposition?.value.valeurProp}}</mat-radio-button><br/>
                                             </div>
                                         </div>
                                         <br/>
@@ -50,10 +54,10 @@
                                 <div *ngSwitchCase="'COMBOBOX'" class="container border rounded border-info p-4">
                                     <mat-form-field class="w-50">
                                         <mat-label>Choisissez une valeur</mat-label>
-                                        <mat-select class="text-center" matNativeControl required>
+                                        <mat-select class="text-center" matNativeControl required (selectionChange)="onChangeSelect($event,question)">
                                             <div formArrayName="propositions">
                                                 <div [formGroupName]="j" *ngFor="let proposition of getPropositions(question); let j = index">
-                                                    <mat-option value="{{proposition?.value.idProp}}">{{proposition?.value.valeurProp}}</mat-option>
+                                                    <mat-option value="{{j}}">{{proposition?.value.valeurProp}}</mat-option>
                                                 </div>
                                             </div>
                                         </mat-select>
@@ -70,7 +74,7 @@
                                 <div *ngSwitchCase="'OUVERT'" class="container border rounded border-info p-4">
                                     <mat-form-field class="w-100" >
                                         <mat-label>Veuillez saisir votre réponse</mat-label>
-                                        <textarea required="{{question?.value.isRequired}}" matInput></textarea>
+                                        <textarea formControlName="valeurReponse" required="{{question?.value.isRequired}}" matInput></textarea>
                                     </mat-form-field>
                                 </div>
                             </ng-container>
@@ -85,9 +89,21 @@
             </div>
             </div>
         </form >
-            {{this.answerForm.value | json}}
     </div>
     <div *ngIf="done" class="card-body">
         <p>{{questionnaire.merci}}</p>
+        <p>Vos réponses : </p>
+        <div *ngFor="let question of getQuestions(answerForm); let i = index">
+            <li>{{question.value.valeurQuestion}}</li>
+            <ul>{{question.value.valeurReponse}}</ul>
+            <div *ngIf="question.value.typeQuestion === 'CHECKBOX' ||
+                        question.value.typeQuestion === 'COMBOBOX' ||
+                        question.value.typeQuestion === 'RADIO'">
+                <div *ngFor="let proposition of getPropositions(question); let j = index">
+                    <ul *ngIf="proposition.value.chosen">{{proposition.value.valeurProp}}</ul>
+                </div>
+            </div>
+        </div>
+        {{this.participant | json}}
     </div>
 </div>

@@ -4,20 +4,15 @@
 package fr.univ.angers.info.m2.acdi.bm.entities;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -44,58 +39,88 @@ public class Reponse implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Question question;
 
-	@ManyToMany
-	private List<Proposition> propositions;
+//	@ManyToMany
+	@OneToOne
+	private Proposition proposition;
 
 	public Reponse() {
 		super();
 	}
 
+	/**
+	 * @return the id
+	 */
 	public Long getId() {
 		return id;
 	}
 
+	/**
+	 * @param id the id to set
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return the valeur
+	 */
 	public String getValeur() {
 		return valeur;
 	}
 
+	/**
+	 * @param valeur the valeur to set
+	 */
 	public void setValeur(String valeur) {
 		this.valeur = valeur;
 	}
 
+	/**
+	 * @return the participant
+	 */
 	public Participant getParticipant() {
 		return participant;
 	}
 
+	/**
+	 * @param participant the participant to set
+	 */
 	public void setParticipant(Participant participant) {
 		this.participant = participant;
 	}
 
+	/**
+	 * @return the question
+	 */
 	public Question getQuestion() {
 		return question;
 	}
 
+	/**
+	 * @param question the question to set
+	 */
 	public void setQuestion(Question question) {
 		this.question = question;
 	}
 
-	@XmlTransient
-	public List<Proposition> getPropositions() {
-		return propositions;
+	/**
+	 * @return the proposition
+	 */
+	public Proposition getProposition() {
+		return proposition;
 	}
 
-	public void setPropositions(List<Proposition> propositions) {
-		this.propositions = propositions;
+	/**
+	 * @param proposition the proposition to set
+	 */
+	public void setProposition(Proposition proposition) {
+		this.proposition = proposition;
 	}
 
 	@Override
 	public String toString() {
-		return "Reponse{" + "id=" + id + ", valeur=" + valeur + ", participant=" + participant + ", question="
-				+ question + ", propositions=" + propositions + '}';
+		return "Reponse [id=" + id + ", valeur=" + valeur + ", participant=" + participant + ", question=" + question
+				+ ", proposition=" + proposition + "]";
 	}
 
 }

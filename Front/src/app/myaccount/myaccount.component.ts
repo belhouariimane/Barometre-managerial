@@ -38,7 +38,7 @@ export class MyaccountComponent implements OnInit {
     this.updateUserForm = this.formBuilder.group({
       prenom: [this.currentUser.prenom],
       nom: [this.currentUser.nom],
-      email: [this.currentUser.email],
+      email: [this.currentUser.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')],
       password: ['', Validators.minLength(6)],
       confirmPassword: ['', Validators.minLength(6)]
     }, { validators: this.checkPasswords});
@@ -82,7 +82,8 @@ export class MyaccountComponent implements OnInit {
     // modifie l'utilisateur actuel
     this.userService.update(this.currentUser.id, this.updateUserForm.value)
         .pipe(first())
-        .subscribe( data => {
+        .subscribe( user => {
+          this.authService.update(this.updateUserForm.value);
           this.alertService.success('Modifications enregistrées', true);
           this.currentUser = this.authService.currentUserValue;
         }

@@ -5,6 +5,7 @@ package fr.univ.angers.info.m2.acdi.bm.entities;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,11 +16,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import fr.univ.angers.info.m2.acdi.bm.helpers.AdministrateurSerializer;
 
 /**
  * @author aharboul
@@ -28,6 +34,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity(name = "Administrateur")
 @Table(name = "administrateur")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonSerialize(using = AdministrateurSerializer.class)
 public class Administrateur implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -39,6 +46,8 @@ public class Administrateur implements Serializable {
 	private String password;
 	private String nom;
 	private String prenom;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateParticipation;
 	@JsonIgnore
 	@OneToMany(mappedBy = "administrateur", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Questionnaire> questionnaires;
@@ -109,12 +118,26 @@ public class Administrateur implements Serializable {
 		this.questionnaires = questionnaires;
 	}
 
+	/**
+	 * @return the dateParticipation
+	 */
+	public Date getDateParticipation() {
+		return dateParticipation;
+	}
+
+	/**
+	 * @param dateParticipation the dateParticipation to set
+	 */
+	public void setDateParticipation(Date dateParticipation) {
+		this.dateParticipation = dateParticipation;
+	}
+
 	@Override
 	public String toString() {
 		return "Administrateur [id=" + id + ", email=" + email + ", password=" + password + ", nom=" + nom + ", prenom="
 				+ prenom + "]";
 	}
-	
+
 	public boolean checkNull() throws IllegalAccessException {
 		for (Field f : this.getClass().getDeclaredFields())
 			if (f.get(this) != null)

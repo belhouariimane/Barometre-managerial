@@ -65,7 +65,7 @@
             </button>
         </div>
         <div *ngIf="submitted && typeQuestion===undefined" class="invalid-feedback float-right">
-            <div *ngIf="typeQuestion===undefined">Veuillez sélectionner un typeQuestion</div><br/>
+            <div *ngIf="typeQuestion===undefined">Veuillez sélectionner un type de question</div><br/>
         </div>
         <div *ngIf="typeQuestion==='CHECKBOX' || typeQuestion==='RADIO' || typeQuestion==='COMBOBOX'">
             <div formArrayName="propositions">
@@ -73,14 +73,18 @@
                     <div class="container border rounded border-info mb-2 pt-2 px-4" [formGroupName]="i">
                         <label>Proposition {{i+1}} : </label>
                         <div class="input-group">
-                            <input type="text" class='form-control mx-2 ' formControlName="valeur" placeholder="{{proposition?.value.valeur}}" />
+                            <input type="text" class='form-control mx-2 ' formControlName="valeur" placeholder="{{proposition?.value.valeur}}"
+                                   [ngClass]="{ 'is-invalid': submitted && proposition.get('valeur').errors}"/>
                             <div class="input-group-prepend">
-                            <button class="float-right" (click)="removeProposition(i)" mat-raised-button  mat-mini-fab color="warn">
+                            <button class="float-right" (click)="removeProposition(i)" [disabled]="propositions.length<=2" mat-raised-button  mat-mini-fab color="warn">
                                 <mat-icon>remove_circle</mat-icon>
                             </button>
-                            </div>
                         </div>
-                            <br/>
+                        <div *ngIf="submitted && proposition.get('valeur').errors" class="invalid-feedback float-right">
+                            <div *ngIf="proposition.get('valeur').errors">Veuillez renseigner une valeur</div><br/>
+                        </div>
+                        </div>
+                        <br/>
                     </div>
                 </div>
             </div>

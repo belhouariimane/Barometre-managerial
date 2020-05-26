@@ -1,9 +1,11 @@
 <h3>Bonjour {{currentUser.prenom}} !</h3>
-<!--<h3>Liste des utilisateurs inscrits :</h3>-->
+<!--<h3>Liste des participations:</h3>-->
 <!--<ul class="list-group">-->
-<!--    <li *ngFor="let user of users" class="list-group-item m-3 rounded border border-primary">-->
-<!--        {{user.email}} ({{user.prenom}} {{user.nom}})-->
-<!--        <button class="btn btn-danger float-right " (click)="deleteUser(user.id)" >Supprimer</button>-->
+<!--    <li *ngFor="let participant of participants" class="list-group-item m-3 rounded border border-primary">-->
+<!--        idQuestionnaire : {{participant.idQuestionnaire}} ({{participant?.prenom}} {{participant?.nom}})-->
+<!--        <div *ngFor="let reponse of participant.reponses" class="list-group-item m-3 rounded border border-primary">-->
+<!--            idQuestion : {{reponse.idQuestion}} ; valeur : ({{reponse?.valeur}} {{reponse.idsProposition[0]}})-->
+<!--        </div>-->
 <!--    </li>-->
 <!--</ul>-->
 <h4>Liste des questionnaires</h4>
@@ -21,6 +23,8 @@
         <button class="float-right mx-2" mat-button mat-raised-button color="accent" [routerLink]="['/edit-questionnaire', questionnaire.id]"><mat-icon>update</mat-icon> </button>
         <button class="float-right mx-2" mat-button mat-raised-button color="primary" [routerLink]="['/show-questionnaire', questionnaire.id]"><mat-icon>slideshow</mat-icon> </button>
         <button class="float-right mx-2" mat-button mat-raised-button color="primary" [routerLink]="['/statistiques', questionnaire.id]"><mat-icon>equalizer</mat-icon> </button>
+        <button class="float-right mx-2" mat-button mat-raised-button color="white" ><mat-icon>arrow_downward</mat-icon> </button>
+        <button class="float-right mx-2" mat-button mat-raised-button color="black" ><mat-icon>arrow_upward</mat-icon> </button>
     </div>
 </ul>
 <div class="text-center mt-3">

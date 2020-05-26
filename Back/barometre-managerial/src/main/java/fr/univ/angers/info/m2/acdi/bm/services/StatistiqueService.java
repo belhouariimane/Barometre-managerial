@@ -1,6 +1,7 @@
 package fr.univ.angers.info.m2.acdi.bm.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,102 +9,154 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fr.univ.angers.info.m2.acdi.bm.constantes.ConstantesREST;
 import fr.univ.angers.info.m2.acdi.bm.dto.StatistiqueDTO;
-import fr.univ.angers.info.m2.acdi.bm.dto.StatistiqueItemDTO;
-import fr.univ.angers.info.m2.acdi.bm.dto.WrapperStatistiqueItemsDTO;
-import fr.univ.angers.info.m2.acdi.bm.entities.Administrateur;
+import fr.univ.angers.info.m2.acdi.bm.dto.StatistiqueFiltreDTO;
+import fr.univ.angers.info.m2.acdi.bm.dto.StatistiqueGlobaleDTO;
 import fr.univ.angers.info.m2.acdi.bm.entities.Participant;
 import fr.univ.angers.info.m2.acdi.bm.entities.Proposition;
 import fr.univ.angers.info.m2.acdi.bm.entities.Question;
 import fr.univ.angers.info.m2.acdi.bm.entities.Questionnaire;
 import fr.univ.angers.info.m2.acdi.bm.entities.Reponse;
 import fr.univ.angers.info.m2.acdi.bm.exceptions.ResourceNotFoundException;
-import fr.univ.angers.info.m2.acdi.bm.repositories.QuestionRepository;
+import fr.univ.angers.info.m2.acdi.bm.helpers.Helpers;
 import fr.univ.angers.info.m2.acdi.bm.repositories.QuestionnaireRepository;
-import fr.univ.angers.info.m2.acdi.bm.response.RetourGeneral;
+import fr.univ.angers.info.m2.acdi.bm.request.response.RetourGeneral;
 
 @Service
 public class StatistiqueService {
 
 	@Autowired
-	private QuestionRepository questionRepository;
-	@Autowired
 	private QuestionnaireRepository questionnaireRepository;
+	public static final String QUESTIONNAIRE_CLASS_NAME = Questionnaire.class.getSimpleName();
 
 	public Integer nombreDePartcipantParQuestionnaire(Long idQuestionnaire) {
 		final Questionnaire questionnaire = questionnaireRepository.findById(idQuestionnaire)
-				.orElseThrow(() -> new ResourceNotFoundException("Questionnaire", "id", idQuestionnaire));
+				.orElseThrow(() -> new ResourceNotFoundException(QUESTIONNAIRE_CLASS_NAME, "id", idQuestionnaire));
 		if (questionnaire.getParticipants() != null)
 			return questionnaire.getParticipants().size();
 		return null;
 	}
 
-	public Integer nombreDePersonneRepondantAUneQuestion(Long idQuestionnaire, Long idQuestion) {
+	public RetourGeneral getStatsWithCsv(Long idQuestionnaire) {
+		RetourGeneral retourGeneral = new RetourGeneral();
+		StatistiqueDTO statistiqueDTO = new StatistiqueDTO();
+
+		try {
+			statistiqueDTO.setStatistiquesGlobales(getStatsGlobaleQuestionnaire(idQuestionnaire));
+			statistiqueDTO.setDataGlobalCSV(construireDataGlobalCsv(statistiqueDTO.getStatistiquesGlobales()));
+			statistiqueDTO.setStatistiquesFiltres(buildWrapperStatistiqueQuestionnaireFiltre(idQuestionnaire));
+			statistiqueDTO.setDataFilterCSV(construireDataFiltreCsv(statistiqueDTO.getStatistiquesFiltres()));
+		} catch (Exception e) {
+			retourGeneral.setDescription(ConstantesREST.UNKNOWN_ERROR);
+		} finally {
+			if (!Helpers.strEmpty(statistiqueDTO.getDataGlobalCSV()).booleanValue()) {
+				retourGeneral.setDescription(ConstantesREST.OK);
+			}
+			retourGeneral.setRetour(statistiqueDTO);
+		}
+
+		return retourGeneral;
+	}
+
+	private List<StatistiqueGlobaleDTO> getStatsGlobaleQuestionnaire(Long idQuestionnaire) {
 		final Questionnaire questionnaire = questionnaireRepository.findById(idQuestionnaire)
-				.orElseThrow(() -> new ResourceNotFoundException("Questionnaire", "id", idQuestionnaire));
+				.orElseThrow(() -> new ResourceNotFoundException(QUESTIONNAIRE_CLASS_NAME, "id", idQuestionnaire));
+		List<StatistiqueGlobaleDTO> list = new ArrayList<>();
+		if (questionnaire.getQuestions() != null) {
+			for (Question question : questionnaire.getQuestions()) {
+				if (question.getPropositions() != null && !question.getPropositions().isEmpty()) {
+					StatistiqueGlobaleDTO statistiqueGlobaleDTO = new StatistiqueGlobaleDTO(question.getValeur(),
+							new ArrayList<>(), new ArrayList<>());
+					for (Proposition proposition : question.getPropositions()) {
+						Integer nombreRepPropostition = nombrePersonneRepondantPropositionParQuestion(questionnaire,
+								question.getId(), proposition.getId());
+						statistiqueGlobaleDTO.getPropositions().add(proposition.getValeur());
+						statistiqueGlobaleDTO.getNombreRepondantsParProposition().add(nombreRepPropostition);
+					}
+					list.add(statistiqueGlobaleDTO);
+				}
+			}
+		}
+		return list;
+	}
+
+	private Integer nombrePersonneRepondantPropositionParQuestion(Questionnaire questionnaire, Long idQuestion,
+			Long idProposition) {
 		Integer compteur = 0;
-		if (questionnaire.getParticipants() != null)
+		if (questionnaire.getParticipants() != null) {
 			for (Participant participant : questionnaire.getParticipants()) {
 				if (participant.getReponses() != null && !participant.getReponses().isEmpty()) {
 					for (Reponse reponse : participant.getReponses()) {
 						if (reponse.getQuestion() != null && reponse.getQuestion().getId().equals(idQuestion)) {
-							compteur++;
+							if (reponse.getProposition() != null && reponse.getProposition().getId() != null
+									&& reponse.getProposition().getId().equals(idProposition)) {
+								compteur++;
+							}
 						}
 					}
 				}
 			}
+		}
+
 		return compteur;
 	}
 
-	public RetourGeneral getStatsWithCsv(Long id) {
-		RetourGeneral retourGeneral = new RetourGeneral();
-		StatistiqueDTO statistiqueDTO = new StatistiqueDTO();
-		WrapperStatistiqueItemsDTO wrapper = buildStatistiqueQuestionnaire(id);
-		statistiqueDTO.setStatistiques(wrapper);
-		statistiqueDTO.setDataCSV(construireCsv(wrapper));
-		retourGeneral.setDescription(ConstantesREST.OK);
-		retourGeneral.setRetour(statistiqueDTO);
-		return retourGeneral;
-	}
-
-	private String construireCsv(final WrapperStatistiqueItemsDTO wrapper) {
+	private String construireDataGlobalCsv(final List<StatistiqueGlobaleDTO> list) {
 		StringBuilder builder = new StringBuilder("");
-		for (StatistiqueItemDTO si : wrapper.getStatistiques()) {
-			builder.append(si.getQuestion());
-			builder.append(",");
-			builder.append(si.getQuestionFilter());
-			builder.append(",");
-			builder.append(si.getFilter());
-			builder.append("\n");
-			for (String label : si.getLabels()) {
-				builder.append(label);
+		builder.append("Question");
+		builder.append(",");
+		builder.append("Reponse");
+		builder.append(",");
+		builder.append("Nombre de répondants");
+		builder.append("\n");
+		for (StatistiqueGlobaleDTO si : list) {
+			for (int i = 0; i < si.getPropositions().size(); i++) {
+				builder.append(si.getQuestion());
 				builder.append(",");
-			}
-			if (builder.length() > 0) {
-				builder.deleteCharAt(builder.length() - 1);
-			}
-			builder.append("\n");
-			for (Integer data : si.getData()) {
-				builder.append(data);
+				builder.append(si.getPropositions().get(i));
 				builder.append(",");
+				builder.append(si.getNombreRepondantsParProposition().get(i));
+				builder.append("\n");
 			}
-			if (builder.length() > 0) {
-				builder.deleteCharAt(builder.length() - 1);
-			}
-			builder.append("\n\n");
 		}
 		return builder.toString();
 	}
 
-	public WrapperStatistiqueItemsDTO buildStatistiqueQuestionnaire(Long idQuestionnaire) {
-		WrapperStatistiqueItemsDTO statistiqueDTO = new WrapperStatistiqueItemsDTO();
-		List<Map<Proposition, Map<Proposition, Integer>>> list = getStatsQuestionnaire(idQuestionnaire);
+	private String construireDataFiltreCsv(final List<StatistiqueFiltreDTO> list) {
+		StringBuilder builder = new StringBuilder("");
+		builder.append("Question");
+		builder.append(",");
+		builder.append("Question de filtre");
+		builder.append(",");
+		builder.append("Filtre");
+		builder.append(",");
+		builder.append("Reponse");
+		builder.append(",");
+		builder.append("Nombre de répondants");
+		builder.append("\n");
+		for (StatistiqueFiltreDTO si : list) {
+			for (int i = 0; i < si.getLabels().size(); i++) {
+				builder.append(si.getQuestion());
+				builder.append(",");
+				builder.append(si.getQuestionFilter());
+				builder.append(",");
+				builder.append(si.getFilter());
+				builder.append(",");
+				builder.append(si.getLabels().get(i));
+				builder.append(",");
+				builder.append(si.getData().get(i));
+				builder.append("\n");
+			}
+		}
+		return builder.toString();
+	}
+
+	private List<StatistiqueFiltreDTO> buildWrapperStatistiqueQuestionnaireFiltre(Long idQuestionnaire) {
+		List<Map<Proposition, Map<Proposition, Integer>>> list = getStatsQuestionnaireWithFilter(idQuestionnaire);
 		if (list == null || list.isEmpty())
 			return null;
+		List<StatistiqueFiltreDTO> retour = new ArrayList<>();
 		for (Map<Proposition, Map<Proposition, Integer>> map : list) {
 			for (Map.Entry<Proposition, Map<Proposition, Integer>> entryFilter : map.entrySet()) {
 				String filter = entryFilter.getKey().getValeur();
@@ -120,25 +173,25 @@ public class StatistiqueService {
 					labels.add(entry.getKey().getValeur());
 					data.add(entry.getValue());
 				}
-				statistiqueDTO.addNewStatistiqueItem(question, questionFilter, filter, labels, data);
+				retour.add(new StatistiqueFiltreDTO(question, questionFilter, filter, labels, data));
 			}
 		}
-		return statistiqueDTO;
+		return retour;
 	}
 
-	public List<Map<Proposition, Map<Proposition, Integer>>> getStatsQuestionnaire(Long idQuestionnaire) {
+	private List<Map<Proposition, Map<Proposition, Integer>>> getStatsQuestionnaireWithFilter(Long idQuestionnaire) {
 		final Questionnaire questionnaire = questionnaireRepository.findById(idQuestionnaire)
-				.orElseThrow(() -> new ResourceNotFoundException("Questionnaire", "id", idQuestionnaire));
+				.orElseThrow(() -> new ResourceNotFoundException(QUESTIONNAIRE_CLASS_NAME, "id", idQuestionnaire));
 		List<Question> filteredQuestions = new ArrayList<>();
 		List<Question> normalQuestions = new ArrayList<>();
 
 		if (questionnaire.getQuestions() == null || questionnaire.getQuestions().isEmpty()) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		if (questionnaire.getQuestions() != null && !questionnaire.getQuestions().isEmpty()) {
 			for (Question question : questionnaire.getQuestions()) {
-				if (question.getIsFilter()) {
+				if (question.getIsFilter().booleanValue()) {
 					filteredQuestions.add(question);
 				} else {
 					normalQuestions.add(question);
@@ -185,17 +238,12 @@ public class StatistiqueService {
 		for (Participant participant : participants) {
 			if (participant.getReponses() != null && participant.getReponses().size() > 1) {
 				for (Reponse reponseFilter : participant.getReponses()) {
-					if (reponseFilter.getQuestion().equals(filter) && reponseFilter.getPropositions() != null
-							&& !reponseFilter.getPropositions().isEmpty()) {
-						for (Proposition propositionFilter : reponseFilter.getPropositions()) {
-							for (Reponse reponse : participant.getReponses()) {
-								if (reponse.getQuestion().equals(question) && reponse.getPropositions() != null
-										&& !reponse.getPropositions().isEmpty()) {
-									for (Proposition proposition : reponse.getPropositions()) {
-										Integer compteurActuel = map.get(propositionFilter).get(proposition);
-										map.get(propositionFilter).put(proposition, ++compteurActuel);
-									}
-								}
+					if (reponseFilter.getQuestion().equals(filter) && reponseFilter.getProposition() != null) {
+						for (Reponse reponse : participant.getReponses()) {
+							if (reponse.getQuestion().equals(question) && reponse.getProposition() != null) {
+								Integer compteurActuel = map.get(reponseFilter.getProposition())
+										.get(reponse.getProposition());
+								map.get(reponseFilter.getProposition()).put(reponse.getProposition(), ++compteurActuel);
 							}
 						}
 					}
