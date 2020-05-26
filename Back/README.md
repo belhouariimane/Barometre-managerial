@@ -123,7 +123,7 @@ http://barometre-managerial.leria-etud.univ-angers.fr/questionnaire/update
 Il est possible de créer `5` types de questions :
 - CHECKBOX
 - COMBOBOX
-- EVALUATION
+- DATE
 - RADIO
 - OUVERT
 

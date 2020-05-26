@@ -18,8 +18,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.springframework.data.annotation.CreatedDate;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -37,7 +35,6 @@ public class Participant implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	@Temporal(TemporalType.TIMESTAMP)
-	@CreatedDate
 	private Date dateParticipation;
 	private String prenom;
 	private String nom;
