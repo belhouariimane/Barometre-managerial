@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: "http://barometre-managerial.leria-etud.univ-angers.fr/api"
+  apiUrl: "https://barometre-managerial.leria-etud.univ-angers.fr/api" // HTTPS sinon ça bloque
 };
