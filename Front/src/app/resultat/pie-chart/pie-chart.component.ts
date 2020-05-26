@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-pie-chart',
@@ -6,14 +6,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./pie-chart.component.scss']
 })
 export class PieChartComponent implements OnInit {
+  @Input() dataS;
 
-  public pieChartLabels = ['Sales Q1', 'Sales Q2', 'Sales Q3', 'Sales Q4'];
-  public pieChartData = [120, 150, 180, 90];
+  public pieChartLabels ;
+  public pieChartData ;
   public pieChartType = 'pie';
 
   constructor() { }
 
   ngOnInit() {
+    console.log(this.dataS);
+    this.pieChartData = this.dataS.data;
+    this.pieChartLabels = this.dataS.labels;
   }
 
 }

@@ -61,9 +61,26 @@ export class QuestionnaireAnswerComponent implements OnInit {
             });
           });
         });
-    this.answerForm = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required]
+  }
+
+  initQuestion(question: Question) {
+    const prop = new Proposition();
+    prop.valeur = 'OUIII';
+    prop.id = 54;
+    return this.formBuilder.group({
+      idQuestion: [question.id],
+      valeurQuestion: [question.valeur],
+      typeQuestion: [question.typeQuestion],
+      isRequired: [question.isRequired],
+      order: [''],
+      propositions: this.formBuilder.array([])
+    });
+  }
+
+  initProposition(proposition: Proposition) {
+    return this.formBuilder.group({
+      idProp: [proposition.id],
+      valeurProp: [proposition.valeur]
     });
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-bar-chart',
@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./bar-chart.component.scss']
 })
 export class BarChartComponent implements OnInit {
-
+  @Input() dataS;
   constructor() { }
   public barChartOptions = {
     scaleShowVerticalLines: false,
@@ -20,5 +20,6 @@ export class BarChartComponent implements OnInit {
     {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'}
   ];
   ngOnInit() {
+    console.log(this.dataS);
   }
 }

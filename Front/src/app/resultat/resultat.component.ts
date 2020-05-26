@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ResultatService} from '../services/resultat.service';
+import {MatAccordion} from '@angular/material';
 
 @Component({
   selector: 'app-resultat',
@@ -8,46 +9,36 @@ import {ResultatService} from '../services/resultat.service';
 })
 export class ResultatComponent implements OnInit {
   public resultatService;
+  public dataSource;
+  public data;
+  public dataToExport;
   constructor(resultatService: ResultatService) {
     this.resultatService = resultatService;
   }
 
   ngOnInit() {
+    this.resultatService.getData(2)
+        .subscribe(dataSource => {
+         this.dataSource = dataSource['retour']['statistiquesFiltres'];
+         this.dataToExport = dataSource['retour']['dataGlobalCSV'];
+        });
   }
-  /*ObjectToCSV(data) {
-    const csvRows = [];
-    // get the headers
-    const  headers = Object.keys((data[0]));
-    csvRows.push(headers.join(','));
-    for (const row of data) {
-      const values = headers.map(header => {
-        const escaped = ('' + row[header]).replace(/"/g, '//"');
-        return `"${escaped}"`;
-      });
-      csvRows.push(values.join(','));
-    }
-    return csvRows.join('\n');
-  }*/
   download(data) {
     const blob = new Blob([data], {type: 'text/csv'});
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.setAttribute('hidden', '');
     a.setAttribute('href', url);
-    a.setAttribute('download', 'download.csv');
+    a.setAttribute('statistiquesFiltres', 'download.csv');
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
   }
-  getReport() {
-    const json = this.resultatService.getData(2);
-    console.log(json);
-    /* const data = json.map(row => ({
-       question : row.question,
-       reponse : row.reponse,
-       participation : row.participation
-     }));
-    const csvData = this.ObjectToCSV(json);
-    this.download(csvData);*/
+  export() {
+    this.download(this.dataToExport);
+
+  }
+  print() {
+    window.print();
   }
 }

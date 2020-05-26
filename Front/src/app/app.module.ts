@@ -10,7 +10,7 @@ import {
     MatFormFieldModule,
     MatIconModule,
     MatInputModule, MatListModule, MatNativeDateModule,
-    MatSelectModule, MatSnackBar, MatSnackBarModule, MatTableModule
+    MatSelectModule, MatSnackBar, MatSnackBarModule, MatTableModule, MatTabsModule
 } from '@angular/material';
 import {MatRadioModule} from '@angular/material/radio';
 
@@ -38,6 +38,7 @@ import { ResultatComponent } from './resultat/resultat.component';
 import { QuestionEditComponent } from './question/question-edit/question-edit.component';
 import { QuestionShowComponent } from './question/question-show/question-show.component';
 import { QuestionnaireAnswerComponent } from './questionnaire/questionnaire-answer/questionnaire-answer.component';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,9 @@ import { QuestionnaireAnswerComponent } from './questionnaire/questionnaire-answ
         MatListModule,
         MatSlideToggleModule,
         MatSnackBarModule,
-        ChartsModule
+        ChartsModule,
+        MatTabsModule,
+        MatExpansionModule
     ],
   providers: [
       { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
