@@ -3,7 +3,7 @@ FROM node:12.16.1 AS build-node
 WORKDIR /Barometre-managerial
 COPY Front /Barometre-managerial
 RUN npm install
-RUN npm run build -- --prod --output-path=./dist/out
+RUN npm run build -- --output-path=./dist/out
 
 FROM nginx:alpine
 COPY ./nginx.conf ./nginx.conf
