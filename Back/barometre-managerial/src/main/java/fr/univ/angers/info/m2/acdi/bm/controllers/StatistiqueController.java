@@ -16,7 +16,6 @@ import io.swagger.annotations.ApiOperation;
 @Api("API pour la gestion des statistiques.")
 @RestController
 @RequestMapping("/statistique")
-//@CrossOrigin( origins = {"http://localhost:4200"} )
 public class StatistiqueController {
 
 	@Autowired

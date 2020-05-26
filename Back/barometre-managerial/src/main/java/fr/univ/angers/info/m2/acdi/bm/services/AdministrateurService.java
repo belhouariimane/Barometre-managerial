@@ -3,6 +3,7 @@ package fr.univ.angers.info.m2.acdi.bm.services;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,7 @@ public class AdministrateurService {
 					String hashedPassword = PasswordUtils.generateStorngPasswordHash(administrateurDto.getPassword());
 					administrateurDto.setPassword(hashedPassword);
 					Administrateur toSave = administrateurMapper.createDtoToEntity(administrateurDto);
+					toSave.setDateParticipation(new Date());
 					Administrateur saved = administrateurRepository.save(toSave);
 					AdministrateurRetourDTO retourAdminDto = administrateurMapper.entityToRetour(saved);
 					retour.setRetour(retourAdminDto);

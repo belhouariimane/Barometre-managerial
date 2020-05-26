@@ -16,7 +16,6 @@ import fr.univ.angers.info.m2.acdi.bm.entities.Question;
 import fr.univ.angers.info.m2.acdi.bm.entities.Questionnaire;
 import fr.univ.angers.info.m2.acdi.bm.entities.Reponse;
 import fr.univ.angers.info.m2.acdi.bm.exceptions.ResourceNotFoundException;
-import fr.univ.angers.info.m2.acdi.bm.helpers.Helpers;
 import fr.univ.angers.info.m2.acdi.bm.mapper.ParticipantMapper;
 import fr.univ.angers.info.m2.acdi.bm.repositories.ParticipantRepository;
 import fr.univ.angers.info.m2.acdi.bm.repositories.PropositionRepository;
@@ -53,18 +52,28 @@ public class ParticipantService {
 					retour.setDescription(ConstantesREST.DATE_PEREMPTION_DEPASSE);
 					return retour;
 				}
+				List<Long> idsQuestionsRequired = new ArrayList<>();
+				List<Long> idsReponses = new ArrayList<>();
+				if (q.getQuestions() != null && !q.getQuestions().isEmpty()) {
+					for (Question question : q.getQuestions()) {
+						if (question.getIsRequired().booleanValue())
+							idsQuestionsRequired.add(question.getId());
+					}
+				}
+				for (Reponse r : newParticipant.getReponses()) {
+					idsReponses.add(r.getQuestion().getId());
+				}
+				boolean existenceAllReponseRequired = idsQuestionsRequired.stream().anyMatch(idsReponses::contains);
+				if (!existenceAllReponseRequired) {
+					retour.setDescription(ConstantesREST.REQUIRED_ANSWERS);
+					return retour;
+				}
 				newParticipant.setQuestionnaire(q);
 				for (Reponse r : newParticipant.getReponses()) {
 					Long idQuestion = r.getQuestion().getId();
 					final Question question = questionRepository.findById(idQuestion).orElseThrow(
 							() -> new ResourceNotFoundException(Question.class.getSimpleName(), "id", idQuestion));
-					boolean reponseNonSaisiQuestionObligatoire = question.getIsRequired()
-							&& (Helpers.strEmpty(r.getValeur()).booleanValue() && (r.getProposition() == null));
 
-					if (reponseNonSaisiQuestionObligatoire) {
-						retour.setDescription(ConstantesREST.REPONSE_REQUIRED_ERROR);
-						return retour;
-					}
 					r.setQuestion(question);
 					r.setParticipant(newParticipant);
 					if (r.getProposition() != null && r.getProposition().getId() != null) {

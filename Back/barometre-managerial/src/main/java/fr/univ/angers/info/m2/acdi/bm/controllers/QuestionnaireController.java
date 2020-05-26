@@ -21,7 +21,6 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/questionnaire")
-//@CrossOrigin( origins = {"http://localhost:4200"} )
 public class QuestionnaireController {
 	
 	@Autowired

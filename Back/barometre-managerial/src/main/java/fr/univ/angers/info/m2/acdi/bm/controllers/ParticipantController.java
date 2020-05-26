@@ -23,7 +23,6 @@ import io.swagger.annotations.ApiOperation;
 @Api("API pour la gestion des participations.")
 @RestController
 @RequestMapping(path = "/participant")
-//@CrossOrigin( origins = {"http://localhost:4200"} )
 public class ParticipantController {
 
 	@Autowired

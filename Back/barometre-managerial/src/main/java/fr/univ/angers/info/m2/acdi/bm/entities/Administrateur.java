@@ -5,6 +5,7 @@ package fr.univ.angers.info.m2.acdi.bm.entities;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,6 +16,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -43,6 +46,8 @@ public class Administrateur implements Serializable {
 	private String password;
 	private String nom;
 	private String prenom;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateParticipation;
 	@JsonIgnore
 	@OneToMany(mappedBy = "administrateur", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Questionnaire> questionnaires;
@@ -111,6 +116,20 @@ public class Administrateur implements Serializable {
 
 	public void setQuestionnaires(List<Questionnaire> questionnaires) {
 		this.questionnaires = questionnaires;
+	}
+
+	/**
+	 * @return the dateParticipation
+	 */
+	public Date getDateParticipation() {
+		return dateParticipation;
+	}
+
+	/**
+	 * @param dateParticipation the dateParticipation to set
+	 */
+	public void setDateParticipation(Date dateParticipation) {
+		this.dateParticipation = dateParticipation;
 	}
 
 	@Override
