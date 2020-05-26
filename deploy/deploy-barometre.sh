@@ -14,7 +14,6 @@ VOLUME_DATA=~/.db
 MYSQL_ROOT_PASSWORD=root
 
 SRC_FOLDER_NAME=Barometre-managerial
-SRC_GITHUB_URL=https://github.com/belhouariimane/Barometre-managerial.git
 
 # arrêts et suppréssions des containers
 docker stop $CONTAINER_NAME_NGINX
@@ -31,14 +30,9 @@ docker network rm $NETWORK_NAME
 # création du Network
 docker network create -d bridge $NETWORK_NAME
 
-# Récupération des sources dans $HOME
-#cd $HOME
-#rm -rf $SRC_FOLDER_NAME
-#git clone $SRC_GITHUB_URL
-
 # Déplacement des sources Back et Front dans les répertoires bmspringboot et autres
 rm -rf $HOME/$SRC_FOLDER_NAME/deploy/bmspringboot/Back
-cp -r $SRC_FOLDER_NAME/Back $HOME/deploy/bmspringboot
+cp -r $HOME/$SRC_FOLDER_NAME/Back $HOME/deploy/bmspringboot
 
 cd $HOME/$SRC_FOLDER_NAME/deploy
 
