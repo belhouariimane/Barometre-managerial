@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  apiUrl: "http://barometre-managerial.leria-etud.univ-angers.fr/api"
 };
