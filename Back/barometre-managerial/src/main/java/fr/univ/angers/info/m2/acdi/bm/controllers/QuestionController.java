@@ -18,7 +18,7 @@ import fr.univ.angers.info.m2.acdi.bm.services.QuestionService;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/question")
+@RequestMapping("/api/question")
 public class QuestionController {
 	@Autowired
 	private QuestionService questionService;

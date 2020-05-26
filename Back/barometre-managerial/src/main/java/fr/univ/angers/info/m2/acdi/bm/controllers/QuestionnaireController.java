@@ -20,7 +20,7 @@ import fr.univ.angers.info.m2.acdi.bm.services.QuestionnaireService;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/questionnaire")
+@RequestMapping("/api/questionnaire")
 public class QuestionnaireController {
 	
 	@Autowired

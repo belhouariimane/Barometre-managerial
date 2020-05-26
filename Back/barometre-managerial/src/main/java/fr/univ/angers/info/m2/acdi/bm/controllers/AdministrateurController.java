@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api("API pour la gestion des administrateurs.")
 @RestController
-@RequestMapping(path = "/admin")
+@RequestMapping(path = "/api/admin")
 public class AdministrateurController {
 
 	@Autowired
