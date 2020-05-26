@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import fr.univ.angers.info.m2.acdi.bm.dto.AdministrateurCreateDTO;
 import fr.univ.angers.info.m2.acdi.bm.dto.AdministrateurUpdateDTO;
 import fr.univ.angers.info.m2.acdi.bm.dto.LoginDTO;
-import fr.univ.angers.info.m2.acdi.bm.dto.RetourGeneral;
+import fr.univ.angers.info.m2.acdi.bm.request.response.RetourGeneral;
 import fr.univ.angers.info.m2.acdi.bm.services.AdministrateurService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,7 +28,6 @@ import io.swagger.annotations.ApiOperation;
 @Api("API pour la gestion des administrateurs.")
 @RestController
 @RequestMapping(path = "/admin")
-//@CrossOrigin( origins = {"http://localhost:4200"} )
 public class AdministrateurController {
 
 	@Autowired
@@ -42,7 +41,6 @@ public class AdministrateurController {
 
 	@ApiOperation(value = "Mise à jour d'un administrateur")
 	@PutMapping("/update/{id}")
-	//@PostMapping("/update/{id}")
 	public ResponseEntity<RetourGeneral> updateAdministrateur(@RequestBody AdministrateurUpdateDTO administrateur,
 			@PathVariable Long id) {
 		return traitementReponse(administrateurService.update(administrateur, id));

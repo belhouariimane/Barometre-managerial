@@ -91,7 +91,7 @@
         </form >
     </div>
     <div *ngIf="done" class="card-body">
-        <p>{{questionnaire.merci}}</p>
+        <p>{{questionnaire.remerciement}}</p>
         <p>Vos réponses : </p>
         <div *ngFor="let question of getQuestions(answerForm); let i = index">
             <li>{{question.value.valeurQuestion}}</li>

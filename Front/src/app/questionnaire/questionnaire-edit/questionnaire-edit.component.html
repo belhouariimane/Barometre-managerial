@@ -19,10 +19,10 @@
         </div>
         <div class="form-group ">
             <label>Message de remerciement</label>
-            <input type="text" formControlName="merci" class="form-control"
-                   [ngClass]="{ 'is-invalid': submitted && f.merci.errors } " placeholder="{{questionnaire?.merci}}"/>
-            <div *ngIf="submitted && f.merci.errors" class="invalid-feedback">
-                <div *ngIf="f.merci.errors.required">Veuillez renseigner un message de remerciement</div>
+            <input type="text" formControlName="remerciement" class="form-control"
+                   [ngClass]="{ 'is-invalid': submitted && f.remerciement.errors } " placeholder="{{questionnaire?.remerciement}}"/>
+            <div *ngIf="submitted && f.remerciement.errors" class="invalid-feedback">
+                <div *ngIf="f.remerciement.errors.required">Veuillez renseigner un message de remerciement</div>
             </div>
         </div>
 <!--        <div formArrayName="themes">-->

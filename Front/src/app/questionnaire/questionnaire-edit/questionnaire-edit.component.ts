@@ -47,7 +47,7 @@ export class QuestionnaireEditComponent implements OnInit {
     this.questionnaireForm = this.fb.group({
       titre: ['', Validators.required],
       description: ['', Validators.required],
-      merci: ['', Validators.required],
+      remerciement: ['', Validators.required],
       anonymous: [false],
       idUser: [this.authService.currentUserValue.id]
       // themes: this.fb.array([])
@@ -65,7 +65,7 @@ export class QuestionnaireEditComponent implements OnInit {
               this.questionnaireForm = this.fb.group({
                 titre: [questionnaire.titre, Validators.required],
                 description: [questionnaire.description, Validators.required],
-                merci: [questionnaire.merci, Validators.required],
+                remerciement: [questionnaire.remerciement, Validators.required],
                 anonymous: [questionnaire.anonymous],
                 idUser: [this.authService.currentUserValue.id],
                 // themes: this.fb.array([])
