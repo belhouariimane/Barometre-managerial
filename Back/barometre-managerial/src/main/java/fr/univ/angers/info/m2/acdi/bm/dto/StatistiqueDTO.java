@@ -4,6 +4,7 @@
 package fr.univ.angers.info.m2.acdi.bm.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author aharboul
@@ -13,39 +14,69 @@ import java.io.Serializable;
 public class StatistiqueDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String dataCSV;
-	private WrapperStatistiqueItemsDTO statistiques;
+	private String dataGlobalCSV;
+	private String dataFilterCSV;
+	private List<StatistiqueGlobaleDTO> statistiquesGlobales;
+	private List<StatistiqueFiltreDTO> statistiquesFiltres;
 
 	public StatistiqueDTO() {
 		super();
 	}
 
 	/**
-	 * @return the dataCSV
+	 * @return the dataGlobalCSV
 	 */
-	public String getDataCSV() {
-		return dataCSV;
+	public String getDataGlobalCSV() {
+		return dataGlobalCSV;
 	}
 
 	/**
-	 * @param dataCSV the dataCSV to set
+	 * @param dataGlobalCSV the dataGlobalCSV to set
 	 */
-	public void setDataCSV(String dataCSV) {
-		this.dataCSV = dataCSV;
+	public void setDataGlobalCSV(String dataGlobalCSV) {
+		this.dataGlobalCSV = dataGlobalCSV;
 	}
 
 	/**
-	 * @return the statistiques
+	 * @return the dataFilterCSV
 	 */
-	public WrapperStatistiqueItemsDTO getStatistiques() {
-		return statistiques;
+	public String getDataFilterCSV() {
+		return dataFilterCSV;
 	}
 
 	/**
-	 * @param statistiques the statistiques to set
+	 * @param dataFilterCSV the dataFilterCSV to set
 	 */
-	public void setStatistiques(WrapperStatistiqueItemsDTO statistiques) {
-		this.statistiques = statistiques;
+	public void setDataFilterCSV(String dataFilterCSV) {
+		this.dataFilterCSV = dataFilterCSV;
+	}
+
+	/**
+	 * @return the statistiquesGlobales
+	 */
+	public List<StatistiqueGlobaleDTO> getStatistiquesGlobales() {
+		return statistiquesGlobales;
+	}
+
+	/**
+	 * @param statistiquesGlobales the statistiquesGlobales to set
+	 */
+	public void setStatistiquesGlobales(List<StatistiqueGlobaleDTO> statistiquesGlobales) {
+		this.statistiquesGlobales = statistiquesGlobales;
+	}
+
+	/**
+	 * @return the statistiquesFiltres
+	 */
+	public List<StatistiqueFiltreDTO> getStatistiquesFiltres() {
+		return statistiquesFiltres;
+	}
+
+	/**
+	 * @param statistiquesFiltres the statistiquesFiltres to set
+	 */
+	public void setStatistiquesFiltres(List<StatistiqueFiltreDTO> statistiquesFiltres) {
+		this.statistiquesFiltres = statistiquesFiltres;
 	}
 
 }
