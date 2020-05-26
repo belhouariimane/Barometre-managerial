@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api("API pour la gestion des participations.")
 @RestController
-@RequestMapping(path = "/api/participant")
+@RequestMapping(path = "/participant")
 public class ParticipantController {
 
 	@Autowired
