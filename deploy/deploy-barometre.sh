@@ -30,9 +30,11 @@ docker network rm $NETWORK_NAME
 # création du Network
 docker network create -d bridge $NETWORK_NAME
 
-# Déplacement des sources Back et Front dans les répertoires bmspringboot et autres
+# Déplacement des sources Back et Front dans les répertoires bmspringboot et nginx
 rm -rf $HOME/$SRC_FOLDER_NAME/deploy/bmspringboot/Back
 cp -r $HOME/$SRC_FOLDER_NAME/Back $HOME/$SRC_FOLDER_NAME/deploy/bmspringboot
+rm -rf $HOME/$SRC_FOLDER_NAME/deploy/nginx/Front
+cp -r $HOME/$SRC_FOLDER_NAME/Front $HOME/$SRC_FOLDER_NAME/deploy/nginx
 
 cd $HOME/$SRC_FOLDER_NAME/deploy
 
