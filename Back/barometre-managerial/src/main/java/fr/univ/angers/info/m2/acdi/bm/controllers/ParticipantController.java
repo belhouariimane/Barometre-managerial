@@ -5,12 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import fr.univ.angers.info.m2.acdi.bm.dto.ParticipantCreateDTO;
 import fr.univ.angers.info.m2.acdi.bm.request.response.RetourGeneral;
 import fr.univ.angers.info.m2.acdi.bm.services.ParticipantService;
 import io.swagger.annotations.Api;
@@ -28,11 +25,11 @@ public class ParticipantController {
 	@Autowired
 	private ParticipantService participantService;
 
-	@ApiOperation(value = "Création d'une nouvel participant")
-	@PostMapping("/create")
-	public ResponseEntity<RetourGeneral> creerParticipant(@RequestBody ParticipantCreateDTO newParticipant) {
-		return traitementReponse(participantService.save(newParticipant));
-	}
+//	@ApiOperation(value = "Création d'une nouvel participant")
+//	@PostMapping("/create")
+//	public ResponseEntity<RetourGeneral> creerParticipant(@RequestBody ParticipantCreateDTO newParticipant) {
+//		return traitementReponse(participantService.save(newParticipant));
+//	}
 
 	@ApiOperation(value = "Récupérer tous les participants")
 	@GetMapping("/readAll")
