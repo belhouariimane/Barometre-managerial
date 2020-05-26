@@ -1,0 +1,47 @@
+<ng-container [ngSwitch]="question?.typeQuestion" >
+    <h3>{{question?.valeur}}</h3><br/>
+    <div *ngSwitchCase="'CHECKBOX'" class="container border rounded border-info px-4 py-2">
+        <div *ngFor="let proposition of propositions">
+            <br/>
+            <mat-checkbox>{{proposition.valeur}}</mat-checkbox>
+        </div>
+    </div>
+    <div *ngSwitchCase="'RADIO'" class="container border rounded border-info px-4 py-2">
+        <mat-radio-group
+                aria-labelledby="example-radio-group-label"
+                class="example-radio-group"
+                [(ngModel)]="chosenResponse">
+            <div *ngFor="let proposition of propositions">
+                <mat-radio-button class="example-radio-button">{{proposition.valeur}}</mat-radio-button><br/>
+            </div>
+            <br/>
+        </mat-radio-group>
+    </div>
+    <div *ngSwitchCase="'COMBOBOX'" class="container border rounded border-info px-4 py-2">
+        <mat-form-field class="w-50">
+            <mat-label>Choisissez une valeur</mat-label>
+            <mat-select class="text-center" matNativeControl required>
+                <div *ngFor="let proposition of propositions">
+                    <mat-option value="{{proposition.valeur}}">{{proposition.valeur}}</mat-option>
+                </div>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div *ngSwitchCase="'DATE'" class="container border rounded border-info px-4 py-2">
+        <mat-form-field>
+            <mat-label>Choisissez une date</mat-label>
+            <input matInput [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <div *ngSwitchCase="'OUVERT'" class="container border rounded border-info px-4 py-2">
+        <mat-form-field class="w-100" >
+            <mat-label>Veuillez saisir votre réponse</mat-label>
+            <textarea matInput></textarea>
+        </mat-form-field>
+    </div>
+
+</ng-container>
+<br/>
+<button [hidden]="!apercuQuestion" class="btn btn-secondary float-right" [routerLink]="['/edit-questionnaire', idQuestionnaire]">Retour au questionnaire</button>

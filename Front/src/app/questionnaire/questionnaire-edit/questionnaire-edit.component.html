@@ -1,1 +1,89 @@
-<p>questionnaire-edit works!</p>
+<div class="container border rounded border-info mb-4 p-3">
+    <h3>Informations du questionnaire</h3>
+    <form class="m-3" [formGroup]="questionnaireForm" >
+        <div class="form-group ">
+            <label>Titre</label>
+            <input type="text" formControlName="titre" class="form-control"
+                   [ngClass]="{ 'is-invalid': submitted && f.titre.errors } " placeholder="{{questionnaire?.titre}}"/>
+            <div *ngIf="submitted && f.titre.errors" class="invalid-feedback">
+                <div *ngIf="f.titre.errors.required">Veuillez renseigner un titre</div>
+            </div>
+        </div>
+        <div class="form-group ">
+            <label>Description</label>
+            <input type="text" formControlName="description" class="form-control"
+                   [ngClass]="{ 'is-invalid': submitted && f.description.errors } " placeholder="{{questionnaire?.description}}"/>
+            <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+                <div *ngIf="f.description.errors.required">Veuillez renseigner une description</div>
+            </div>
+        </div>
+        <div class="form-group ">
+            <label>Message de remerciement</label>
+            <input type="text" formControlName="merci" class="form-control"
+                   [ngClass]="{ 'is-invalid': submitted && f.merci.errors } " placeholder="{{questionnaire?.merci}}"/>
+            <div *ngIf="submitted && f.merci.errors" class="invalid-feedback">
+                <div *ngIf="f.merci.errors.required">Veuillez renseigner un message de remerciement</div>
+            </div>
+        </div>
+<!--        <div formArrayName="themes">-->
+<!--            <label>Thèmes</label>-->
+<!--            <br/>-->
+<!--            <div *ngFor="let theme of themes.controls; let i = index;" [formGroupName]="i">-->
+<!--                <div class="input-group">-->
+<!--                    <label>Thème {{i+1}} : </label>-->
+<!--                    <input type="text" class='form-control mx-2' formControlName="theme" placeholder="{{theme?.value.theme}}" />-->
+<!--                    <button class="float-right" (click)="removeTheme(i)" mat-raised-button  mat-mini-fab color="warn">-->
+<!--                        <mat-icon>remove_circle</mat-icon>-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--                <br/>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        {{this.questionnaireForm.value | json}}-->
+
+<!--        <button class="float-right" (click)="addTheme('')" mat-raised-button  mat-mini-fab color="primary">-->
+<!--            <mat-icon>add_circle</mat-icon>-->
+<!--        </button>-->
+        <br/>
+        <br/>
+        <div class="form-group">
+            <mat-slide-toggle
+                    class="example-margin"
+                    formControlName="anonymous"
+                    checked="{{questionnaire?.anonymous}}">
+                Questionnaire anonyme
+            </mat-slide-toggle>
+        </div>
+        <div class="form-group text-center">
+            <button (click)="onNewQuestionnaire()" [disabled]="loading" class="btn btn-primary">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Valider les informations
+            </button>
+        </div>
+    </form>
+</div>
+<div class="container border rounded border-info mb-4 p-3">
+    <h3>Liste des questions</h3>
+    <ul class="list-group">
+        <div *ngFor="let question of questions" class="list-group-item m-3 rounded border">
+            <div class="zero-border" [routerLink]="['/edit-question',idQuestionnaire, question.id]">
+                <div>Question n°{{question.id}} : {{question.valeur}}</div>
+                <div>Type : {{question.typeQuestion}}</div>
+                <div *ngIf="question.isFilter">Filtre : {{question.isFilter}}</div>
+                <div *ngIf="question.hasGraph">Graphe : {{question.hasGraph}}</div>
+                <div *ngIf="question.isRequired">Obligatoire : {{question.isRequired}}</div>
+            </div>
+            <div class="float-right ">
+                <button class="mx-2" mat-button mat-raised-button color="primary"  [routerLink]="['/show-question',idQuestionnaire, question.id]"><mat-icon>slideshow</mat-icon> </button>
+                <button class="mx-2" mat-button mat-raised-button color="accent" [routerLink]="['/edit-question',idQuestionnaire, question.id]"><mat-icon>update</mat-icon> </button>
+                <button class="mx-2" mat-button mat-raised-button color="warn" [routerLink]="['/edit-questionnaire', idQuestionnaire]" (click)="deleteQuestion(question.id)"><mat-icon>delete</mat-icon> </button>
+            </div>
+        </div>
+    </ul>
+    <div class="text-center mt-3">
+         <button class="btn btn-primary mx-3" [routerLink]="['/edit-question', idQuestionnaire]">
+             Nouvelle question
+         </button>
+    </div>
+</div>
+<button class="btn btn-secondary float-right mx-3" routerLink="'/'">Retour à l'accueil</button>

@@ -17,6 +17,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -38,6 +40,9 @@ public class Questionnaire implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date datePeremption;
 	private Boolean anonymous;
+	private String description;
+	private String remerciement;
+	private Date dateCreation;
 
 	// https://keepgrowing.in/java/springboot/how-to-get-json-response-only-with-an-id-of-the-related-entity/
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -125,14 +130,36 @@ public class Questionnaire implements Serializable {
 	}
 
 	public void setAdministrateur(Administrateur administrateur) {
-//		Administrateur admin = new Administrateur();
-//		admin.setId(administrateur);
 		this.administrateur = administrateur;
 	}
 
 	@XmlTransient
 	public List<Participant> getParticipants() {
 		return participants;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getRemerciement() {
+		return remerciement;
+	}
+
+	public void setRemerciement(String remerciement) {
+		this.remerciement = remerciement;
+	}
+
+	public Date getDateCreation() {
+		return dateCreation;
+	}
+
+	public void setDateCreation(Date dateCreation) {
+		this.dateCreation = dateCreation;
 	}
 
 	public void setParticipants(List<Participant> participants) {
@@ -152,7 +179,8 @@ public class Questionnaire implements Serializable {
 	public String toString() {
 		return "Questionnaire{" + "id=" + id + ", titre=" + titre + ", url=" + url + ", datePeremption="
 				+ datePeremption + ", anonymous=" + anonymous + ", administrateur=" + administrateur + ", participants="
-				+ participants + ", questions=" + questions + '}';
+				+ participants + ", questions=" + questions + ", description" + description + ", remerciement" + remerciement
+				+ ", dateCreation" + dateCreation + "}";
 	}
 
 }
