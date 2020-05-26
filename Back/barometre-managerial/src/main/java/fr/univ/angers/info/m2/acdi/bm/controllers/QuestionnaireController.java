@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.univ.angers.info.m2.acdi.bm.dto.QuestionnaireCreateDTO;
+import fr.univ.angers.info.m2.acdi.bm.dto.QuestionnaireUpdateDTO;
 import fr.univ.angers.info.m2.acdi.bm.entities.Questionnaire;
 import fr.univ.angers.info.m2.acdi.bm.request.response.ResponseSingleQuestionnaire;
 import fr.univ.angers.info.m2.acdi.bm.services.QuestionnaireService;
@@ -27,8 +29,8 @@ public class QuestionnaireController {
 	
 	@ApiOperation(value = "Création d'un questionnaire")
 	@PostMapping("/create")
-	public ResponseEntity<ResponseSingleQuestionnaire> create(@RequestBody Questionnaire questionnaire) {
-		ResponseSingleQuestionnaire rsq = this.questionnaireService.insertOne(questionnaire);
+	public ResponseEntity<ResponseSingleQuestionnaire> create(@RequestBody QuestionnaireCreateDTO questionnaireDTO) {
+		ResponseSingleQuestionnaire rsq = this.questionnaireService.insertOne(questionnaireDTO);
 		return new ResponseEntity<ResponseSingleQuestionnaire>(rsq, rsq.getStatus());
 	}
 	
@@ -41,8 +43,8 @@ public class QuestionnaireController {
 	
 	@ApiOperation(value = "Mise à jour des champs d'un questionnaire")
 	@PostMapping("/update")
-	public ResponseEntity<ResponseSingleQuestionnaire> update(@RequestBody Questionnaire questionnaire) {
-		ResponseSingleQuestionnaire rsq = this.questionnaireService.updateQuestionnaire(questionnaire);
+	public ResponseEntity<ResponseSingleQuestionnaire> update(@RequestBody QuestionnaireUpdateDTO questionnaireDTO) {
+		ResponseSingleQuestionnaire rsq = this.questionnaireService.updateQuestionnaire(questionnaireDTO);
 		return new ResponseEntity<ResponseSingleQuestionnaire>(rsq, rsq.getStatus());
 	}
 	
