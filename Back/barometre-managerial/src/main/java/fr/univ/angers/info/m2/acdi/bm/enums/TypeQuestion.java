@@ -4,7 +4,7 @@ public enum TypeQuestion {
 	RADIO ("RADIO"),
 	CHECKBOX ("CHECKBOX"),
 	COMBOBOX ("COMBOBOX"),
-	EVALUATION ("EVALUATION"),
+	DATE ("DATE"),
 	OUVERT ("OUVERT");
 	
 	private String typeQuestion = "";
