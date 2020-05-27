@@ -34,4 +34,4 @@ cd Barometre-managerial/deploy
 
 ## Exposition des APIs
 
-[https://barometre-managerial.leria-etud.univ-angers.fr/swagger-ui.html#/](https://barometre-managerial.leria-etud.univ-angers.fr/swagger-ui.html#/)
+[https://barometre-managerial.leria-etud.univ-angers.fr/api/swagger-ui.html#/](https://barometre-managerial.leria-etud.univ-angers.fr/api/swagger-ui.html#/)
