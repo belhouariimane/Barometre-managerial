@@ -17,8 +17,7 @@ export class UserService {
     }
 
     register(user: User) {
-        console.log(user);
-        return this.http.post(`/admin/create`, user);
+        return this.http.post(`/public/admin/create`, user);
         // return this.http.post(`${environment.apiUrl}/users/register`, user);
     }
 

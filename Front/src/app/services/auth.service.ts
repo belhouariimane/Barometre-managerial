@@ -25,7 +25,7 @@ export class AuthService {
     }
 
     login(email, password) {
-         return this.http.post<any>(`/admin/login`, { email, password })
+         return this.http.post<any>(`/public/admin/login`, { email, password })
          // return this.http.post<any>(`/users/authenticate`, { email, password })
             .pipe(map(user => {
                // stocke les détails de l'utilisateur + le jeton jwt dans le stockaqe local pour conserver
