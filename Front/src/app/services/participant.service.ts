@@ -12,8 +12,8 @@ export class ParticipantService {
     create(participant: Participant) {
         console.log(JSON.stringify(participant));
 
-        return this.http.post(`/public/participant/create`, JSON.stringify(participant));
-        //return this.http.post(`${environment.apiUrl}/participant/create`, JSON.stringify(participant));
+        //return this.http.post(`/public/participant/create`, JSON.stringify(participant));
+        return this.http.post(`${environment.apiUrl}/public//participant/create`, JSON.stringify(participant));
     }
 
     readAll() {

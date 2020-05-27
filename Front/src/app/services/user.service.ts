@@ -17,10 +17,10 @@ export class UserService {
     }
 
     register(user: User) {
-        return this.http.post(`/public/admin/create`, user);
+      //  return this.http.post(`/public/admin/create`, user);
 
-       //console.log(user);
-       //return this.http.post(`${environment.apiUrl}/admin/create`, user);
+
+       return this.http.post(`${environment.apiUrl}/public//admin/create`, user);
         // return this.http.post(`${environment.apiUrl}/users/register`, user);
     }
 
