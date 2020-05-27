@@ -20,7 +20,7 @@ export class UserService {
       //  return this.http.post(`/public/admin/create`, user);
 
 
-       return this.http.post(`${environment.apiUrl}/public//admin/create`, user);
+       return this.http.post(`${environment.apiUrl}/public/admin/create`, user);
         // return this.http.post(`${environment.apiUrl}/users/register`, user);
     }
 

@@ -13,7 +13,7 @@ export class ParticipantService {
         console.log(JSON.stringify(participant));
 
         //return this.http.post(`/public/participant/create`, JSON.stringify(participant));
-        return this.http.post(`${environment.apiUrl}/public//participant/create`, JSON.stringify(participant));
+        return this.http.post(`${environment.apiUrl}/public/participant/create`, JSON.stringify(participant));
     }
 
     readAll() {
