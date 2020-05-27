@@ -16,8 +16,7 @@ export class QuestionService {
     readAllByIdQuestionnaire(idQuestionnaire: number) {
         const questionnaire = new Questionnaire();
         questionnaire.id = idQuestionnaire;
-        return this.http.get<Question[]>(`/api/question/findByIdQuestionnaire/${idQuestionnaire}`);
-        // return this.http.get<Question[]>(`${environment.apiUrl}/questions/all/${idQuestionnaire}`);
+        return this.http.get<Question[]>(`/question/findByIdQuestionnaire/${idQuestionnaire}`);
     }
 
     read(idQuestion: number): Observable<Question> {
@@ -25,7 +24,6 @@ export class QuestionService {
             .pipe(map(data => {
                 return data.question;
             }));
-        // return this.http.get<Question>(`${environment.apiUrl}/questions/read/${idQuestion}`);
     }
 
     create(question: Question, propositions: Proposition[]) {
@@ -40,13 +38,12 @@ export class QuestionService {
         question.propositions = propositions;
         const questStr = JSON.stringify(question, replacer);
         console.log(questStr);
-        return this.http.post(`/api/question/create`, JSON.parse(questStr));
-        // return this.http.post(`${environment.apiUrl}/questions/create`, question);
+        return this.http.post(`/question/create`, JSON.parse(questStr));
     }
 
     update(id: number, question: Question, propositions: Proposition[]) {
         function replacer(key: string, value: any) {
-            if (key === 'idQuestionnaire' || key === 'idTheme' || key === 'merci') {
+            if (key === 'idQuestionnaire' || key === 'idTheme') {
                 return undefined;
             }
             return value;
@@ -56,12 +53,10 @@ export class QuestionService {
         question.propositions = propositions;
         const questStr = JSON.stringify(question, replacer);
         console.log(questStr);
-        return this.http.post(`/api/question/update/${id}`, JSON.parse(questStr));
-        // return this.http.post(`${environment.apiUrl}/questions/update/${id}`, question);
+        return this.http.post(`/question/update/${id}`, JSON.parse(questStr));
     }
 
     delete(id: number) {
-         return this.http.delete(`/api/question/delete/${id}`);
-        // return this.http.delete(`${environment.apiUrl}/questions/${id}`);
+         return this.http.delete(`/question/delete/${id}`);
     }
 }

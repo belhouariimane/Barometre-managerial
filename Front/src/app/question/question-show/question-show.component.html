@@ -34,6 +34,12 @@
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
     </div>
+    <div *ngSwitchCase="'EVALUATION'" class="container border rounded border-info px-4 py-2">
+        <mat-form-field class="w-50">
+            <mat-label>Choisissez une valeur</mat-label>
+            <mat-slider thumbLabel matNativeControl required tickInterval="1" min="1" max="10"></mat-slider>
+        </mat-form-field>
+    </div>
     <div *ngSwitchCase="'OUVERT'" class="container border rounded border-info px-4 py-2">
         <mat-form-field class="w-100" >
             <mat-label>Veuillez saisir votre réponse</mat-label>
