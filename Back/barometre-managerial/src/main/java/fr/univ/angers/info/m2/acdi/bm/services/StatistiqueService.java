@@ -41,12 +41,16 @@ public class StatistiqueService {
 	public RetourGeneral getStatsWithCsv(Long idQuestionnaire) {
 		RetourGeneral retourGeneral = new RetourGeneral();
 		StatistiqueDTO statistiqueDTO = new StatistiqueDTO();
-
+		final Questionnaire questionnaire = questionnaireRepository.findById(idQuestionnaire)
+				.orElseThrow(() -> new ResourceNotFoundException(QUESTIONNAIRE_CLASS_NAME, "id", idQuestionnaire));
 		try {
-			statistiqueDTO.setStatistiquesGlobales(getStatsGlobaleQuestionnaire(idQuestionnaire));
+			statistiqueDTO.setStatistiquesGlobales(getStatsGlobaleQuestionnaire(questionnaire));
 			statistiqueDTO.setDataGlobalCSV(construireDataGlobalCsv(statistiqueDTO.getStatistiquesGlobales()));
-			statistiqueDTO.setStatistiquesFiltres(buildWrapperStatistiqueQuestionnaireFiltre(idQuestionnaire));
+			statistiqueDTO.setDataNonAnonymousCSV(getStatsByAnounymous(questionnaire));
+			statistiqueDTO.setStatistiquesFiltres(getStatsFiltreQuestionnaire(questionnaire));
 			statistiqueDTO.setDataFilterCSV(construireDataFiltreCsv(statistiqueDTO.getStatistiquesFiltres()));
+		} catch (ResourceNotFoundException e) {
+			retourGeneral.setDescription(e.getMessage());
 		} catch (Exception e) {
 			retourGeneral.setDescription(ConstantesREST.UNKNOWN_ERROR);
 		} finally {
@@ -59,13 +63,104 @@ public class StatistiqueService {
 		return retourGeneral;
 	}
 
-	private List<StatistiqueGlobaleDTO> getStatsGlobaleQuestionnaire(Long idQuestionnaire) {
-		final Questionnaire questionnaire = questionnaireRepository.findById(idQuestionnaire)
-				.orElseThrow(() -> new ResourceNotFoundException(QUESTIONNAIRE_CLASS_NAME, "id", idQuestionnaire));
+	private String getStatsByAnounymous(final Questionnaire questionnaire) {
+		String resultat = "";
+		if (questionnaire.getQuestions() != null && !questionnaire.getQuestions().isEmpty()) {
+			List<String> questionsLabels = new ArrayList<>();
+			for (Question question : questionnaire.getQuestions()) {
+				questionsLabels.add(question.getValeur());
+			}
+			String entete = construireEnteteAnonymousCsv(questionnaire.getAnonymous().booleanValue(), questionsLabels);
+			List<String> itemReponsesFormated = new ArrayList<>();
+			for (Participant participant : questionnaire.getParticipants()) {
+				List<List<String>> reponsesLabels = new ArrayList<>();
+				for (Question question : questionnaire.getQuestions()) {
+					List<String> reponses = new ArrayList<>();
+					if (participant.getReponses() != null && !participant.getReponses().isEmpty()) {
+						for (Reponse reponse : participant.getReponses()) {
+							if (reponse.getQuestion().getId().equals(question.getId())) {
+								if (reponse.getProposition() != null) {
+									reponses.add(reponse.getProposition().getValeur());
+								} else if (!Helpers.strEmpty(reponse.getValeur())) {
+									reponses.add(reponse.getValeur());
+								}
+							}
+						}
+					}
+					reponsesLabels.add(reponses);
+				}
+				String item = construireDataAnonymousCsv(questionnaire.getAnonymous().booleanValue(), participant,
+						reponsesLabels);
+				itemReponsesFormated.add(item);
+
+			}
+			resultat = construireAnonymousCsv(entete, itemReponsesFormated);
+		}
+		return resultat;
+	}
+
+	private String construireAnonymousCsv(String entete, List<String> data) {
+		StringBuilder builder = new StringBuilder("");
+		builder.append(entete);
+		data.forEach(builder::append);
+		return builder.toString();
+	}
+
+	private String construireEnteteAnonymousCsv(boolean isAnounymous, List<String> questionsLabels) {
+		StringBuilder builder = new StringBuilder("");
+		if (isAnounymous) {
+			builder.append("idParticipant,");
+		} else {
+			builder.append("Nom,Prenom,");
+		}
+		for (String question : questionsLabels) {
+			builder.append(question);
+			builder.append(",");
+		}
+		builder.setLength(builder.length() - 1);
+		builder.append("\n");
+		return builder.toString();
+	}
+
+	private String construireDataAnonymousCsv(boolean isAnounymous, Participant participant,
+			List<List<String>> reponsesLabels) {
+		StringBuilder builder = new StringBuilder("");
+		if (isAnounymous) {
+			builder.append(participant.getId());
+			builder.append(",");
+		} else {
+			builder.append(participant.getNom());
+			builder.append(",");
+			builder.append(participant.getPrenom());
+			builder.append(",");
+		}
+
+		for (List<String> reponse : reponsesLabels) {
+			if (reponse.isEmpty()) {
+				builder.append("Non répondu");
+				builder.append(",");
+			} else {
+				builder.append("[");
+				for (String prop : reponse) {
+					builder.append(prop);
+					builder.append("|");
+				}
+				builder.setLength(builder.length() - 1);
+				builder.append("]");
+			}
+			builder.append(",");
+		}
+		builder.setLength(builder.length() - 1);
+		builder.append("\n");
+		return builder.toString();
+	}
+
+	private List<StatistiqueGlobaleDTO> getStatsGlobaleQuestionnaire(final Questionnaire questionnaire) {
 		List<StatistiqueGlobaleDTO> list = new ArrayList<>();
 		if (questionnaire.getQuestions() != null) {
 			for (Question question : questionnaire.getQuestions()) {
-				if (question.getPropositions() != null && !question.getPropositions().isEmpty()) {
+				if (question.getHasGraph() != null && question.getHasGraph().booleanValue()
+						&& question.getPropositions() != null && !question.getPropositions().isEmpty()) {
 					StatistiqueGlobaleDTO statistiqueGlobaleDTO = new StatistiqueGlobaleDTO(question.getValeur(),
 							new ArrayList<>(), new ArrayList<>());
 					for (Proposition proposition : question.getPropositions()) {
@@ -79,6 +174,7 @@ public class StatistiqueService {
 			}
 		}
 		return list;
+
 	}
 
 	private Integer nombrePersonneRepondantPropositionParQuestion(Questionnaire questionnaire, Long idQuestion,
@@ -123,37 +219,8 @@ public class StatistiqueService {
 		return builder.toString();
 	}
 
-	private String construireDataFiltreCsv(final List<StatistiqueFiltreDTO> list) {
-		StringBuilder builder = new StringBuilder("");
-		builder.append("Question");
-		builder.append(",");
-		builder.append("Question de filtre");
-		builder.append(",");
-		builder.append("Filtre");
-		builder.append(",");
-		builder.append("Reponse");
-		builder.append(",");
-		builder.append("Nombre de répondants");
-		builder.append("\n");
-		for (StatistiqueFiltreDTO si : list) {
-			for (int i = 0; i < si.getLabels().size(); i++) {
-				builder.append(si.getQuestion());
-				builder.append(",");
-				builder.append(si.getQuestionFilter());
-				builder.append(",");
-				builder.append(si.getFilter());
-				builder.append(",");
-				builder.append(si.getLabels().get(i));
-				builder.append(",");
-				builder.append(si.getData().get(i));
-				builder.append("\n");
-			}
-		}
-		return builder.toString();
-	}
-
-	private List<StatistiqueFiltreDTO> buildWrapperStatistiqueQuestionnaireFiltre(Long idQuestionnaire) {
-		List<Map<Proposition, Map<Proposition, Integer>>> list = getStatsQuestionnaireWithFilter(idQuestionnaire);
+	private List<StatistiqueFiltreDTO> getStatsFiltreQuestionnaire(final Questionnaire questionnaire) {
+		List<Map<Proposition, Map<Proposition, Integer>>> list = getStatsQuestionnaireWithFilter(questionnaire);
 		if (list == null || list.isEmpty())
 			return null;
 		List<StatistiqueFiltreDTO> retour = new ArrayList<>();
@@ -179,9 +246,8 @@ public class StatistiqueService {
 		return retour;
 	}
 
-	private List<Map<Proposition, Map<Proposition, Integer>>> getStatsQuestionnaireWithFilter(Long idQuestionnaire) {
-		final Questionnaire questionnaire = questionnaireRepository.findById(idQuestionnaire)
-				.orElseThrow(() -> new ResourceNotFoundException(QUESTIONNAIRE_CLASS_NAME, "id", idQuestionnaire));
+	private List<Map<Proposition, Map<Proposition, Integer>>> getStatsQuestionnaireWithFilter(
+			final Questionnaire questionnaire) {
 		List<Question> filteredQuestions = new ArrayList<>();
 		List<Question> normalQuestions = new ArrayList<>();
 
@@ -194,7 +260,9 @@ public class StatistiqueService {
 				if (question.getIsFilter().booleanValue()) {
 					filteredQuestions.add(question);
 				} else {
-					normalQuestions.add(question);
+					if (question.getHasGraph().booleanValue()) {
+						normalQuestions.add(question);
+					}
 				}
 			}
 		}
@@ -251,5 +319,34 @@ public class StatistiqueService {
 			}
 		}
 		return map;
+	}
+
+	private String construireDataFiltreCsv(final List<StatistiqueFiltreDTO> list) {
+		StringBuilder builder = new StringBuilder("");
+		builder.append("Question");
+		builder.append(",");
+		builder.append("Question de filtre");
+		builder.append(",");
+		builder.append("Filtre");
+		builder.append(",");
+		builder.append("Reponse");
+		builder.append(",");
+		builder.append("Nombre de répondants");
+		builder.append("\n");
+		for (StatistiqueFiltreDTO si : list) {
+			for (int i = 0; i < si.getLabels().size(); i++) {
+				builder.append(si.getQuestion());
+				builder.append(",");
+				builder.append(si.getQuestionFilter());
+				builder.append(",");
+				builder.append(si.getFilter());
+				builder.append(",");
+				builder.append(si.getLabels().get(i));
+				builder.append(",");
+				builder.append(si.getData().get(i));
+				builder.append("\n");
+			}
+		}
+		return builder.toString();
 	}
 }
