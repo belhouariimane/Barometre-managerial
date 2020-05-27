@@ -35,6 +35,7 @@ public class Question implements Serializable {
 	private String valeur;
 	private Boolean isRequired;
 	private Boolean isFilter;
+	private Boolean hasGraph;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Questionnaire questionnaire;
@@ -136,6 +137,14 @@ public class Question implements Serializable {
 
 	public void setReponses(List<Reponse> reponses) {
 		this.reponses = reponses;
+	}
+	
+	public Boolean getHasGraph() {
+		return hasGraph;
+	}
+
+	public void setHasGraph(Boolean hasGraph) {
+		this.hasGraph = hasGraph;
 	}
 
 	@Override

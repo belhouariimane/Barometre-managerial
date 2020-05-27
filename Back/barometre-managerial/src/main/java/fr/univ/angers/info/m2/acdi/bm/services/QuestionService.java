@@ -41,6 +41,9 @@ public class QuestionService {
 		if (question.getIsRequired() == null) {
 			question.setIsRequired(false);
 		}
+		if (question.getHasGraph() == null) {
+			question.setHasGraph(false);
+		}
 		question.setQuestionnaire(rsquestionnaire.getQuestionnaire());
 		// Faire une boucle, pour chaque proposition rajouter une référence à la question
 		for (Proposition p : question.getPropositions()) {
@@ -83,6 +86,9 @@ public class QuestionService {
 		}
 		if (question.getIsFilter() != null) {
 			questionToUpdate.setIsFilter(question.getIsFilter());
+		}
+		if (question.getHasGraph() != null) {
+			questionToUpdate.setHasGraph(question.getHasGraph());
 		}
 		if (question.getPropositions() != null) {
 			questionToUpdate.setPropositions(question.getPropositions());
