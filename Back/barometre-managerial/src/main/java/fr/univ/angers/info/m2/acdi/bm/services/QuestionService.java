@@ -1,5 +1,6 @@
 package fr.univ.angers.info.m2.acdi.bm.services;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,7 +74,6 @@ public class QuestionService {
 		}
 		
 		// Les champs renseignés seront modifiés
-		// TODO : Rajouter des tests de validités de la question
 		Question questionToUpdate = lastRecord.get();
 		if (question.getTypeQuestion() != null) {
 			questionToUpdate.setTypeQuestion(question.getTypeQuestion());
@@ -90,6 +90,9 @@ public class QuestionService {
 		if (question.getHasGraph() != null) {
 			questionToUpdate.setHasGraph(question.getHasGraph());
 		}
+		if (question.getOrdre() != 0) {
+			questionToUpdate.setOrdre(question.getOrdre());
+		}
 		if (question.getPropositions() != null) {
 			questionToUpdate.setPropositions(question.getPropositions());
 		}
@@ -104,7 +107,9 @@ public class QuestionService {
 	}
 	
 	public List<Question> findByIdQuestionnaire(Long idQuestionnaire) {
-		return this.questionRepository.findByQuestionnaire_Id(idQuestionnaire);
+		List<Question> result = this.questionRepository.findByQuestionnaire_Id(idQuestionnaire);
+		Collections.sort(result); // tri croissant sur le champ ordre
+		return result;
 	}
 	
 	public void deleteById(Long id) {
