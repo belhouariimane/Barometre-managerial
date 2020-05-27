@@ -39,7 +39,6 @@ public class SwaggerConfig implements WebMvcConfigurer {
 				.securityContexts(Lists.newArrayList(securityContext()))
 	            .securitySchemes(Lists.newArrayList(apiKey()));
 	}
-	
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 	    registry.addRedirectViewController("/v2/api-docs", "/v2/api-docs");
