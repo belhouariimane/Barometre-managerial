@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Participant} from '../models/participant';
 import {User} from '../models/user';
-import {environment} from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ParticipantService {
@@ -11,13 +10,15 @@ export class ParticipantService {
 
     create(participant: Participant) {
         console.log(JSON.stringify(participant));
-
-        //return this.http.post(`/public/participant/create`, JSON.stringify(participant));
-        return this.http.post(`${environment.apiUrl}/public//participant/create`, JSON.stringify(participant));
+        const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
+        return this.http.post(`/public/participant/create`, JSON.stringify(participant), {headers});
     }
 
-    readAll() {
-        return this.http.get<Participant[]>(`${environment.apiUrl}/participant/readAll`);
+    readAllByIdQuestionnaire(idQuestionnaire: number) {
+        return this.http.get<any>(`/participant/readAll`)
+            .pipe(map(data => {
+               return data.retour.filter(x => x.idQuestionnaire === idQuestionnaire);
+            }));
     }
 
 }

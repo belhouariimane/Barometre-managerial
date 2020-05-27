@@ -20,7 +20,6 @@ export class QuestionEditComponent implements OnInit {
   idQuestionnaire: number;
   modification: boolean;
   submitted = false;
-  // themes = [];
   loading = false;
   typeQuestion: string;
 
@@ -52,14 +51,13 @@ export class QuestionEditComponent implements OnInit {
         idQuestionnaire: [this.idQuestionnaire],
         valeur: ['', Validators.required],
         typeQuestion: [''],
-        // idTheme: [null, Validators.required],
         isRequired: [false],
         isFilter: [false],
         hasGraph: [false],
+        order: [],
         propositions: this.formBuilder.array([])
     });
 
-    // this.loadAllThemes(this.idQuestionnaire);
     // en cas de modification, on renseigne dans le formulaire les informations déjà présentes
     if (this.idQuestion !== undefined) {
         this.modification = true;
@@ -76,6 +74,7 @@ export class QuestionEditComponent implements OnInit {
                         isRequired: [question.isRequired, Validators.required],
                         isFilter: [question.isFilter, Validators.required],
                         hasGraph: [question.hasGraph, Validators.required],
+                        order: [question.order],
                         propositions: this.formBuilder.array([])
                     });
                     this.question.propositions.forEach((item) => {
@@ -87,11 +86,7 @@ export class QuestionEditComponent implements OnInit {
                     this.router.navigate(['/edit-questionnaire', this.idQuestionnaire]);
                 }
             });
-        // sinon, on charge deux propositions vides pour commencer
-    }// } else {
-    //     this.addPropositions('');
-    //     this.addPropositions('');
-    // }
+    }
   }
 
   // accès simplifié aux champs du formulaire
@@ -113,13 +108,6 @@ export class QuestionEditComponent implements OnInit {
           this.propositions.removeAt(i);
       }
   }
-
-
-  // loadAllThemes(idQuestionnaire: number) {
-  //     this.themes.push('Thème A');
-  //     this.themes.push('Thème B');
-  //     this.themes.push('Thème C');
-  // }
 
   onNewQuestion() {
     this.questionForm.value.typeQuestion = this.typeQuestion;
@@ -146,23 +134,18 @@ export class QuestionEditComponent implements OnInit {
               }
           );
     } else {
+      this.questionService.readAllByIdQuestionnaire(this.idQuestionnaire).subscribe(questions => {
+          this.questionForm.value.order = questions === undefined ? 1 : questions.length + 1;
+          console.log('order: ' + this.questionForm.value.order);
+      });
       this.questionService.create(this.questionForm.value, this.propositions.value)
           .subscribe(data => {
-                  this.alertService.success('Question enregistrée', true);
+                this.alertService.success('Question enregistrée', true);
               }, error => {
                 this.alertService.error(error);
               }
           );
     }
-    // ci-dessous, géré par le back
-    // this.propositionService.deleteAll(this.idQuestion).subscribe();
-    // for (let i = 0; i < this.propositions.length; i++) {
-    //   const p = new Proposition();
-    //   p.idQuestion = this.idQuestion;
-    //   p.libelle = this.propositions.value[i].libelle;
-    //   p.order = i + 1;
-    //   this.propositionService.create(p).subscribe();
-    // }
     this.router.navigate(['/edit-questionnaire', this.idQuestionnaire]);
     this.loading = false;
   }
@@ -193,12 +176,14 @@ export class QuestionEditComponent implements OnInit {
 
   addDatePicker() {
       this.typeQuestion = 'DATE';
-      // this.propositions.clear();
   }
 
   addInput() {
       this.typeQuestion = 'OUVERT';
-      // this.propositions.clear();
+  }
+
+  addEvaluation() {
+      this.typeQuestion = 'EVALUATION';
   }
 
   backClicked() {
