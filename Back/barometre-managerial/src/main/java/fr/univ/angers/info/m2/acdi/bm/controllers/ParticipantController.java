@@ -7,11 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-<<<<<<< HEAD
-=======
-import fr.univ.angers.info.m2.acdi.bm.dto.ParticipantCreateDTO;
->>>>>>> develop-thibaut
 import fr.univ.angers.info.m2.acdi.bm.request.response.RetourGeneral;
 import fr.univ.angers.info.m2.acdi.bm.services.ParticipantService;
 import io.swagger.annotations.Api;
