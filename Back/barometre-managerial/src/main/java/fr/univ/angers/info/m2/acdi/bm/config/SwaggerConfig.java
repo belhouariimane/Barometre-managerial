@@ -5,11 +5,13 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -25,6 +27,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
+@EnableWebMvc
 public class SwaggerConfig implements WebMvcConfigurer {
 	
 	@Bean
@@ -36,9 +39,11 @@ public class SwaggerConfig implements WebMvcConfigurer {
 				.build()
 				.enable(true)
 				.apiInfo(apiInfo())
+				.protocols(Sets.newHashSet("http", "https"))
 				.securityContexts(Lists.newArrayList(securityContext()))
 	            .securitySchemes(Lists.newArrayList(apiKey()));
 	}
+	
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 	    registry.addRedirectViewController("/v2/api-docs", "/v2/api-docs");
