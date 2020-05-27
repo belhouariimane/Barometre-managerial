@@ -23,6 +23,7 @@ export class MyaccountComponent implements OnInit {
   message: string;
   nbQuestionnairesCrees: number;
   nbQuestionsCreees: number;
+  dateCreation: Date;
 
   constructor(private formBuilder: FormBuilder,
               private authService: AuthService,

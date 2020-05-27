@@ -8,7 +8,7 @@ import {Question} from '../../models/question';
     templateUrl: './question-show.component.html',
     styleUrls: ['./question-show.component.scss']
 })
-export class QuestionShowComponent implements OnInit, OnChanges {
+export class QuestionShowComponent implements OnInit {
     @Input() idQuestion;
     chosenResponse: string;
     idQuestionnaire: number;
@@ -31,15 +31,9 @@ export class QuestionShowComponent implements OnInit, OnChanges {
         this.questionService.read(this.idQuestion)
             .subscribe(question => {
                 this.question = question;
-                console.log(question.typeQuestion);
                 if (question.typeQuestion === 'COMBOBOX' || question.typeQuestion === 'CHECKBOX' || question.typeQuestion === 'RADIO') {
                     this.propositions = question.propositions;
                 }
             });
     }
-
-    ngOnChanges(changes: SimpleChanges) {
-        console.log(changes);
-    }
-
 }

@@ -15,6 +15,7 @@ import {Location} from '@angular/common';
 import {ThemeService} from '../../services/theme.service';
 import {QuestionService} from '../../services/question.service';
 import {Theme} from '../../models/theme';
+import {ParticipantService} from '../../services/participant.service';
 
 @Component({
   selector: 'app-questionnaire-edit',
@@ -32,6 +33,7 @@ export class QuestionnaireEditComponent implements OnInit {
   loading = false;
   submitted = false;
   modification = false;
+  nbParticipants = 0;
 
   constructor(private fb: FormBuilder,
               private questionnaireService: QuestionnaireService,
@@ -39,6 +41,7 @@ export class QuestionnaireEditComponent implements OnInit {
               private authService: AuthService,
               private themeService: ThemeService,
               private questionService: QuestionService,
+              private participantService: ParticipantService,
               private location: Location,
               private router: Router,
               private route: ActivatedRoute) { }
@@ -47,10 +50,9 @@ export class QuestionnaireEditComponent implements OnInit {
     this.questionnaireForm = this.fb.group({
       titre: ['', Validators.required],
       description: ['', Validators.required],
-      merci: ['', Validators.required],
+      remerciement: ['', Validators.required],
       anonymous: [false],
       idUser: [this.authService.currentUserValue.id]
-      // themes: this.fb.array([])
     });
 
     this.idQuestionnaire = this.route.snapshot.params.id;
@@ -61,14 +63,13 @@ export class QuestionnaireEditComponent implements OnInit {
           .subscribe(questionnaire => {
             if (questionnaire !== null) {
               this.loadAllQuestions(this.idQuestionnaire);
-              this.loadAllThemes(this.idQuestionnaire);
+              this.loadNbParticipations(this.idQuestionnaire);
               this.questionnaireForm = this.fb.group({
                 titre: [questionnaire.titre, Validators.required],
                 description: [questionnaire.description, Validators.required],
-                merci: [questionnaire.merci, Validators.required],
+                remerciement: [questionnaire.remerciement, Validators.required],
                 anonymous: [questionnaire.anonymous],
-                idUser: [this.authService.currentUserValue.id],
-                // themes: this.fb.array([])
+                idUser: [this.authService.currentUserValue.id]
               });
             } else {
               this.alertService.clear();
@@ -82,18 +83,6 @@ export class QuestionnaireEditComponent implements OnInit {
   // accès simplifié aux champs du formulaire
   get f() {
     return this.questionnaireForm.controls;
-  }
-
-  get themes(): FormArray {
-    return this.questionnaireForm.get('themes') as FormArray;
-  }
-
-  addTheme(value: string) {
-    this.themes.push(this.fb.group({theme: value === null ? '' : value}));
-  }
-
-  removeTheme(i: number) {
-    this.themes.removeAt(i);
   }
 
   onNewQuestionnaire() {
@@ -114,14 +103,6 @@ export class QuestionnaireEditComponent implements OnInit {
           .pipe(first())
           .subscribe(
               data => {
-                // this.themeService.deleteAll(this.idQuestionnaire).subscribe();
-                // for (let i = 1; i <= this.themes.length; i++) {
-                //   const t = new Theme();
-                //   t.idQuestionnaire = this.idQuestionnaire;
-                //   t.theme = this.themes.at(i).value;
-                //   t.order = i;
-                //   this.themeService.create(t);
-                // }
                 this.alertService.success('Questionnaire enregistré', true);
               }, error => {
                 this.alertService.error(error);
@@ -131,7 +112,8 @@ export class QuestionnaireEditComponent implements OnInit {
       this.questionnaireService.register(this.questionnaireForm.value)
           .pipe(first())
           .subscribe(
-              data => {
+              questionnaire => {
+                this.router.navigate(['/edit-questionnaire', questionnaire.id]);
                 this.alertService.success('Questionnaire enregistré', true);
               }, error => {
                 this.alertService.error(error);
@@ -145,37 +127,58 @@ export class QuestionnaireEditComponent implements OnInit {
     this.questionService.readAllByIdQuestionnaire(idQuestionnaire)
         .subscribe(questions => {
           this.questions = questions;
+          questions.forEach((item) => {
+            console.log(item.valeur + ' : ordre ' + item.order);
+          });
         });
   }
 
 
-  loadAllThemes(idQuestion: number) {
-    // const p1 = new Proposition();
-    // p1.id = 1;
-    // p1.idQuestion = this.idQuestion;
-    // p1.libelle = 'Première proposition';
-    // const p2 = new Proposition();
-    // p2.id = 2;
-    // p2.idQuestion = this.idQuestion;
-    // p2.libelle = 'Deuxième proposition';
-    // this.addPropositions(p1.libelle);
-    // this.addPropositions(p2.libelle);
-    // this.themeService.readAllByIdQuestionnaire(this.idQuestionnaire)
-    //     .subscribe(themes => {
-    //       themes.forEach(function(item) {
-    //         console.log('Thème : ' + item.id + ', ' + item.idQuestionnaire + ', ' + item.theme);
-    //         this.addTheme(item.theme);
-    //       });
-    //     });
+  loadNbParticipations(idQuestionnaire: number) {
+    this.participantService.readAllByIdQuestionnaire(idQuestionnaire)
+        .subscribe(participants => {
+          this.nbParticipants = participants.length;
+        });
+    this.nbParticipants = 1;
   }
 
   deleteQuestion(idQuestion: number) {
-    this.questionService.delete(idQuestion).subscribe(() => {
-      this.loadAllQuestions(this.idQuestionnaire);
-    });
+    this.questionService.delete(idQuestion).subscribe();
+    this.questionService.readAllByIdQuestionnaire(this.idQuestionnaire)
+        .subscribe(questions => {
+          questions.forEach((item, index) => {
+            if (index > idQuestion) {
+              item.order--;
+              this.questionService.update(item.id, item, item.propositions).subscribe();
+            }
+          });
+          this.loadAllQuestions(this.idQuestionnaire);
+        });
   }
 
+  // monte l'emplacement d'une question (décrémente l'ordre de 1)
+  up(index: number) {
+    const questionUp: Question = this.questions[index];
+    const questionDown: Question = this.questions[index - 1];
+    questionUp.order--;
+    questionDown.order++;
+    this.questionService.update(questionUp.id, questionUp, questionUp.propositions).subscribe();
+    this.questionService.update(questionDown.id, questionDown, questionDown.propositions).subscribe();
+    this.loadAllQuestions(this.idQuestionnaire);
+  }
 
+  // descend l'emplacement d'une question (donc l'augmente de 1)
+  down(index: number) {
+    const questionDown: Question = this.questions[index];
+    const questionUp: Question = this.questions[index + 1];
+    questionDown.order++;
+    questionUp.order--;
+    this.questionService.update(questionUp.id, questionUp, questionUp.propositions).subscribe();
+    this.questionService.update(questionDown.id, questionDown, questionDown.propositions).subscribe();
+    this.loadAllQuestions(this.idQuestionnaire);
+  }
+
+  // permet d'afficher à l'utilisateur des types de questions plus compréhensibles
   getRealType(typeQuestion: string): string {
     let returnStr = '';
     switch (typeQuestion) {
@@ -184,6 +187,9 @@ export class QuestionnaireEditComponent implements OnInit {
         break;
       case 'DATE':
         returnStr = 'date';
+        break;
+      case 'EVALUATION':
+        returnStr = 'question d\'évaluation';
         break;
       case 'RADIO':
         returnStr = 'question à choix unique (boutons)';

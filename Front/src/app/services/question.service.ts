@@ -25,12 +25,11 @@ export class QuestionService {
             .pipe(map(data => {
                 return data.question;
             }));
-        // return this.http.get<Question>(`${environment.apiUrl}/questions/read/${idQuestion}`);
     }
 
     create(question: Question, propositions: Proposition[]) {
         function replacer(key: string, value: any) {
-            if (key === 'idQuestionnaire' || key === 'idTheme' || key === 'merci') {
+            if (key === 'idQuestionnaire' || key === 'idTheme') {
                 return undefined;
             }
             return value;
@@ -46,7 +45,7 @@ export class QuestionService {
 
     update(id: number, question: Question, propositions: Proposition[]) {
         function replacer(key: string, value: any) {
-            if (key === 'idQuestionnaire' || key === 'idTheme' || key === 'merci') {
+            if (key === 'idQuestionnaire' || key === 'idTheme') {
                 return undefined;
             }
             return value;
