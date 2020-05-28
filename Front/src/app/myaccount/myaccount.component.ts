@@ -23,7 +23,7 @@ export class MyaccountComponent implements OnInit {
   message: string;
   nbQuestionnairesCrees: number;
   nbQuestionsCreees: number;
-  dateCreation: Date;
+  dateCreation: string;
 
   constructor(private formBuilder: FormBuilder,
               private authService: AuthService,
@@ -44,6 +44,10 @@ export class MyaccountComponent implements OnInit {
       confirmPassword: ['', Validators.minLength(6)]
     }, { validators: this.checkPasswords});
     this.nbQuestionsCreees = 0;
+    this.userService.read(this.currentUser.id)
+        .subscribe(user => {
+          this.dateCreation = new Date(user.dateCreation).toLocaleDateString();
+        });
     this.questionnaireService.getAllByIdUser(this.currentUser.id)
         .subscribe(questionnaires => {
           this.nbQuestionnairesCrees = questionnaires.length;

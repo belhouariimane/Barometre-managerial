@@ -58,11 +58,5 @@ export class QuestionnaireService {
         return this.http.delete(`${environment.apiUrl}/questionnaire/delete/${id}`);
     }
 
-    getNbQuestions(idQuestionnaire: number) {
-        this.questionService.readAllByIdQuestionnaire(idQuestionnaire)
-            .subscribe(questions => {
-                console.log('nb ' + questions.length);
-                return questions.length;
-        });
-    }
 }
+

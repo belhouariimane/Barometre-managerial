@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../models/user';
 import {environment} from '../../environments/environment';
+import {map} from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 
@@ -13,8 +14,13 @@ export class UserService {
 
     getAll() {
          return this.http.get<User[]>(`/admin/readAll`);
-        // return this.http.get<User[]>(`${environment.apiUrl}/users`);
+    }
 
+    read(id: number) {
+        return this.http.get<any>(`/admin/read/${id}`)
+            .pipe(map(user => {
+                return user.retour;
+            }));
     }
 
     register(user: User) {
@@ -27,12 +33,12 @@ export class UserService {
 
         return this.http.delete(`/admin/delete/${id}`);
         // return this.http.delete(`${environment.apiUrl}/users/${id}`);
-
     }
 
     update(id: number, user: User) {
         delete user.id;
         return this.http.put(`/admin/update/${id}`, user);
         // return this.http.post(`${environment.apiUrl}/users/update/${id}`, user);
+
     }
 }
