@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Participant} from '../models/participant';
 import {User} from '../models/user';
+import {map} from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ParticipantService {
