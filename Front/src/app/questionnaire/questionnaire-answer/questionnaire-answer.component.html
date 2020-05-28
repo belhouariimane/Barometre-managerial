@@ -98,18 +98,17 @@
     </div>
     <div *ngIf="done" class="card-body">
         <p>{{questionnaire.remerciement}}</p>
-        <p>Vos réponses : </p>
-        <div *ngFor="let question of getQuestions(answerForm); let i = index">
-            <li>{{question.value.valeurQuestion}}</li>
-            <ul>{{question.value.valeurReponse}}</ul>
-            <div *ngIf="question.value.typeQuestion === 'CHECKBOX' ||
-                        question.value.typeQuestion === 'COMBOBOX' ||
-                        question.value.typeQuestion === 'RADIO'">
-                <div *ngFor="let proposition of getPropositions(question); let j = index">
-                    <ul *ngIf="proposition.value.chosen">{{proposition.value.valeurProp}}</ul>
-                </div>
-            </div>
-        </div>
-        {{this.participant | json}}
+<!--        <p>Vos réponses : </p>-->
+<!--        <div *ngFor="let question of getQuestions(answerForm); let i = index">-->
+<!--            <li>{{question.value.valeurQuestion}}</li>-->
+<!--            <ul>{{question.value.valeurReponse}}</ul>-->
+<!--            <div *ngIf="question.value.typeQuestion === 'CHECKBOX' ||-->
+<!--                        question.value.typeQuestion === 'COMBOBOX' ||-->
+<!--                        question.value.typeQuestion === 'RADIO'">-->
+<!--                <div *ngFor="let proposition of getPropositions(question); let j = index">-->
+<!--                    <ul *ngIf="proposition.value.chosen">{{proposition.value.valeurProp}}</ul>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 </div>

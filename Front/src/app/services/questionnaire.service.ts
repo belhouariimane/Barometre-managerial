@@ -5,11 +5,13 @@ import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
 import {User} from '../models/user';
 import {map} from 'rxjs/operators';
+import {QuestionService} from './question.service';
 
 @Injectable({ providedIn: 'root' })
 export class QuestionnaireService {
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient,
+                private questionService: QuestionService) { }
 
     getAllByIdUser(idUser: number) {
         return this.http.get<Questionnaire[]>(`${environment.apiUrl}/questionnaire/findByIdAdministrateur/${idUser}`);
@@ -36,7 +38,6 @@ export class QuestionnaireService {
         questionnaire.url = environment.apiUrl + '/answer/' + questionnaire.id;
         const questStr = JSON.stringify(questionnaire, replacer);
         return this.http.post(`${environment.apiUrl}/questionnaire/create`, JSON.parse(questStr));
-        // return this.http.post(`${environment.apiUrl}/questionnaires/register`, questionnaire);
     }
 
     update(id: number, questionnaire: Questionnaire) {
@@ -51,11 +52,17 @@ export class QuestionnaireService {
         questionnaire.id = id;
         const questStr = JSON.stringify(questionnaire, replacer);
         return this.http.post(`${environment.apiUrl}/questionnaire/update`, JSON.parse(questStr));
-        // return this.http.post(`${environment.apiUrl}/questionnaires/update/${id}`, questionnaire);
     }
 
     delete(id: number) {
         return this.http.delete(`${environment.apiUrl}/questionnaire/delete/${id}`);
-        // return this.http.delete(`${environment.apiUrl}/questionnaires/${id}`);
+    }
+
+    getNbQuestions(idQuestionnaire: number) {
+        this.questionService.readAllByIdQuestionnaire(idQuestionnaire)
+            .subscribe(questions => {
+                console.log('nb ' + questions.length);
+                return questions.length;
+        });
     }
 }
