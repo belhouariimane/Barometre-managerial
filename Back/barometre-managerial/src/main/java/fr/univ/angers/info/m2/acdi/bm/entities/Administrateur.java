@@ -47,7 +47,7 @@ public class Administrateur implements Serializable {
 	private String nom;
 	private String prenom;
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date dateParticipation;
+	private Date dateCreation;
 	@JsonIgnore
 	@OneToMany(mappedBy = "administrateur", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Questionnaire> questionnaires;
@@ -119,17 +119,17 @@ public class Administrateur implements Serializable {
 	}
 
 	/**
-	 * @return the dateParticipation
+	 * @return the dateCreation
 	 */
-	public Date getDateParticipation() {
-		return dateParticipation;
+	public Date getDateCreation() {
+		return dateCreation;
 	}
 
 	/**
-	 * @param dateParticipation the dateParticipation to set
+	 * @param dateCreation the dateParticipation to set
 	 */
-	public void setDateParticipation(Date dateParticipation) {
-		this.dateParticipation = dateParticipation;
+	public void setDateCreation(Date dateCreation) {
+		this.dateCreation = dateCreation;
 	}
 
 	@Override

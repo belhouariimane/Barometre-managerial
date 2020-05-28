@@ -14,6 +14,7 @@ import java.util.List;
 public class StatistiqueDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private String dataNonAnonymousCSV;
 	private String dataGlobalCSV;
 	private String dataFilterCSV;
 	private List<StatistiqueGlobaleDTO> statistiquesGlobales;
@@ -21,6 +22,20 @@ public class StatistiqueDTO implements Serializable {
 
 	public StatistiqueDTO() {
 		super();
+	}
+
+	/**
+	 * @return the dataNonAnonymousCSV
+	 */
+	public String getDataNonAnonymousCSV() {
+		return dataNonAnonymousCSV;
+	}
+
+	/**
+	 * @param dataNonAnonymousCSV the dataNonAnonymousCSV to set
+	 */
+	public void setDataNonAnonymousCSV(String dataNonAnonymousCSV) {
+		this.dataNonAnonymousCSV = dataNonAnonymousCSV;
 	}
 
 	/**

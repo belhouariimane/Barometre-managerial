@@ -24,7 +24,7 @@ import fr.univ.angers.info.m2.acdi.bm.helpers.Helpers;
 @Entity(name = "Question")
 @Table(name = "question")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Question implements Serializable {
+public class Question implements Serializable, Comparable<Question> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,7 +36,8 @@ public class Question implements Serializable {
 	private Boolean isRequired;
 	private Boolean isFilter;
 	private Boolean hasGraph;
-
+	private Integer ordre;
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Questionnaire questionnaire;
 
@@ -146,6 +147,14 @@ public class Question implements Serializable {
 	public void setHasGraph(Boolean hasGraph) {
 		this.hasGraph = hasGraph;
 	}
+	
+	public Integer getOrdre() {
+		return ordre;
+	}
+
+	public void setOrdre(Integer ordre) {
+		this.ordre = ordre;
+	}
 
 	@Override
 	public String toString() {
@@ -182,5 +191,10 @@ public class Question implements Serializable {
 //			}
 //		}
 		return true;
+	}
+
+	@Override
+	public int compareTo(Question o) {
+		return this.getOrdre().compareTo(o.getOrdre());
 	}
 }
