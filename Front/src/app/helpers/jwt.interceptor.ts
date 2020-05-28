@@ -19,7 +19,7 @@ export class JwtInterceptor implements HttpInterceptor {
         console.log(request.url);
         const re = 'public';
 
-        if (request.url.search(re) === 1) {
+        if (request.url.search(re) === -1) {
             if (currentUser) {
                 request = request.clone({
                     setHeaders: {
