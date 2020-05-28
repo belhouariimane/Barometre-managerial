@@ -5,7 +5,7 @@ export class Questionnaire {
     idUser: number;
     titre: string;
     description: string;
-    merci: string;
+    remerciement: string;
     anonymous: boolean;
     administrateur: User;
     dateCreation: Date;
@@ -20,7 +20,7 @@ export class Questionnaire {
         console.log('idUser: ' + this.idUser);
         console.log('titre: ' + this.titre);
         console.log('description: ' + this.description);
-        console.log('merci: ' + this.merci);
+        console.log('remerciement: ' + this.remerciement);
         console.log('anonymous: ' + this.anonymous);
         console.log('administrateur: ' + this.administrateur);
         console.log('dateCreation: ' + this.dateCreation);

@@ -3,12 +3,12 @@ import {Questionnaire} from '../../models/questionnaire';
 import {QuestionService} from '../../services/question.service';
 import {QuestionnaireService} from '../../services/questionnaire.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {AlertService} from '../../services/alert.service';
 import {Question} from '../../models/question';
 import {Proposition} from '../../models/proposition';
 import {Participant} from '../../models/participant';
-import {MatCheckboxChange, MatRadioChange, MatSelectChange} from '@angular/material';
+import {MatCheckboxChange, MatDatepickerInputEvent, MatRadioChange, MatSelectChange, MatSliderChange} from '@angular/material';
 import {Reponse} from '../../models/reponse';
 import {ParticipantService} from '../../services/participant.service';
 
@@ -24,7 +24,6 @@ export class QuestionnaireAnswerComponent implements OnInit {
   submitted = false;
   loading = false;
   done = false;
-  prenom: string;
   anonymous: boolean;
 
   constructor(private formBuilder: FormBuilder,
@@ -51,14 +50,12 @@ export class QuestionnaireAnswerComponent implements OnInit {
                 lastName: [''],
                 questions: this.formBuilder.array([])
               });
-              // }, { validators: this.checkAnswersValidator});
             } else {
               this.answerForm = this.formBuilder.group({
                 firstName: ['', Validators.required],
                 lastName: ['', Validators.required],
                 questions: this.formBuilder.array([])
               });
-              // }, { validators: this.checkAnswers});
             }
           } else {
             this.alertService.clear();
@@ -79,12 +76,8 @@ export class QuestionnaireAnswerComponent implements OnInit {
         });
   }
 
-  checkAnswersValidator: ValidatorFn = (group: FormGroup): ValidationErrors | null => {
-    return this.checkAnswers(group) === true ? null : { 'requiredAnswers': true };
-  }
-
-  checkAnswers(group: FormGroup): boolean {
-    this.getQuestions(group).forEach((item) => {
+  checkAnswers(): boolean {
+    this.getQuestions(this.answerForm).forEach((item) => {
       if (item.value.isRequired) {
         console.log('required : ' + item.value.valeurQuestion);
         if (item.value.typeQuestion === 'OUVERT' || item.value.typeQuestion === 'DATE') {
@@ -94,7 +87,7 @@ export class QuestionnaireAnswerComponent implements OnInit {
           }
         } else {
           let isRequiredOK = false;
-          this.getPropositions(item.value).forEach((prop) => {
+          this.getPropositions(item).forEach((prop) => {
             // si on trouve au moins une valeur sélectionnée par le participant,
             // on considère qu'il a répondu à la question obligatoire
             if (prop.value.chosen && !isRequiredOK) {
@@ -168,7 +161,8 @@ export class QuestionnaireAnswerComponent implements OnInit {
     this.alertService.clear();
 
     // s'arrête ici si le formulaire est invalide
-    if (this.answerForm.invalid) {
+    if (this.answerForm.invalid || !this.checkAnswers()) {
+      console.log(this.checkAnswers());
       return;
     }
 
@@ -190,6 +184,8 @@ export class QuestionnaireAnswerComponent implements OnInit {
       reponse.idQuestion = question.value.idQuestion;
       if (question.value.typeQuestion === 'OUVERT' || question.value.typeQuestion === 'DATE') {
         reponse.valeur = question.value.valeurReponse;
+        // on envoie la réponse seulement si celle-ci a une valeur
+        this.participant.reponses.push(reponse);
       } else {
         reponse.idsProposition = [];
         console.log('Question : ' + question.value.valeurQuestion);
@@ -200,17 +196,23 @@ export class QuestionnaireAnswerComponent implements OnInit {
             reponse.idsProposition.push(proposition.value.idProp);
           }
         });
+        if (reponse.idsProposition.length > 0) {
+          this.participant.reponses.push(reponse);
+        }
       }
-      this.participant.reponses.push(reponse);
     });
 
     // lorsque l'objet participant est complet, on l'envoie vers l'API
-    this.participantService.create(this.participant).subscribe();
+    this.participantService.create(this.participant).subscribe(next => {
+      this.alertService.success('Participation enregistrée');
+    }, error => {
+      this.alertService.error(error);
+    });
     this.done = true;
   }
 
   onChangeSelect(event: any, question: Question) {
-    this.getPropositions(question).forEach((item, index) => {
+    this.getPropositions(question).forEach((item) => {
       if (item.value.valeurProp === this.getPropositions(question)[event.value].value.valeurProp) {
         item.value.chosen = true;
       } else {
@@ -227,5 +229,13 @@ export class QuestionnaireAnswerComponent implements OnInit {
         console.log(item.value.valeurProp + ' : ' + item.value.chosen);
       }
     });
+  }
+
+  onChangeDate(event: MatDatepickerInputEvent<any>, question: AbstractControl) {
+    question.value.valeurReponse = new Date(event.value).toLocaleDateString();
+  }
+
+  onChangeEvaluation(event: MatSliderChange, question: AbstractControl) {
+    question.value.valeurReponse = event.value;
   }
 }

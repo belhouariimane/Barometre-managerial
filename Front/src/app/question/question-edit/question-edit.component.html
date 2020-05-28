@@ -9,19 +9,6 @@
                 <div *ngIf="f.valeur.errors.required">Veuillez renseigner la question</div>
             </div>
         </div>
-<!--        <div class="form-group">-->
-<!--            <label>Thème</label>-->
-<!--            <select formControlName="idTheme" class="form-control browser-default custom-select"-->
-<!--                [ngClass]=" { 'is-invalid': submitted && f.idTheme.errors }">-->
-<!--                <option [ngValue]="null" disabled>Choisissez le thème associé à cette question</option>-->
-<!--                <option *ngFor="let theme of themes; let i = index" [ngValue]=i+1>-->
-<!--                    {{ theme }}-->
-<!--                </option>-->
-<!--            </select>-->
-<!--            <div *ngIf="submitted && f.idTheme.errors" class="invalid-feedback">-->
-<!--                <div *ngIf="f.idTheme.errors.required">Veuillez sélectionner un thème</div>-->
-<!--            </div>-->
-<!--        </div>-->
         <div class="form-group">
             <mat-slide-toggle
                     class="example-margin"
@@ -63,6 +50,9 @@
             <button  class="mx-3" [ngClass]="(typeQuestion==='DATE')?'button-custom' : ''" mat-raised-button  mat-mini-fab color="accent" (click)="addDatePicker()">
                 <mat-icon>date_range</mat-icon>
             </button>
+            <button  class="mx-3" [ngClass]="(typeQuestion==='EVALUATION')?'button-custom' : ''" mat-raised-button  mat-mini-fab color="accent" (click)="addEvaluation()">
+                <mat-icon>linear_scale</mat-icon>
+            </button>
         </div>
         <div *ngIf="submitted && typeQuestion===undefined" class="invalid-feedback float-right">
             <div *ngIf="typeQuestion===undefined">Veuillez sélectionner un type de question</div><br/>
@@ -101,7 +91,14 @@
                 </mat-form-field>
             </div>
         </div>
-
+        <div *ngIf="typeQuestion==='EVALUATION'">
+            <div class="container border rounded border-info px-4 py-2">
+                <mat-form-field class="w-100">
+                    <mat-label>Choisissez une valeur</mat-label>
+                    <mat-slider thumbLabel matNativeControl required tickInterval="1" min="1" max="10"></mat-slider>
+                </mat-form-field>
+            </div>
+        </div>
         <div *ngIf="typeQuestion==='DATE'">
             <div class="container border rounded border-info mb-4 pb-4 pt-2 px-4">
                 <mat-form-field>

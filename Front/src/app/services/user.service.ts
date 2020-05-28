@@ -17,10 +17,9 @@ export class UserService {
     }
 
     register(user: User) {
-      //  return this.http.post(`/public/admin/create`, user);
-
-
-       return this.http.post(`${environment.apiUrl}/public/admin/create`, user);
+        console.log(user);
+        user.dateCreation = new Date(Date.now());
+        return this.http.post(`/public/admin/create`, user);
         // return this.http.post(`${environment.apiUrl}/users/register`, user);
     }
 
