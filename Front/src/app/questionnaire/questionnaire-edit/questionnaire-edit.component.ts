@@ -128,7 +128,7 @@ export class QuestionnaireEditComponent implements OnInit {
         .subscribe(questions => {
           this.questions = questions;
           questions.forEach((item) => {
-            console.log(item.valeur + ' : ordre ' + item.order);
+            console.log(item.valeur + ' : ordre ' + item.ordre);
           });
         });
   }
@@ -148,7 +148,7 @@ export class QuestionnaireEditComponent implements OnInit {
         .subscribe(questions => {
           questions.forEach((item, index) => {
             if (index > idQuestion) {
-              item.order--;
+              item.ordre--;
               this.questionService.update(item.id, item, item.propositions).subscribe();
             }
           });
@@ -160,8 +160,8 @@ export class QuestionnaireEditComponent implements OnInit {
   up(index: number) {
     const questionUp: Question = this.questions[index];
     const questionDown: Question = this.questions[index - 1];
-    questionUp.order--;
-    questionDown.order++;
+    questionUp.ordre--;
+    questionDown.ordre++;
     this.questionService.update(questionUp.id, questionUp, questionUp.propositions).subscribe();
     this.questionService.update(questionDown.id, questionDown, questionDown.propositions).subscribe();
     this.loadAllQuestions(this.idQuestionnaire);
@@ -171,8 +171,8 @@ export class QuestionnaireEditComponent implements OnInit {
   down(index: number) {
     const questionDown: Question = this.questions[index];
     const questionUp: Question = this.questions[index + 1];
-    questionDown.order++;
-    questionUp.order--;
+    questionDown.ordre++;
+    questionUp.ordre--;
     this.questionService.update(questionUp.id, questionUp, questionUp.propositions).subscribe();
     this.questionService.update(questionDown.id, questionDown, questionDown.propositions).subscribe();
     this.loadAllQuestions(this.idQuestionnaire);

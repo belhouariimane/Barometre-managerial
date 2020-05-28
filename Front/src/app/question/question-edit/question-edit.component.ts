@@ -54,7 +54,7 @@ export class QuestionEditComponent implements OnInit {
         isRequired: [false],
         isFilter: [false],
         hasGraph: [false],
-        order: [],
+        ordre: [],
         propositions: this.formBuilder.array([])
     });
 
@@ -74,7 +74,7 @@ export class QuestionEditComponent implements OnInit {
                         isRequired: [question.isRequired, Validators.required],
                         isFilter: [question.isFilter, Validators.required],
                         hasGraph: [question.hasGraph, Validators.required],
-                        order: [question.order],
+                        ordre: [question.ordre],
                         propositions: this.formBuilder.array([])
                     });
                     this.question.propositions.forEach((item) => {
@@ -135,8 +135,8 @@ export class QuestionEditComponent implements OnInit {
           );
     } else {
       this.questionService.readAllByIdQuestionnaire(this.idQuestionnaire).subscribe(questions => {
-          this.questionForm.value.order = questions === undefined ? 1 : questions.length + 1;
-          console.log('order: ' + this.questionForm.value.order);
+          this.questionForm.value.ordre = questions === undefined ? 1 : questions.length + 1;
+          console.log('ordre: ' + this.questionForm.value.ordre);
       });
       this.questionService.create(this.questionForm.value, this.propositions.value)
           .subscribe(data => {
