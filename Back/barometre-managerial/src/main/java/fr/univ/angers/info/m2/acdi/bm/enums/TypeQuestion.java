@@ -5,6 +5,7 @@ public enum TypeQuestion {
 	CHECKBOX ("CHECKBOX"),
 	COMBOBOX ("COMBOBOX"),
 	DATE ("DATE"),
+	EVALUATION ("EVALUATION"),
 	OUVERT ("OUVERT");
 	
 	private String typeQuestion = "";
