@@ -10,8 +10,7 @@ import {QuestionService} from './question.service';
 @Injectable({ providedIn: 'root' })
 export class QuestionnaireService {
 
-    constructor(private http: HttpClient,
-                private questionService: QuestionService) { }
+    constructor(private http: HttpClient) { }
 
     getAllByIdUser(idUser: number) {
         return this.http.get<Questionnaire[]>(`${environment.apiUrl}/questionnaire/findByIdAdministrateur/${idUser}`);
@@ -56,13 +55,5 @@ export class QuestionnaireService {
 
     delete(id: number) {
         return this.http.delete(`${environment.apiUrl}/questionnaire/delete/${id}`);
-    }
-
-    getNbQuestions(idQuestionnaire: number) {
-        this.questionService.readAllByIdQuestionnaire(idQuestionnaire)
-            .subscribe(questions => {
-                console.log('nb ' + questions.length);
-                return questions.length;
-        });
     }
 }
