@@ -1,21 +1,71 @@
+<div class="container p-3 mb-5 bg-white rounded">
+    <mat-tab-group>
+        <mat-tab label="statistique par filtre">
+            <div *ngFor="let data of dataSource">
+            <mat-accordion >
+                <mat-expansion-panel class="shadow-sm p-3 mb-5 bg-white rounded" [expanded]="true">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{data.filter}}
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            Ce graphique présente les réponses collectées pour la question : {{data.question}}
+                            <br/>
+                            On a utilisé cet question pour filtrer: {{data.questionFilter}}
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <app-pie-chart [dataS]=data></app-pie-chart>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+        </mat-tab>
+        <mat-tab label="statistique global">
+            <div *ngFor="let data of dataSourceGlobal">
+                <mat-accordion >
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{data.question}}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <app-doughnut-chart [dataS]=data></app-doughnut-chart>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
 
-<div *ngFor="let data of dataSource">
-<mat-accordion >
-    <mat-expansion-panel>
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    {{data.filter}}
-                </mat-panel-title>
-                <mat-panel-description>
-                    Ce graphique présente les réponses collectées pour la question : {{data.question}}
-                    <br/>
-                    On a utilisé cet question pour filtrer: {{data.questionFilter}}
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            <app-pie-chart [dataS]=data></app-pie-chart>
-    </mat-expansion-panel>
-</mat-accordion>
+    <div class="row">
+        <div class="col-9">
+            <label> Pour exporter les données utilisées pour la genération des graphiques avec des questions filtres :</label>
+        </div>
+        <div class="col-3">
+            <button class="btn btn-primary float-right"(click)="exportFilter()" >export CSV filtre </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-9">
+            <label> Pour exporter les données utilisées pour la genération des graphiques sans question filtre :</label>
+        </div>
+        <div class="col-3">
+            <button class="btn btn-primary float-right"(click)="exportStatGlobal()" > export CSV </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-9">
+            <label> Pour exporter les réponses avec les informations des répondeurs :</label>
+        </div>
+        <div class="col-3">
+            <button class="btn btn-primary float-right"(click)="exportGlobal()" > export les résultats CSV </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-9">
+            <label> Pour imprimer les graphiques  :</label>
+        </div>
+        <div class="col-3">
+            <button class="btn btn-primary float-right"(click)="print()" >imprimer</button>
+        </div>
+    </div>
+
 </div>
-<br/>
-<button class="btn btn-secondary float-right"(click)="export()" >export</button>
-<button class="btn btn-secondary float-right"(click)="print()" >imprimer</button>

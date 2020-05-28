@@ -11,11 +11,13 @@ import {AlertService} from '../services/alert.service';
   styleUrls: ['./resultat.component.scss']
 })
 export class ResultatComponent implements OnInit {
-  public resultatService;
   public dataSource;
-  public data;
-  public dataToExport;
-  constructor(resultatService: ResultatService,
+  public dataToExportFilter;
+  public dataToExportGlobalCSV;
+  public dataToExportNonAnonymousCSV;
+
+  public dataSourceGlobal:any;
+  constructor(public resultatService: ResultatService,
               private questionnaireService: QuestionnaireService,
               private alertService: AlertService,
               private router: Router,
@@ -34,24 +36,32 @@ export class ResultatComponent implements OnInit {
         });
     this.resultatService.getData(this.route.snapshot.params.id)
         .subscribe(dataSource => {
-         this.dataSource = dataSource['retour']['statistiquesFiltres'];
-         this.dataToExport = dataSource['retour']['dataGlobalCSV'];
+           this.dataSource = dataSource['retour']['statistiquesFiltres'];
+           this.dataToExportFilter = dataSource['retour']['dataFilterCSV'];
+           this.dataToExportGlobalCSV = dataSource['retour']['dataGlobalCSV'];
+           this.dataToExportNonAnonymousCSV = dataSource['retour']['dataNonAnonymousCSV'];
+           this.dataSourceGlobal = dataSource['retour']['statistiquesGlobales'];
         });
   }
-  download(data) {
+  download(data, fileName) {
     const blob = new Blob([data], {type: 'text/csv'});
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.setAttribute('hidden', '');
     a.setAttribute('href', url);
-    a.setAttribute('statistiquesFiltres', 'download.csv');
+    a.setAttribute('download', fileName.concat('.csv'));
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
   }
-  export() {
-    this.download(this.dataToExport);
-
+  exportFilter() {
+    this.download(this.dataToExportFilter, 'filtre');
+  }
+  exportStatGlobal() {
+    this.download(this.dataToExportGlobalCSV, 'globales');
+  }
+  exportGlobal() {
+    this.download(this.dataToExportNonAnonymousCSV, 'nonanonymous');
   }
   print() {
     window.print();
