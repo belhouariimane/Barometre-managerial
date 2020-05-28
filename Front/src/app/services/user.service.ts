@@ -14,18 +14,20 @@ export class UserService {
     getAll() {
          return this.http.get<User[]>(`/admin/readAll`);
         // return this.http.get<User[]>(`${environment.apiUrl}/users`);
+
     }
 
     register(user: User) {
         console.log(user);
         user.dateCreation = new Date(Date.now());
         return this.http.post(`/public/admin/create`, user);
-        // return this.http.post(`${environment.apiUrl}/users/register`, user);
     }
 
     delete(id: number) {
+
         return this.http.delete(`/admin/delete/${id}`);
         // return this.http.delete(`${environment.apiUrl}/users/${id}`);
+
     }
 
     update(id: number, user: User) {
