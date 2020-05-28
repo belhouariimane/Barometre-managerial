@@ -1,55 +1,57 @@
-<h2 class="text-center">Inscription</h2>
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-        <label>Prénom</label>
-        <input type="text" formControlName="prenom" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.prenom.errors }" />
-        <div *ngIf="submitted && f.prenom.errors" class="invalid-feedback">
-            <div *ngIf="f.prenom.errors.required">Veuillez renseigner votre prénom</div>
+<div class="container shadow-lg p-3 mb-5 bg-white rounded">
+    <h2 class="text-center">Inscription</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label>Prénom</label>
+            <input type="text" formControlName="prenom" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.prenom.errors }" />
+            <div *ngIf="submitted && f.prenom.errors" class="invalid-feedback">
+                <div *ngIf="f.prenom.errors.required">Veuillez renseigner votre prénom</div>
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <label>Nom</label>
-        <input type="text" formControlName="nom" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.nom.errors }" />
-        <div *ngIf="submitted && f.nom.errors" class="invalid-feedback">
-            <div *ngIf="f.nom.errors.required">Veuillez renseigner votre nom</div>
+        <div class="form-group">
+            <label>Nom</label>
+            <input type="text" formControlName="nom" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.nom.errors }" />
+            <div *ngIf="submitted && f.nom.errors" class="invalid-feedback">
+                <div *ngIf="f.nom.errors.required">Veuillez renseigner votre nom</div>
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <label>Email</label>
-        <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
-        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-            <div *ngIf="f.email.errors.required">Veuillez renseigner votre email</div>
-            <div *ngIf="f.email.errors.pattern">Le format email n'est pas reconnu</div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                <div *ngIf="f.email.errors.required">Veuillez renseigner votre email</div>
+                <div *ngIf="f.email.errors.pattern">Le format email n'est pas reconnu</div>
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <label>Mot de passe</label>
-        <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && (f.password.errors || registerForm.errors?.notSame)}" />
-        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-            <div *ngIf="f.password.errors.required">Veuillez renseigner votre mot de passe</div>
-            <div *ngIf="f.password.errors.minlength">Le mot de passe doit contenir au moins 6 caractères</div>
+        <div class="form-group">
+            <label>Mot de passe</label>
+            <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && (f.password.errors || registerForm.errors?.notSame)}" />
+            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                <div *ngIf="f.password.errors.required">Veuillez renseigner votre mot de passe</div>
+                <div *ngIf="f.password.errors.minlength">Le mot de passe doit contenir au moins 6 caractères</div>
+            </div>
+            <div *ngIf="submitted && registerForm.errors?.notSame" class="invalid-feedback">
+                <div *ngIf="registerForm.errors?.notSame">Les mots de passe ne sont pas identiques</div>
+            </div>
         </div>
-        <div *ngIf="submitted && registerForm.errors?.notSame" class="invalid-feedback">
-            <div *ngIf="registerForm.errors?.notSame">Les mots de passe ne sont pas identiques</div>
+        <div class="form-group">
+            <label>Confirmation du mot de passe</label>
+            <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && (f.confirmPassword.errors || registerForm.errors?.notSame)}" />
+            <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
+                <div *ngIf="f.confirmPassword.errors.required">Veuillez confirmer votre nouveau mot de passe</div>
+                <div *ngIf="f.confirmPassword.errors.minlength">Le mot de passe doit contenir au moins 6 caractères</div>
+            </div>
+            <div *ngIf="submitted && registerForm.errors?.notSame" class="invalid-feedback">
+                <div *ngIf="registerForm.errors?.notSame">Les mots de passe ne sont pas identiques</div>
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <label>Confirmation du mot de passe</label>
-        <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && (f.confirmPassword.errors || registerForm.errors?.notSame)}" />
-        <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
-            <div *ngIf="f.confirmPassword.errors.required">Veuillez confirmer votre nouveau mot de passe</div>
-            <div *ngIf="f.confirmPassword.errors.minlength">Le mot de passe doit contenir au moins 6 caractères</div>
+        <br/>
+        <div class="form-group text-center">
+            <button [disabled]="loading" class="btn btn-primary">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                S'inscrire
+            </button>
+            <a routerLink="/login" class="btn btn-link">Se connecter</a>
         </div>
-        <div *ngIf="submitted && registerForm.errors?.notSame" class="invalid-feedback">
-            <div *ngIf="registerForm.errors?.notSame">Les mots de passe ne sont pas identiques</div>
-        </div>
-    </div>
-    <br/>
-    <div class="form-group text-center">
-        <button [disabled]="loading" class="btn btn-primary">
-            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-            S'inscrire
-        </button>
-        <a routerLink="/login" class="btn btn-link">Se connecter</a>
-    </div>
-</form>
+    </form>
+</div>
