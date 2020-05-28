@@ -33,7 +33,7 @@ public class PublicController {
 	private ParticipantService participantService;
 
 	@ApiOperation(value = "Création d'un nouveau administrateur")
-	@PostMapping("/admin/create")
+	@PostMapping(value = "/admin/create")
 	public ResponseEntity<RetourGeneral> creerAdministrateur(@RequestBody AdministrateurCreateDTO newAdministrateur) {
 		return traitementReponse(administrateurService.save(newAdministrateur));
 	}
