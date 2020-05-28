@@ -17,7 +17,9 @@ export class JwtInterceptor implements HttpInterceptor {
         const currentUser = this.authService.currentUserValue;
         console.log(currentUser);
         console.log(request.url);
-        if (!request.url.includes('public')) {
+        const re = 'public';
+
+        if (request.url.search(re) === 1) {
             if (currentUser) {
                 request = request.clone({
                     setHeaders: {
