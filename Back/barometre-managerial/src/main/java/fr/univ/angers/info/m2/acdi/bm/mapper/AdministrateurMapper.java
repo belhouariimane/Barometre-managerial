@@ -19,6 +19,7 @@ public interface AdministrateurMapper {
 
 	Administrateur loginToEntity(LoginDTO dto);
 
+	@Mapping(target = "dateCreation", source = "dateCreation", dateFormat = "dd/MM/yyyy")
 	AdministrateurRetourDTO entityToRetour(Administrateur entity);
 
 	@Mapping(target = "dateCreation", source = "dateCreation", dateFormat = "dd/MM/yyyy")

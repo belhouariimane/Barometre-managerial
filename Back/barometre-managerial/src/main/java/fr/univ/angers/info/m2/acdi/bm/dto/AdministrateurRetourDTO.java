@@ -14,6 +14,7 @@ public class AdministrateurRetourDTO implements Serializable {
 	private String email;
 	private String nom;
 	private String prenom;
+	private String dateCreation;
 
 	/**
 	 * @return the id
@@ -69,6 +70,20 @@ public class AdministrateurRetourDTO implements Serializable {
 	 */
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
+	}
+
+	/**
+	 * @return the dateCreation
+	 */
+	public String getDateCreation() {
+		return dateCreation;
+	}
+
+	/**
+	 * @param dateCreation the dateCreation to set
+	 */
+	public void setDateCreation(String dateCreation) {
+		this.dateCreation = dateCreation;
 	}
 
 	public boolean checkNull() throws IllegalAccessException {
