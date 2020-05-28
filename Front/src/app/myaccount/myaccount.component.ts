@@ -8,6 +8,7 @@ import {AlertService} from '../services/alert.service';
 import {first} from 'rxjs/operators';
 import {QuestionnaireService} from '../services/questionnaire.service';
 import {QuestionService} from '../services/question.service';
+import {ParticipantService} from '../services/participant.service';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class MyaccountComponent implements OnInit {
   message: string;
   nbQuestionnairesCrees: number;
   nbQuestionsCreees: number;
+  nbParticipations: number;
   dateCreation: string;
 
   constructor(private formBuilder: FormBuilder,
@@ -31,6 +33,7 @@ export class MyaccountComponent implements OnInit {
               private alertService: AlertService,
               private questionnaireService: QuestionnaireService,
               private questionService: QuestionService,
+              private participantService: ParticipantService,
               private router: Router) {
     this.currentUser = this.authService.currentUserValue;
   }
@@ -44,16 +47,21 @@ export class MyaccountComponent implements OnInit {
       confirmPassword: ['', Validators.minLength(6)]
     }, { validators: this.checkPasswords});
     this.nbQuestionsCreees = 0;
+    this.nbParticipations = 0;
     this.userService.read(this.currentUser.id)
         .subscribe(user => {
-          this.dateCreation = new Date(user.dateCreation).toLocaleDateString();
+          this.dateCreation = user.dateCreation;
         });
     this.questionnaireService.getAllByIdUser(this.currentUser.id)
         .subscribe(questionnaires => {
+          // Récupère le nombre de questionnaires créés
           this.nbQuestionnairesCrees = questionnaires.length;
           for (const questionnaire of questionnaires) {
+            // Récupère le nombre total de questions créées
             this.questionService.readAllByIdQuestionnaire(questionnaire.id)
                 .subscribe(questions => this.nbQuestionsCreees += questions.length);
+            this.participantService.readAllByIdQuestionnaire(questionnaire.id)
+                .subscribe(participations => this.nbParticipations += participations.length);
           }
         });
   }

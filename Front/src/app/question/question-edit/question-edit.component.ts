@@ -70,7 +70,6 @@ export class QuestionEditComponent implements OnInit {
                         idQuestionnaire: [this.idQuestionnaire],
                         valeur: [question.valeur, Validators.required],
                         typeQuestion: [question.typeQuestion, Validators.required],
-                        // idTheme: [question.idTheme, Validators.required],
                         isRequired: [question.isRequired, Validators.required],
                         isFilter: [question.isFilter, Validators.required],
                         hasGraph: [question.hasGraph, Validators.required],
@@ -131,28 +130,29 @@ export class QuestionEditComponent implements OnInit {
                 this.alertService.success('Question enregistrée', true);
               }, error => {
                   this.alertService.error(error);
+              }, () => {
+                  this.router.navigate(['/edit-questionnaire', this.idQuestionnaire]);
+                  this.loading = false;
               }
           );
     } else {
         this.questionService.readAllByIdQuestionnaire(this.idQuestionnaire)
             .subscribe(questions => {
-                console.log('nb ' + questions.length);
                 this.questionForm.value.ordre = questions.length;
                 this.questionForm.value.ordre++;
-                console.log('Ordre de la question before : ' + this.questionForm.value.ordre);
             }, () => {}, () => {
-                console.log('Ordre de la question after : ' + this.questionForm.value.ordre);
                 this.questionService.create(this.questionForm.value, this.propositions.value)
                   .subscribe(data => {
                         this.alertService.success('Question enregistrée', true);
                       }, error => {
                         this.alertService.error(error);
+                      }, () => {
+                          this.router.navigate(['/edit-questionnaire', this.idQuestionnaire]);
+                          this.loading = false;
                       }
                   );
             });
     }
-    this.router.navigate(['/edit-questionnaire', this.idQuestionnaire]);
-    this.loading = false;
   }
 
   addCheckBox() {

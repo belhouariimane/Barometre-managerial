@@ -62,8 +62,8 @@ export class QuestionnaireEditComponent implements OnInit {
       this.questionnaireService.getById(this.idQuestionnaire)
           .subscribe(questionnaire => {
             if (questionnaire !== null) {
-              this.loadAllQuestions(this.idQuestionnaire);
-              this.loadNbParticipations(this.idQuestionnaire);
+              this.loadAllQuestions();
+              this.loadNbParticipations(questionnaire.id);
               this.questionnaireForm = this.fb.group({
                 titre: [questionnaire.titre, Validators.required],
                 description: [questionnaire.description, Validators.required],
@@ -123,13 +123,10 @@ export class QuestionnaireEditComponent implements OnInit {
     this.loading = false;
   }
 
-  loadAllQuestions(idQuestionnaire: number) {
-    this.questionService.readAllByIdQuestionnaire(idQuestionnaire)
+  loadAllQuestions() {
+    this.questionService.readAllByIdQuestionnaire(this.idQuestionnaire)
         .subscribe(questions => {
           this.questions = questions;
-          questions.forEach((item) => {
-            console.log(item.valeur + ' : ordre ' + item.ordre);
-          });
         });
   }
 
@@ -139,21 +136,28 @@ export class QuestionnaireEditComponent implements OnInit {
         .subscribe(participants => {
           this.nbParticipants = participants.length;
         });
-    this.nbParticipants = 1;
   }
 
   deleteQuestion(idQuestion: number) {
-    this.questionService.delete(idQuestion).subscribe();
-    this.questionService.readAllByIdQuestionnaire(this.idQuestionnaire)
-        .subscribe(questions => {
-          questions.forEach((item, index) => {
-            if (index > idQuestion) {
-              item.ordre--;
-              this.questionService.update(item.id, item, item.propositions).subscribe();
-            }
+    const indexQuestion = this.questions.findIndex(x => x.id === idQuestion);
+    this.questionService.delete(idQuestion).subscribe(() => {
+      this.questionService.readAllByIdQuestionnaire(this.idQuestionnaire)
+          .subscribe(questions => {
+            questions.forEach((item, index) => {
+              if (index >= indexQuestion) {
+                item.ordre--;
+                this.questionService.updateOrder(item).subscribe(() => {}, () => {}, () => {
+                  // Après avoir mis à jour le dernier ordre, on met à jour la liste de questions
+                  if (index === questions.length - 1) {
+                    this.loadAllQuestions();
+                  }
+                });
+              }
+            });
+          }, () => {}, () => {
+            this.loadAllQuestions();
           });
-          this.loadAllQuestions(this.idQuestionnaire);
-        });
+    });
   }
 
   // monte l'emplacement d'une question (décrémente l'ordre de 1)
@@ -162,9 +166,12 @@ export class QuestionnaireEditComponent implements OnInit {
     const questionDown: Question = this.questions[index - 1];
     questionUp.ordre--;
     questionDown.ordre++;
-    this.questionService.update(questionUp.id, questionUp, questionUp.propositions).subscribe();
-    this.questionService.update(questionDown.id, questionDown, questionDown.propositions).subscribe();
-    this.loadAllQuestions(this.idQuestionnaire);
+    // ici, on veut simplement mettre à jour l'ordre donc on ne passe pas les propositions de la question en paramètre
+    this.questionService.updateOrder(questionUp).subscribe(() => {
+      this.questionService.updateOrder(questionDown).subscribe(() => {
+        this.loadAllQuestions();
+      });
+    });
   }
 
   // descend l'emplacement d'une question (donc l'augmente de 1)
@@ -173,9 +180,11 @@ export class QuestionnaireEditComponent implements OnInit {
     const questionUp: Question = this.questions[index + 1];
     questionDown.ordre++;
     questionUp.ordre--;
-    this.questionService.update(questionUp.id, questionUp, questionUp.propositions).subscribe();
-    this.questionService.update(questionDown.id, questionDown, questionDown.propositions).subscribe();
-    this.loadAllQuestions(this.idQuestionnaire);
+    this.questionService.updateOrder(questionUp).subscribe(() => {
+      this.questionService.updateOrder(questionDown).subscribe(() => {
+        this.loadAllQuestions();
+      });
+    });
   }
 
   // permet d'afficher à l'utilisateur des types de questions plus compréhensibles
