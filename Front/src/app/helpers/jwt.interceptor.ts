@@ -8,20 +8,23 @@ import {AuthService} from '../services/auth.service';
  * à l'en-tête Authorization si l'utilisateur est connecté.
  */
 export class JwtInterceptor implements HttpInterceptor {
-    constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService) {
+    }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // add authorization header with jwt token if available
         console.log('on intercept');
         const currentUser = this.authService.currentUserValue;
         console.log(currentUser);
-
-        if (currentUser) {
-            request = request.clone({
-               setHeaders: {
-                   Authorization: `Bearer ${currentUser['tokenJwt']}`
-               }
-            });
+        console.log(request.url);
+        if (!request.url.includes('public')) {
+            if (currentUser) {
+                request = request.clone({
+                    setHeaders: {
+                        Authorization: `Bearer ${currentUser['tokenJwt']}`
+                    }
+                });
+            }
         }
         return next.handle(request);
     }
