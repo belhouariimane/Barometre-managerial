@@ -98,9 +98,6 @@ export class QuestionnaireEditComponent implements OnInit {
 
     // s'arrête ici si le formulaire est invalide
     if (this.questionnaireForm.invalid) {
-      if (this.questionnaireForm.errors.before) {
-        console.log('erreur date');
-      }
       return;
     }
 
@@ -222,7 +219,6 @@ export class QuestionnaireEditComponent implements OnInit {
   checkDate: ValidatorFn = (group: FormGroup): ValidationErrors | null => {
     const dateP = new Date(group.get('datePeremption').value).getTime();
     const dateN = new Date(Date.now()).getTime();
-    console.log(dateP + ' > ' + dateN + ' = ' + (dateP > dateN));
     return dateP > dateN ? null : { 'before': true };
   }
 }

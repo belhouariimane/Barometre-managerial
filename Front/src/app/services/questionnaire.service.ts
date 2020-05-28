@@ -38,7 +38,6 @@ export class QuestionnaireService {
         questionnaire.dateCreation.setHours(questionnaire.dateCreation.getHours() + 2);
         questionnaire.url = environment.apiUrl + '/answer/' + questionnaire.id;
         const questStr = JSON.stringify(questionnaire, replacer);
-        console.log(questStr);
         return this.http.post(`${environment.apiUrl}/questionnaire/create`, JSON.parse(questStr));
     }
 
@@ -56,7 +55,6 @@ export class QuestionnaireService {
         }
         questionnaire.datePeremption.setHours(questionnaire.datePeremption.getHours() + 2);
         const questStr = JSON.stringify(questionnaire, replacer);
-        console.log(questStr);
         return this.http.post(`${environment.apiUrl}/questionnaire/update`, JSON.parse(questStr));
     }
 

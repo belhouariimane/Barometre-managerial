@@ -28,9 +28,10 @@
                     <h5>{{questionnaire.description}} </h5>
                     <div>Lien : <a [routerLink]="['/answer', questionnaire.id]">{{apiUrl}}/answer/{{questionnaire.id}}</a></div>
                         <div>Anonyme : {{ questionnaire.anonymous ? "oui" : "non" }} </div>
-                        <div>Date de création : {{questionnaire.dateCreation}}</div>
                         <div>Nombre de questions : {{questionnaire.nbQuestions}}</div>
                         <div>Nombre de participations : {{questionnaire.nbParticipants}}</div>
+                        <div>Date de création : {{questionnaire.dateCreation}}</div>
+                        <div>Date limite de participation : {{questionnaire.datePeremption}}</div>
                     </div>
                     <button class="float-right mx-2"
                             mat-button mat-raised-button color="warn"

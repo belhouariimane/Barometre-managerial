@@ -111,7 +111,6 @@ export class QuestionEditComponent implements OnInit {
 
   onNewQuestion() {
     this.questionForm.value.typeQuestion = this.typeQuestion;
-    console.log(this.questionForm.value);
 
     this.submitted = true;
 

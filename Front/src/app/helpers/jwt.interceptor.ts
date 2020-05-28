@@ -13,10 +13,7 @@ export class JwtInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // add authorization header with jwt token if available
-        console.log('on intercept');
         const currentUser = this.authService.currentUserValue;
-        console.log(currentUser);
-        console.log(request.url);
         const re = 'public';
 
         if (request.url.search(re) === -1) {
