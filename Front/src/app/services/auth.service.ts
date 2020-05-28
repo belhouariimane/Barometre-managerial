@@ -47,10 +47,6 @@ export class AuthService {
         user.nom = user.nom.length === 0 ? this.currentUserValue.nom : user.nom;
         user.prenom = user.prenom.length === 0 ? this.currentUserValue.prenom : user.prenom;
         user.id = this.currentUserValue.id;
-        console.log(user.email);
-        console.log(user.password);
-        console.log(user.nom);
-        console.log(user.prenom);
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
     }

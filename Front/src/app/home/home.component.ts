@@ -44,6 +44,7 @@ export class HomeComponent implements OnInit {
           this.questionnaires = questionnaires;
           this.questionnaires.forEach((item) => {
               item.dateCreation = new Date(item.dateCreation).toLocaleDateString();
+              item.datePeremption = new Date(item.datePeremption).toLocaleDateString();
           });
           this.loadNbQuestions();
           this.loadNbParticipations();

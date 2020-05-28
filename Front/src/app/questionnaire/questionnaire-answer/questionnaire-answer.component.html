@@ -66,16 +66,22 @@
                                 <div *ngSwitchCase="'DATE'" class="container border rounded border-info p-4">
                                     <mat-form-field>
                                         <mat-label>Choisissez une date</mat-label>
-                                        <input type="date" matInput (dateChange)="onChangeDate($event, question)" [matDatepicker]="picker">
+                                        <input matInput (dateChange)="onChangeDate($event, question)" [matDatepicker]="picker">
                                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                         <mat-datepicker #picker></mat-datepicker>
                                     </mat-form-field>
                                 </div>
                                 <div *ngSwitchCase="'EVALUATION'" class="container border rounded border-info px-4 py-2">
-                                    <mat-form-field class="w-50">
-                                        <mat-label>Choisissez une valeur</mat-label>
-                                        <mat-slider thumbLabel matNativeControl required tickInterval="1" min="1" max="10"></mat-slider>
-                                    </mat-form-field>
+                                    <mat-label>Choisissez une valeur</mat-label><br/>
+                                    <mat-slider
+                                            (valueChange)="onChangeEvaluation($event,question)"
+                                            class="w-100 mat-slider-horizontal"
+                                            [min]="1"
+                                            [max]="10"
+                                            [step]="1"
+                                            formControlName="valeurReponse"
+                                            thumbLabel>
+                                    </mat-slider>
                                 </div>
                                 <div *ngSwitchCase="'OUVERT'" class="container border rounded border-info p-4">
                                     <mat-form-field class="w-100" >
@@ -97,7 +103,7 @@
         </form >
     </div>
     <div *ngIf="done" class="card-body">
-        <p>{{questionnaire.remerciement}}</p>
+        <p *ngIf="!perime">{{questionnaire.remerciement}}</p>
 <!--        <p>Vos réponses : </p>-->
 <!--        <div *ngFor="let question of getQuestions(answerForm); let i = index">-->
 <!--            <li>{{question.value.valeurQuestion}}</li>-->

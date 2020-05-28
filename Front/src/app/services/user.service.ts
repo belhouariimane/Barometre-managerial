@@ -24,7 +24,6 @@ export class UserService {
     }
 
     register(user: User) {
-        console.log(user);
         user.dateCreation = new Date(Date.now());
         return this.http.post(`/public/admin/create`, user);
     }

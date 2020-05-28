@@ -11,7 +11,6 @@ export class ParticipantService {
     constructor(private http: HttpClient) { }
 
     create(participant: Participant) {
-        console.log(JSON.stringify(participant));
         const headers = new HttpHeaders().set('Content-Type', 'application/json; charset=utf-8');
         return this.http.post(`/public/participant/create`, JSON.stringify(participant), {headers});
     }
