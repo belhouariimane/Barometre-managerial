@@ -63,6 +63,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
         BrowserAnimationsModule,
         MatFormFieldModule,
         MatInputModule,
+        MatSliderModule,
         MatSelectModule,
         MatCheckboxModule,
         MatIconModule,
@@ -92,7 +93,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
       //
       // // création de fausses données en attendant le back ...
       // fakeBackendProvider,
-      MatDatepickerModule
+      MatDatepickerModule,
+      MatSliderModule
   ],
 
   bootstrap: [AppComponent]

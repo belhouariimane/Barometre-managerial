@@ -137,17 +137,15 @@
         </div>
         <div *ngIf="typeQuestion==='EVALUATION'">
             <div class="container border rounded border-info px-4 py-2">
-                <mat-form-field class="w-100">
-                    <mat-label>Choisissez une valeur</mat-label>
-                    <mat-slider thumbLabel matNativeControl required tickInterval="1" min="1" max="10"></mat-slider>
-                </mat-form-field>
+                    <mat-label>Choisissez une valeur</mat-label><br/>
+                    <mat-slider class="w-100 mat-slider-horizontal" thumbLabel id="slider" step="1" min="1" max="10"></mat-slider>
             </div>
         </div>
         <div *ngIf="typeQuestion==='DATE'">
             <div class="container border rounded border-info mb-4 pb-4 pt-2 px-4">
                 <mat-form-field>
                     <mat-label>Choisissez une date</mat-label>
-                    <input matInput [matDatepicker]="picker">
+                    <input type="date" matInput [matDatepicker]="picker">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
