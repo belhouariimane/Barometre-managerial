@@ -10,7 +10,7 @@ import {
     MatFormFieldModule,
     MatIconModule,
     MatInputModule, MatListModule, MatNativeDateModule,
-    MatSelectModule, MatSliderModule, MatSnackBar, MatSnackBarModule, MatTableModule, MatTabsModule
+    MatSelectModule, MatSliderModule, MatSnackBar, MatSnackBarModule, MatTableModule, MatTabsModule, MatTooltipModule
 } from '@angular/material';
 import {MatRadioModule} from '@angular/material/radio';
 
@@ -84,7 +84,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
         ChartsModule,
         MatTabsModule,
         MatExpansionModule,
-        MatSliderModule
+        MatSliderModule,
+        MatTooltipModule
     ],
   providers: [
       // { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
