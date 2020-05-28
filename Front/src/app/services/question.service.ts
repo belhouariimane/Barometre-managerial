@@ -37,7 +37,6 @@ export class QuestionService {
         question.questionnaire.id = question.idQuestionnaire;
         question.propositions = propositions;
         const questStr = JSON.stringify(question, replacer);
-        console.log(questStr);
         return this.http.post(`${environment.apiUrl}/question/create`, JSON.parse(questStr));
     }
 
@@ -48,12 +47,21 @@ export class QuestionService {
             }
             return value;
         }
-        question.questionnaire = new Questionnaire();
-        question.questionnaire.id = question.idQuestionnaire;
         question.propositions = propositions;
         const questStr = JSON.stringify(question, replacer);
-        console.log(questStr);
-        return this.http.post(`${environment.apiUrl}/question/update/${id}`, JSON.parse(questStr));
+        return this.http.post(`${environment.apiUrl}/question/update`, JSON.parse(questStr));
+    }
+
+    // update spécifique pour mettre à jour uniquement l'ordre d'affichage
+    updateOrder(question: Question) {
+        function replacer(key: string, value: any) {
+            if (key === 'idQuestionnaire' || key === 'questionnaire') {
+                return undefined;
+            }
+            return value;
+        }
+        const questStr = JSON.stringify(question, replacer);
+        return this.http.post(`${environment.apiUrl}/question/update`, JSON.parse(questStr));
     }
 
     delete(id: number) {
