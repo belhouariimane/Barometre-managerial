@@ -20,6 +20,7 @@ import fr.univ.angers.info.m2.acdi.bm.dto.AdministrateurCreateDTO;
 import fr.univ.angers.info.m2.acdi.bm.dto.AdministrateurRetourDTO;
 import fr.univ.angers.info.m2.acdi.bm.dto.AdministrateurUpdateDTO;
 import fr.univ.angers.info.m2.acdi.bm.dto.LoginDTO;
+import fr.univ.angers.info.m2.acdi.bm.dto.LoginRetourDTO;
 import fr.univ.angers.info.m2.acdi.bm.entities.Administrateur;
 import fr.univ.angers.info.m2.acdi.bm.exceptions.ResourceNotFoundException;
 import fr.univ.angers.info.m2.acdi.bm.helpers.JwtUtil;
@@ -70,7 +71,7 @@ public class AdministrateurService implements UserDetailsService {
 				} else {
 					administrateurDto.setPassword(passwordEncoder.encode(administrateurDto.getPassword()));
 					Administrateur toSave = administrateurMapper.createDtoToEntity(administrateurDto);
-					toSave.setDateParticipation(new Date());
+					toSave.setDateCreation(new Date());
 					Administrateur saved = administrateurRepository.save(toSave);
 					AdministrateurRetourDTO retourAdminDto = administrateurMapper.entityToRetour(saved);
 					retour.setRetour(retourAdminDto);
@@ -133,7 +134,10 @@ public class AdministrateurService implements UserDetailsService {
 		try {
 			authenticationManager
 					.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
-			retour.setRetour(jwtUtil.generateToken(loginDTO.getEmail()));
+			Administrateur found = administrateurRepository.findByEmail(loginDTO.getEmail());
+			LoginRetourDTO loginRetour = administrateurMapper.entityToLoginRetour(found);
+			loginRetour.setTokenJwt(jwtUtil.generateToken(loginDTO.getEmail()));
+			retour.setRetour(loginRetour);
 			retour.setDescription(ConstantesREST.OK);
 		} catch (Exception e) {
 			retour.setDescription(ConstantesREST.CREDANTIALS_INVALID);

@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Participant} from '../models/participant';
 import {User} from '../models/user';
 import {map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ParticipantService {
@@ -15,7 +16,7 @@ export class ParticipantService {
         return this.http.post(`/public/participant/create`, JSON.stringify(participant), {headers});
     }
 
-    readAllByIdQuestionnaire(idQuestionnaire: number) {
+    readAllByIdQuestionnaire(idQuestionnaire: number): Observable<Participant[]> {
         return this.http.get<any>(`/participant/readAll`)
             .pipe(map(data => {
                return data.retour.filter(x => x.idQuestionnaire === idQuestionnaire);

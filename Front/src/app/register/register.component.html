@@ -44,11 +44,12 @@
             <div *ngIf="registerForm.errors?.notSame">Les mots de passe ne sont pas identiques</div>
         </div>
     </div>
-    <div class="form-group">
+    <br/>
+    <div class="form-group text-center">
         <button [disabled]="loading" class="btn btn-primary">
             <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
             S'inscrire
         </button>
-        <a routerLink="/login" class="btn btn-link">Annuler</a>
+        <a routerLink="/login" class="btn btn-link">Se connecter</a>
     </div>
 </form>
