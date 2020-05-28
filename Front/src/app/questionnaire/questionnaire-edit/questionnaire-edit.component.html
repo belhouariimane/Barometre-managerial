@@ -27,6 +27,14 @@
         </div>
         <br/>
         <div class="form-group">
+            <label>Choisissez une date limite de réponse au questionnaire</label><br/>
+            <input matInput formControlName="datePeremption" placeholder="{{this.dateLimite}}" [matDatepicker]="picker">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <div *ngIf="submitted && questionnaireForm.errors?.before" class="before-error">Veuillez saisir une date supérieure à la date du jour</div>
+        </div>
+        <br/>
+        <div class="form-group">
             <mat-slide-toggle
                     class="example-margin"
                     formControlName="anonymous"

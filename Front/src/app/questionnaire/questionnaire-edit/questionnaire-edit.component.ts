@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import {Question} from '../../models/question';
 import {Questionnaire} from '../../models/questionnaire';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {QuestionnaireService} from '../../services/questionnaire.service';
 import {AlertService} from '../../services/alert.service';
@@ -16,6 +16,7 @@ import {ThemeService} from '../../services/theme.service';
 import {QuestionService} from '../../services/question.service';
 import {Theme} from '../../models/theme';
 import {ParticipantService} from '../../services/participant.service';
+import {MatDatepickerInputEvent} from '@angular/material';
 
 @Component({
   selector: 'app-questionnaire-edit',
@@ -34,6 +35,7 @@ export class QuestionnaireEditComponent implements OnInit {
   submitted = false;
   modification = false;
   nbParticipants = 0;
+  dateLimite: string;
 
   constructor(private fb: FormBuilder,
               private questionnaireService: QuestionnaireService,
@@ -51,9 +53,10 @@ export class QuestionnaireEditComponent implements OnInit {
       titre: ['', Validators.required],
       description: ['', Validators.required],
       remerciement: ['', Validators.required],
+      datePeremption: [''],
       anonymous: [false],
       idUser: [this.authService.currentUserValue.id]
-    });
+    }, { validators: this.checkDate});
 
     this.idQuestionnaire = this.route.snapshot.params.id;
     // en cas de modification, on renseigne dans le formulaire les informations déjà présentes
@@ -68,9 +71,11 @@ export class QuestionnaireEditComponent implements OnInit {
                 titre: [questionnaire.titre, Validators.required],
                 description: [questionnaire.description, Validators.required],
                 remerciement: [questionnaire.remerciement, Validators.required],
+                datePeremption: [questionnaire.datePeremption],
                 anonymous: [questionnaire.anonymous],
                 idUser: [this.authService.currentUserValue.id]
-              });
+              }, { validators: this.checkDate});
+              this.dateLimite = new Date(questionnaire.datePeremption).toLocaleDateString();
             } else {
               this.alertService.clear();
               this.alertService.error('Le questionnaire demandé n\'existe pas. Retour au menu principal.', true);
@@ -93,6 +98,9 @@ export class QuestionnaireEditComponent implements OnInit {
 
     // s'arrête ici si le formulaire est invalide
     if (this.questionnaireForm.invalid) {
+      if (this.questionnaireForm.errors.before) {
+        console.log('erreur date');
+      }
       return;
     }
 
@@ -154,8 +162,6 @@ export class QuestionnaireEditComponent implements OnInit {
                 });
               }
             });
-          }, () => {}, () => {
-            this.loadAllQuestions();
           });
     });
   }
@@ -213,4 +219,10 @@ export class QuestionnaireEditComponent implements OnInit {
     return returnStr;
   }
 
+  checkDate: ValidatorFn = (group: FormGroup): ValidationErrors | null => {
+    const dateP = new Date(group.get('datePeremption').value).getTime();
+    const dateN = new Date(Date.now()).getTime();
+    console.log(dateP + ' > ' + dateN + ' = ' + (dateP > dateN));
+    return dateP > dateN ? null : { 'before': true };
+  }
 }

@@ -66,7 +66,7 @@
                                 <div *ngSwitchCase="'DATE'" class="container border rounded border-info p-4">
                                     <mat-form-field>
                                         <mat-label>Choisissez une date</mat-label>
-                                        <input matInput (dateChange)="onChangeDate($event, question)" [matDatepicker]="picker">
+                                        <input type="date" matInput (dateChange)="onChangeDate($event, question)" [matDatepicker]="picker">
                                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                         <mat-datepicker #picker></mat-datepicker>
                                     </mat-form-field>
