@@ -15,10 +15,11 @@ export class JwtInterceptor implements HttpInterceptor {
         console.log('on intercept');
         const currentUser = this.authService.currentUserValue;
         console.log(currentUser);
+
         if (currentUser) {
             request = request.clone({
                setHeaders: {
-                   Authorization: `Bearer ${currentUser}`
+                   Authorization: `Bearer ${currentUser['tokenJwt']}`
                }
             });
         }
