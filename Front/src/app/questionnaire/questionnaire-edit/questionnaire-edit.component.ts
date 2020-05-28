@@ -112,8 +112,8 @@ export class QuestionnaireEditComponent implements OnInit {
       this.questionnaireService.register(this.questionnaireForm.value)
           .pipe(first())
           .subscribe(
-              questionnaire => {
-                this.router.navigate(['/edit-questionnaire', questionnaire.id]);
+              retour => {
+                this.router.navigate(['/edit-questionnaire', retour.questionnaire.id]);
                 this.alertService.success('Questionnaire enregistré', true);
               }, error => {
                 this.alertService.error(error);

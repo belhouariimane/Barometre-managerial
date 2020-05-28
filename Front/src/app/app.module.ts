@@ -86,11 +86,11 @@ import {MatExpansionModule} from '@angular/material/expansion';
         MatSliderModule
     ],
   providers: [
-      { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+      // { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
       { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-
-      // création de fausses données en attendant le back ...
-      fakeBackendProvider,
+      //
+      // // création de fausses données en attendant le back ...
+      // fakeBackendProvider,
       MatDatepickerModule
   ],
 

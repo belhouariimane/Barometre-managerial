@@ -17,7 +17,6 @@ export class QuestionService {
         const questionnaire = new Questionnaire();
         questionnaire.id = idQuestionnaire;
         return this.http.get<Question[]>(`${environment.apiUrl}/question/findByIdQuestionnaire/${idQuestionnaire}`);
-        // return this.http.get<Question[]>(`${environment.apiUrl}/questions/all/${idQuestionnaire}`);
     }
 
     read(idQuestion: number): Observable<Question> {
@@ -40,7 +39,6 @@ export class QuestionService {
         const questStr = JSON.stringify(question, replacer);
         console.log(questStr);
         return this.http.post(`${environment.apiUrl}/question/create`, JSON.parse(questStr));
-        // return this.http.post(`${environment.apiUrl}/questions/create`, question);
     }
 
     update(id: number, question: Question, propositions: Proposition[]) {
@@ -56,11 +54,9 @@ export class QuestionService {
         const questStr = JSON.stringify(question, replacer);
         console.log(questStr);
         return this.http.post(`${environment.apiUrl}/question/update/${id}`, JSON.parse(questStr));
-        // return this.http.post(`${environment.apiUrl}/questions/update/${id}`, question);
     }
 
     delete(id: number) {
          return this.http.delete(`${environment.apiUrl}/question/delete/${id}`);
-        // return this.http.delete(`${environment.apiUrl}/questions/${id}`);
     }
 }
