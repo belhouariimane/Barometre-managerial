@@ -1,4 +1,4 @@
-<div class="container border rounded border-info mb-4 p-3">
+<div class="container shadow-lg p-3 mb-5 bg-white rounded ">
     <h3>Informations du questionnaire</h3>
     <form class="m-3" [formGroup]="questionnaireForm" >
         <div class="form-group ">
@@ -42,7 +42,7 @@
         </div>
     </form>
 </div>
-<div *ngIf="modification" class="container border rounded border-info mb-4 p-3">
+<div *ngIf="modification" class="container shadow-lg p-3 mb-5 bg-white rounded">
     <h3>Liste des questions</h3>
     <ul class="list-group">
         <div *ngFor="let question of questions; let i = index" class="list-group-item m-3 rounded border">
@@ -61,11 +61,39 @@
                 <div *ngIf="question.hasGraph">Présent dans la page de synthèse</div>
             </div>
             <div class="float-right ">
-                <button class="mx-2" [disabled]="i === 0" (click)="up(i)" mat-button mat-raised-button><mat-icon>arrow_upward</mat-icon> </button>
-                <button class="mx-2" [disabled]="i === questions.length - 1" (click)="down(i)" mat-button mat-raised-button><mat-icon>arrow_downward</mat-icon> </button>
-                <button class="mx-2" mat-button mat-raised-button color="primary"  [routerLink]="['/show-question',idQuestionnaire, question.id]"><mat-icon>slideshow</mat-icon> </button>
-                <button class="mx-2" [disabled]="nbParticipants > 0" mat-button mat-raised-button color="accent" [routerLink]="['/edit-question',idQuestionnaire, question.id]"><mat-icon>update</mat-icon> </button>
-                <button class="mx-2" mat-button mat-raised-button color="warn" [routerLink]="['/edit-questionnaire', idQuestionnaire]" (click)="deleteQuestion(question.id)"><mat-icon>delete</mat-icon> </button>
+                <button class="mx-2"
+                        [disabled]="i === 0" (click)="up(i)"
+                        mat-button mat-raised-button
+                        #tooltip="matTooltip"
+                        matTooltip="Déplacer la question vers le haut .">
+                    <mat-icon>arrow_upward</mat-icon> </button>
+                <button class="mx-2"
+                        [disabled]="i === questions.length - 1" (click)="down(i)"
+                        mat-button mat-raised-button
+                        #tooltip="matTooltip"
+                        matTooltip="Déplacer la question vers le bas .">
+                    <mat-icon>arrow_downward</mat-icon> </button>
+                <button class="mx-2"
+                        mat-button mat-raised-button
+                        color="primary"
+                        [routerLink]="['/show-question',idQuestionnaire, question.id]"
+                        #tooltip="matTooltip"
+                        matTooltip="Afficher la question .">
+                    <mat-icon>slideshow</mat-icon> </button>
+                <button class="mx-2"
+                        [disabled]="nbParticipants > 0"
+                        mat-button mat-raised-button color="accent"
+                        [routerLink]="['/edit-question',idQuestionnaire, question.id]"
+                        #tooltip="matTooltip"
+                        matTooltip="Modifier la question .">
+                    <mat-icon>update</mat-icon> </button>
+                <button class="mx-2"
+                        mat-button mat-raised-button color="warn"
+                        [routerLink]="['/edit-questionnaire', idQuestionnaire]"
+                        (click)="deleteQuestion(question.id)"
+                        #tooltip="matTooltip"
+                        matTooltip="Supprimer la question.">
+                    <mat-icon>delete</mat-icon> </button>
             </div>
         </div>
     </ul>
