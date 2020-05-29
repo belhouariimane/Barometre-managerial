@@ -1,22 +1,19 @@
 import {
   Component,
-  OnInit,
-  ViewChild
+  OnInit
 } from '@angular/core';
 import {Question} from '../../models/question';
 import {Questionnaire} from '../../models/questionnaire';
-import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {QuestionnaireService} from '../../services/questionnaire.service';
 import {AlertService} from '../../services/alert.service';
 import {AuthService} from '../../services/auth.service';
 import {first} from 'rxjs/operators';
-import {Location} from '@angular/common';
+import {DatePipe, Location} from '@angular/common';
 import {ThemeService} from '../../services/theme.service';
 import {QuestionService} from '../../services/question.service';
-import {Theme} from '../../models/theme';
 import {ParticipantService} from '../../services/participant.service';
-import {MatDatepickerInputEvent} from '@angular/material';
 
 @Component({
   selector: 'app-questionnaire-edit',
@@ -45,6 +42,7 @@ export class QuestionnaireEditComponent implements OnInit {
               private questionService: QuestionService,
               private participantService: ParticipantService,
               private location: Location,
+              private datePipe: DatePipe,
               private router: Router,
               private route: ActivatedRoute) { }
 
@@ -75,7 +73,7 @@ export class QuestionnaireEditComponent implements OnInit {
                 anonymous: [questionnaire.anonymous],
                 idUser: [this.authService.currentUserValue.id]
               }, { validators: this.checkDate});
-              this.dateLimite = new Date(questionnaire.datePeremption).toLocaleDateString();
+              this.dateLimite = this.datePipe.transform(questionnaire.datePeremption, 'yyyy-MM-ddThh:mm');
             } else {
               this.alertService.clear();
               this.alertService.error('Le questionnaire demandé n\'existe pas. Retour au menu principal.', true);
@@ -110,7 +108,7 @@ export class QuestionnaireEditComponent implements OnInit {
               data => {
                 this.alertService.success('Questionnaire enregistré', true);
               }, error => {
-                this.alertService.error(error);
+                this.alertService.error('Le questionnaire n\'a pas été mis à jour');
               }
       );
     } else {
@@ -121,7 +119,7 @@ export class QuestionnaireEditComponent implements OnInit {
                 this.router.navigate(['/edit-questionnaire', retour.questionnaire.id]);
                 this.alertService.success('Questionnaire enregistré', true);
               }, error => {
-                this.alertService.error(error);
+                this.alertService.error('Le questionnaire n\'a pas été créé');
               }
           );
     }

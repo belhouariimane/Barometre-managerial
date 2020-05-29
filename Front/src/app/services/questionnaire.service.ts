@@ -5,13 +5,11 @@ import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
 import {User} from '../models/user';
 import {map} from 'rxjs/operators';
-import {QuestionService} from './question.service';
 
 @Injectable({ providedIn: 'root' })
 export class QuestionnaireService {
 
-    constructor(private http: HttpClient,
-                private questionService: QuestionService) { }
+    constructor(private http: HttpClient) { }
 
     getAllByIdUser(idUser: number) {
         return this.http.get<Questionnaire[]>(`${environment.apiUrl}/questionnaire/findByIdAdministrateur/${idUser}`);
@@ -34,7 +32,6 @@ export class QuestionnaireService {
         questionnaire.administrateur = new User();
         questionnaire.administrateur.id = questionnaire.idUser;
         questionnaire.dateCreation = new Date(Date.now());
-        questionnaire.datePeremption.setHours(questionnaire.datePeremption.getHours() + 2);
         questionnaire.dateCreation.setHours(questionnaire.dateCreation.getHours() + 2);
         questionnaire.url = environment.apiUrl + '/answer/' + questionnaire.id;
         const questStr = JSON.stringify(questionnaire, replacer);
@@ -53,7 +50,6 @@ export class QuestionnaireService {
         if (questionnaire.datePeremption === undefined) {
           questionnaire.datePeremption = new Date(Date.now());
         }
-        questionnaire.datePeremption.setHours(questionnaire.datePeremption.getHours() + 2);
         const questStr = JSON.stringify(questionnaire, replacer);
         return this.http.post(`${environment.apiUrl}/questionnaire/update`, JSON.parse(questStr));
     }
