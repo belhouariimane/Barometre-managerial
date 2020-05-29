@@ -100,15 +100,16 @@ public class QuestionService {
 		if (question.getHasGraph() != null) {
 			questionToUpdate.setHasGraph(question.getHasGraph());
 		}
-		if (question.getOrdre() != 0) {
+		if (question.getOrdre() != null) {
 			questionToUpdate.setOrdre(question.getOrdre());
 		}
 		if (question.getPropositions() != null && !question.getPropositions().isEmpty()) {
 
 			if (questionToUpdate.getPropositions() != null && !questionToUpdate.getPropositions().isEmpty()) {
 				for (Proposition proposition : questionToUpdate.getPropositions()) {
-					questionToUpdate.removeProposition(proposition);
+					proposition.setQuestion(null);
 				}
+				questionToUpdate.setPropositions(new ArrayList<Proposition>());
 				for (final Proposition p : question.getPropositions()) {
 					questionToUpdate.addProposition(p);
 				}
