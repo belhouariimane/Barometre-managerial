@@ -47,6 +47,9 @@ export class QuestionService {
             }
             return value;
         }
+        propositions.forEach((proposition) => {
+            proposition.question = id;
+        });
         question.propositions = propositions;
         question.id = id;
         const questStr = JSON.stringify(question, replacer);

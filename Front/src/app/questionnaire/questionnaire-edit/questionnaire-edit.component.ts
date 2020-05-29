@@ -65,15 +65,15 @@ export class QuestionnaireEditComponent implements OnInit {
             if (questionnaire !== null) {
               this.loadAllQuestions();
               this.loadNbParticipations(questionnaire.id);
+              this.dateLimite = this.datePipe.transform(questionnaire.datePeremption, 'yyyy-MM-dd');
               this.questionnaireForm = this.fb.group({
                 titre: [questionnaire.titre, Validators.required],
                 description: [questionnaire.description, Validators.required],
                 remerciement: [questionnaire.remerciement, Validators.required],
-                datePeremption: [questionnaire.datePeremption, Validators.required],
+                datePeremption: [this.dateLimite, Validators.required],
                 anonymous: [questionnaire.anonymous],
                 idUser: [this.authService.currentUserValue.id]
               }, { validators: this.checkDate});
-              this.dateLimite = this.datePipe.transform(questionnaire.datePeremption, 'yyyy-MM-dd');
             } else {
               this.alertService.clear();
               this.alertService.error('Le questionnaire demandé n\'existe pas. Retour au menu principal.', true);
