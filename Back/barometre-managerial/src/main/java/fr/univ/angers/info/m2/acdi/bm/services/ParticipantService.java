@@ -60,14 +60,17 @@ public class ParticipantService {
 							idsQuestionsRequired.add(question.getId());
 					}
 				}
-				for (Reponse r : newParticipant.getReponses()) {
-					idsReponses.add(r.getQuestion().getId());
+				if(!idsQuestionsRequired.isEmpty()) {
+					for (Reponse r : newParticipant.getReponses()) {
+						idsReponses.add(r.getQuestion().getId());
+					}
+					boolean existenceAllReponseRequired = idsQuestionsRequired.stream().anyMatch(idsReponses::contains);
+					if (!existenceAllReponseRequired) {
+						retour.setDescription(ConstantesREST.REQUIRED_ANSWERS);
+						return retour;
+					}
 				}
-				boolean existenceAllReponseRequired = idsQuestionsRequired.stream().anyMatch(idsReponses::contains);
-				if (!existenceAllReponseRequired) {
-					retour.setDescription(ConstantesREST.REQUIRED_ANSWERS);
-					return retour;
-				}
+				
 				newParticipant.setQuestionnaire(q);
 				for (Reponse r : newParticipant.getReponses()) {
 					Long idQuestion = r.getQuestion().getId();
