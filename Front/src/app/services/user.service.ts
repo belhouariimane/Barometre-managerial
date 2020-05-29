@@ -13,11 +13,11 @@ export class UserService {
     constructor(private http: HttpClient) { }
 
     getAll() {
-         return this.http.get<User[]>(`/admin/readAll`);
+         return this.http.get<User[]>(`${environment.apiUrl}/admin/readAll`);
     }
 
     read(id: number) {
-        return this.http.get<any>(`/admin/read/${id}`)
+        return this.http.get<any>(`${environment.apiUrl}/admin/read/${id}`)
             .pipe(map(user => {
                 return user.retour;
             }));
@@ -25,17 +25,17 @@ export class UserService {
 
     register(user: User) {
         user.dateCreation = new Date(Date.now());
-        return this.http.post(`/public/admin/create`, user);
+        return this.http.post(`${environment.apiUrl}/public/admin/create`, user);
     }
 
     delete(id: number) {
-        return this.http.delete(`/admin/delete/${id}`);
+        return this.http.delete(`${environment.apiUrl}/admin/delete/${id}`);
         // return this.http.delete(`${environment.apiUrl}/users/${id}`);
     }
 
     update(id: number, user: User) {
         delete user.id;
-        return this.http.put(`/admin/update/${id}`, user);
+        return this.http.put(`${environment.apiUrl}/admin/update/${id}`, user);
         // return this.http.post(`${environment.apiUrl}/users/update/${id}`, user);
 
     }
