@@ -1,5 +1,6 @@
 package fr.univ.angers.info.m2.acdi.bm.services;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -103,14 +104,26 @@ public class QuestionService {
 			questionToUpdate.setOrdre(question.getOrdre());
 		}
 		if (question.getPropositions() != null && !question.getPropositions().isEmpty()) {
-			for (Proposition p : question.getPropositions()) {
-				questionToUpdate.addProposition(p);
+
+			if (questionToUpdate.getPropositions() != null && !questionToUpdate.getPropositions().isEmpty()) {
+				for (Proposition proposition : questionToUpdate.getPropositions()) {
+					questionToUpdate.removeProposition(proposition);
+				}
+				for (final Proposition p : question.getPropositions()) {
+					questionToUpdate.addProposition(p);
+				}
+			} else if (questionToUpdate.getPropositions() != null && questionToUpdate.getPropositions().isEmpty()) {
+				for (final Proposition p : question.getPropositions()) {
+					questionToUpdate.addProposition(p);
+				}
+			} else {
+				questionToUpdate.setReponses(new ArrayList<>());
+				for (final Proposition p : question.getPropositions()) {
+					questionToUpdate.addProposition(p);
+				}
 			}
-			for (Proposition p : questionToUpdate.getPropositions()) {
-				questionToUpdate.removeProposition(p);
-			}
-			//questionToUpdate.setPropositions(question.getPropositions());
-			//this.propositionRepository.deleteByQuestion_id(question.getId());
+			// questionToUpdate.setPropositions(question.getPropositions());
+			// this.propositionRepository.deleteByQuestion_id(question.getId());
 		}
 
 		Question savedQuestion = this.questionRepository.save(questionToUpdate);
