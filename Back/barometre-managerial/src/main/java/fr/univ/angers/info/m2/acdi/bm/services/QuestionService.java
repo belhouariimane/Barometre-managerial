@@ -101,8 +101,14 @@ public class QuestionService {
 			questionToUpdate.setOrdre(question.getOrdre());
 		}
 		if (question.getPropositions() != null) {
-			questionToUpdate.setPropositions(question.getPropositions());
-			this.propositionRepository.deleteByQuestion_id(question.getId());
+			for (Proposition p : questionToUpdate.getPropositions()) {
+				questionToUpdate.removeProposition(p);
+			}
+			for (Proposition p : question.getPropositions()) {
+				questionToUpdate.addProposition(p);
+			}
+//			questionToUpdate.setPropositions(question.getPropositions());
+//			this.propositionRepository.deleteByQuestion_id(question.getId());
 		}
 		
 		Question savedQuestion = this.questionRepository.save(questionToUpdate);
