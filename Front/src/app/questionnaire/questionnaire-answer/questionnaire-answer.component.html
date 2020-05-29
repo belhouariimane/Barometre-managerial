@@ -72,7 +72,7 @@
                                     </mat-form-field>
                                 </div>
                                 <div *ngSwitchCase="'EVALUATION'" class="container border rounded border-info px-4 py-2">
-                                    <mat-label>Choisissez une valeur</mat-label><br/>
+                                    <mat-label>Choisissez une valeur entre 1 et 10</mat-label><br/>
                                     <mat-slider
                                             (valueChange)="onChangeEvaluation($event,question)"
                                             class="w-100 mat-slider-horizontal"

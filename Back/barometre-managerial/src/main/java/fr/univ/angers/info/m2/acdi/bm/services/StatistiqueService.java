@@ -29,6 +29,7 @@ public class StatistiqueService {
 	@Autowired
 	private QuestionnaireRepository questionnaireRepository;
 	public static final String QUESTIONNAIRE_CLASS_NAME = Questionnaire.class.getSimpleName();
+	public static final String SAPARATOR = ";";
 
 	public Integer nombreDePartcipantParQuestionnaire(Long idQuestionnaire) {
 		final Questionnaire questionnaire = questionnaireRepository.findById(idQuestionnaire)
@@ -81,7 +82,7 @@ public class StatistiqueService {
 							if (reponse.getQuestion().getId().equals(question.getId())) {
 								if (reponse.getProposition() != null) {
 									reponses.add(reponse.getProposition().getValeur());
-								} else if (!Helpers.strEmpty(reponse.getValeur())) {
+								} else if (!Helpers.strEmpty(reponse.getValeur()).booleanValue()) {
 									reponses.add(reponse.getValeur());
 								}
 							}
@@ -109,13 +110,17 @@ public class StatistiqueService {
 	private String construireEnteteAnonymousCsv(boolean isAnounymous, List<String> questionsLabels) {
 		StringBuilder builder = new StringBuilder("");
 		if (isAnounymous) {
-			builder.append("idParticipant,");
+			builder.append("idParticipant");
+			builder.append(SAPARATOR);
 		} else {
-			builder.append("Nom,Prenom,");
+			builder.append("Nom");
+			builder.append(SAPARATOR);
+			builder.append("Prenom");
+			builder.append(SAPARATOR);
 		}
 		for (String question : questionsLabels) {
 			builder.append(question);
-			builder.append(",");
+			builder.append(SAPARATOR);
 		}
 		builder.setLength(builder.length() - 1);
 		builder.append("\n");
@@ -127,18 +132,18 @@ public class StatistiqueService {
 		StringBuilder builder = new StringBuilder("");
 		if (isAnounymous) {
 			builder.append(participant.getId());
-			builder.append(",");
+			builder.append(SAPARATOR);
 		} else {
 			builder.append(participant.getNom());
-			builder.append(",");
+			builder.append(SAPARATOR);
 			builder.append(participant.getPrenom());
-			builder.append(",");
+			builder.append(SAPARATOR);
 		}
 
 		for (List<String> reponse : reponsesLabels) {
 			if (reponse.isEmpty()) {
 				builder.append("Non répondu");
-				builder.append(",");
+				builder.append(SAPARATOR);
 			} else {
 				builder.append("[");
 				for (String prop : reponse) {
@@ -148,7 +153,7 @@ public class StatistiqueService {
 				builder.setLength(builder.length() - 1);
 				builder.append("]");
 			}
-			builder.append(",");
+			builder.append(SAPARATOR);
 		}
 		builder.setLength(builder.length() - 1);
 		builder.append("\n");
@@ -184,34 +189,32 @@ public class StatistiqueService {
 			for (Participant participant : questionnaire.getParticipants()) {
 				if (participant.getReponses() != null && !participant.getReponses().isEmpty()) {
 					for (Reponse reponse : participant.getReponses()) {
-						if (reponse.getQuestion() != null && reponse.getQuestion().getId().equals(idQuestion)) {
-							if (reponse.getProposition() != null && reponse.getProposition().getId() != null
-									&& reponse.getProposition().getId().equals(idProposition)) {
-								compteur++;
-							}
+						if (reponse.getQuestion() != null && reponse.getQuestion().getId().equals(idQuestion)
+								&& reponse.getProposition() != null && reponse.getProposition().getId() != null
+								&& reponse.getProposition().getId().equals(idProposition)) {
+							compteur++;
 						}
 					}
 				}
 			}
 		}
-
 		return compteur;
 	}
 
 	private String construireDataGlobalCsv(final List<StatistiqueGlobaleDTO> list) {
 		StringBuilder builder = new StringBuilder("");
 		builder.append("Question");
-		builder.append(",");
+		builder.append(SAPARATOR);
 		builder.append("Reponse");
-		builder.append(",");
+		builder.append(SAPARATOR);
 		builder.append("Nombre de répondants");
-		builder.append("\n");
+		builder.append(SAPARATOR);
 		for (StatistiqueGlobaleDTO si : list) {
 			for (int i = 0; i < si.getPropositions().size(); i++) {
 				builder.append(si.getQuestion());
-				builder.append(",");
+				builder.append(SAPARATOR);
 				builder.append(si.getPropositions().get(i));
-				builder.append(",");
+				builder.append(SAPARATOR);
 				builder.append(si.getNombreRepondantsParProposition().get(i));
 				builder.append("\n");
 			}
@@ -222,7 +225,7 @@ public class StatistiqueService {
 	private List<StatistiqueFiltreDTO> getStatsFiltreQuestionnaire(final Questionnaire questionnaire) {
 		List<Map<Proposition, Map<Proposition, Integer>>> list = getStatsQuestionnaireWithFilter(questionnaire);
 		if (list == null || list.isEmpty())
-			return null;
+			return Collections.emptyList();
 		List<StatistiqueFiltreDTO> retour = new ArrayList<>();
 		for (Map<Proposition, Map<Proposition, Integer>> map : list) {
 			for (Map.Entry<Proposition, Map<Proposition, Integer>> entryFilter : map.entrySet()) {
@@ -324,25 +327,25 @@ public class StatistiqueService {
 	private String construireDataFiltreCsv(final List<StatistiqueFiltreDTO> list) {
 		StringBuilder builder = new StringBuilder("");
 		builder.append("Question");
-		builder.append(",");
+		builder.append(SAPARATOR);
 		builder.append("Question de filtre");
-		builder.append(",");
+		builder.append(SAPARATOR);
 		builder.append("Filtre");
-		builder.append(",");
+		builder.append(SAPARATOR);
 		builder.append("Reponse");
-		builder.append(",");
+		builder.append(SAPARATOR);
 		builder.append("Nombre de répondants");
 		builder.append("\n");
 		for (StatistiqueFiltreDTO si : list) {
 			for (int i = 0; i < si.getLabels().size(); i++) {
 				builder.append(si.getQuestion());
-				builder.append(",");
+				builder.append(SAPARATOR);
 				builder.append(si.getQuestionFilter());
-				builder.append(",");
+				builder.append(SAPARATOR);
 				builder.append(si.getFilter());
-				builder.append(",");
+				builder.append(SAPARATOR);
 				builder.append(si.getLabels().get(i));
-				builder.append(",");
+				builder.append(SAPARATOR);
 				builder.append(si.getData().get(i));
 				builder.append("\n");
 			}

@@ -24,12 +24,6 @@ public class ParticipantController {
 	@Autowired
 	private ParticipantService participantService;
 
-//	@ApiOperation(value = "Création d'une nouvel participant")
-//	@PostMapping("/create")
-//	public ResponseEntity<RetourGeneral> creerParticipant(@RequestBody ParticipantCreateDTO newParticipant) {
-//		return traitementReponse(participantService.save(newParticipant));
-//	}
-
 	@ApiOperation(value = "Récupérer tous les participants")
 	@GetMapping("/readAll")
 	public ResponseEntity<RetourGeneral> all() {

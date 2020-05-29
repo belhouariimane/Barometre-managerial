@@ -1,6 +1,7 @@
 package fr.univ.angers.info.m2.acdi.bm.mapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.mapstruct.Mapper;
@@ -22,11 +23,11 @@ public interface ParticipantMapper {
 	Participant createDtoToEntity(ParticipantCreateDTO dto);
 
 	@Mapping(source = "questionnaire.id", target = "idQuestionnaire")
-	ParticipantRetourDTO EntityToRetourDto(Participant entity);
+	ParticipantRetourDTO entityToRetourDto(Participant entity);
 
 	default List<Reponse> from(List<ReponseCreateDTO> list) {
 		if (list == null || list.isEmpty()) {
-			return null;
+			return Collections.emptyList(); 
 		}
 		List<Reponse> reponses = new ArrayList<>();
 		for (ReponseCreateDTO reponseCreateDTO : list) {
@@ -37,11 +38,11 @@ public interface ParticipantMapper {
 
 	default List<Reponse> from1(ReponseCreateDTO dto) {
 		if (dto == null) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		if (dto.getIdQuestion() == null) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		List<Reponse> reponses = new ArrayList<>();
@@ -56,7 +57,7 @@ public interface ParticipantMapper {
 				r.setProposition(p);
 				reponses.add(r);
 			}
-		} else if (!Helpers.strEmpty(dto.getValeur())) {
+		} else if (!Helpers.strEmpty(dto.getValeur()).booleanValue()) {
 			Reponse r = new Reponse();
 			Question q = new Question();
 			q.setId(dto.getIdQuestion());
@@ -64,7 +65,7 @@ public interface ParticipantMapper {
 			r.setValeur(dto.getValeur());
 			reponses.add(r);
 		} else {
-			return null;
+			return Collections.emptyList();
 		}
 		return reponses;
 	}

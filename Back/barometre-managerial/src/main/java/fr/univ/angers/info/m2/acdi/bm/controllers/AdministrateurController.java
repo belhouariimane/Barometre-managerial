@@ -30,12 +30,6 @@ public class AdministrateurController {
 	@Autowired
 	private AdministrateurService administrateurService;
 
-//	@ApiOperation(value = "Création d'un nouveau administrateur")
-//	@PostMapping("/create")
-//	public ResponseEntity<RetourGeneral> creerAdministrateur(@RequestBody AdministrateurCreateDTO newAdministrateur) {
-//		return traitementReponse(administrateurService.save(newAdministrateur));
-//	}
-
 	@ApiOperation(value = "Mise à jour d'un administrateur")
 	@PutMapping("/update/{id}")
 	public ResponseEntity<RetourGeneral> updateAdministrateur(@RequestBody AdministrateurUpdateDTO administrateur,
@@ -60,12 +54,6 @@ public class AdministrateurController {
 	public ResponseEntity<RetourGeneral> recupererAdministrateurParId(@PathVariable Long id) {
 		return traitementReponse(administrateurService.findById(id));
 	}
-
-//	@ApiOperation(value = "Authentification de l'administrateur en renseignant son email et mot de passe")
-//	@PostMapping("/login")
-//	public ResponseEntity<RetourGeneral> authentification(@RequestBody LoginDTO loginDTO) {
-//		return traitementReponse(administrateurService.login(loginDTO));
-//	}
 
 	private ResponseEntity<RetourGeneral> traitementReponse(RetourGeneral retour) {
 		if (retour.getRetour() != null) {

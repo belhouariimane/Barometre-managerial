@@ -37,7 +37,7 @@ public class Question implements Serializable, Comparable<Question> {
 	private Boolean isFilter;
 	private Boolean hasGraph;
 	private Integer ordre;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Questionnaire questionnaire;
 
@@ -117,8 +117,6 @@ public class Question implements Serializable, Comparable<Question> {
 	}
 
 	public void setQuestionnaire(Questionnaire questionnaire) {
-//		Questionnaire quest = new Questionnaire();
-//		quest.setId(questionnaire);
 		this.questionnaire = questionnaire;
 	}
 
@@ -139,7 +137,7 @@ public class Question implements Serializable, Comparable<Question> {
 	public void setReponses(List<Reponse> reponses) {
 		this.reponses = reponses;
 	}
-	
+
 	public Boolean getHasGraph() {
 		return hasGraph;
 	}
@@ -147,7 +145,7 @@ public class Question implements Serializable, Comparable<Question> {
 	public void setHasGraph(Boolean hasGraph) {
 		this.hasGraph = hasGraph;
 	}
-	
+
 	public Integer getOrdre() {
 		return ordre;
 	}
@@ -165,8 +163,8 @@ public class Question implements Serializable, Comparable<Question> {
 	}
 
 	public Boolean validity() {
-		if (this.questionnaire == null || this.questionnaire.getId() == null || Helpers.strEmpty(this.typeQuestion)
-				|| Helpers.strEmpty(this.valeur)) {
+		if (this.questionnaire == null || this.questionnaire.getId() == null || Helpers.strEmpty(this.typeQuestion).booleanValue()
+				|| Helpers.strEmpty(this.valeur).booleanValue()) {
 			return false;
 		}
 
@@ -174,22 +172,6 @@ public class Question implements Serializable, Comparable<Question> {
 		if (!TypeQuestion.contains(this.typeQuestion)) {
 			return false;
 		}
-
-		// En fonction du type de question, vérifier
-		// la validité des propositions
-//		if (TypeQuestion.CHECKBOX.toString().equals(this.typeQuestion)
-//				|| TypeQuestion.COMBOBOX.toString().equals(this.typeQuestion)
-//				|| TypeQuestion.EVALUATION.toString().equals(this.typeQuestion)
-//				|| TypeQuestion.RADIO.toString().equals(this.typeQuestion)) {
-//			if (Helpers.arrayListEmpty(this.propositions)) {
-//				return false;
-//			}
-//		} else {
-//			// Question OUVERTE
-//			if (!Helpers.arrayListEmpty(this.propositions)) {
-//				return false;
-//			}
-//		}
 		return true;
 	}
 

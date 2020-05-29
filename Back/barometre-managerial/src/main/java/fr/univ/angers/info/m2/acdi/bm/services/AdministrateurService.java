@@ -30,18 +30,6 @@ public class AdministrateurService {
 	private AdministrateurRepository administrateurRepository;
 	@Autowired
 	private AdministrateurMapper administrateurMapper;
-//	@Autowired
-//	private PasswordEncoder passwordEncoder;
-//	@Autowired
-//	private JwtUtil jwtUtil;
-//	@Autowired
-//	private AuthenticationManager authenticationManager;
-
-//	@Override
-//	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//		Administrateur administrateur = administrateurRepository.findByEmail(username);
-//		return new User(administrateur.getEmail(), administrateur.getPassword(), new ArrayList<>());
-//	}
 
 	public RetourGeneral findAll() {
 		RetourGeneral retour = new RetourGeneral();
@@ -65,7 +53,6 @@ public class AdministrateurService {
 					retour.setDescription(ConstantesREST.EMPTY_REQUEST);
 				} else {
 					String passwordEncoded = PasswordUtils.generateStorngPasswordHash(administrateurDto.getPassword());
-					// administrateurDto.setPassword(passwordEncoder.encode(administrateurDto.getPassword()));
 					administrateurDto.setPassword(passwordEncoded);
 					Administrateur toSave = administrateurMapper.createDtoToEntity(administrateurDto);
 					toSave.setDateCreation(new Date());
@@ -126,24 +113,6 @@ public class AdministrateurService {
 		administrateurRepository.deleteById(id);
 	}
 
-//	public RetourGeneral login(LoginDTO loginDTO) {
-//		RetourGeneral retour = new RetourGeneral();
-//		try {
-////			authenticationManager
-////					.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
-//			Administrateur found = administrateurRepository.findByEmail(loginDTO.getEmail());
-//			if (found.getPassword().equals(passwordEncoder.encode(loginDTO.getPassword()))){
-//				LoginRetourDTO loginRetour = administrateurMapper.entityToLoginRetour(found);
-//				// loginRetour.setTokenJwt(jwtUtil.generateToken(loginDTO.getEmail()));
-//				retour.setRetour(loginRetour);
-//				retour.setDescription(ConstantesREST.OK);
-//			}
-//		} catch (Exception e) {
-//			retour.setDescription(ConstantesREST.CREDANTIALS_INVALID);
-//		}
-//		return retour;
-//	}
-
 	public RetourGeneral login(LoginDTO loginDTO) {
 		RetourGeneral retour = new RetourGeneral();
 		try {
@@ -176,7 +145,8 @@ public class AdministrateurService {
 		return retour;
 	}
 
-	private void majChampsAdministrateur(final AdministrateurUpdateDTO from, final Administrateur to) throws NoSuchAlgorithmException, InvalidKeySpecException {
+	private void majChampsAdministrateur(final AdministrateurUpdateDTO from, final Administrateur to)
+			throws NoSuchAlgorithmException, InvalidKeySpecException {
 		if (from.getNom() != null) {
 			to.setNom(from.getNom());
 		}

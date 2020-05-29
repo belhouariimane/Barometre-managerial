@@ -86,7 +86,7 @@ public class ParticipantService {
 				}
 				newParticipant.setDateParticipation(new Date());
 				newParticipant = participantRepository.save(newParticipant);
-				ParticipantRetourDTO participantRetourDTO = participantMapper.EntityToRetourDto(newParticipant);
+				ParticipantRetourDTO participantRetourDTO = participantMapper.entityToRetourDto(newParticipant);
 				retour.setDescription(ConstantesREST.OK);
 				retour.setRetour(participantRetourDTO);
 			}
@@ -110,7 +110,7 @@ public class ParticipantService {
 			} else {
 				List<ParticipantRetourDTO> retourlist = new ArrayList<>();
 				for (Participant participant : participants) {
-					retourlist.add(participantMapper.EntityToRetourDto(participant));
+					retourlist.add(participantMapper.entityToRetourDto(participant));
 				}
 				retour.setDescription(ConstantesREST.OK);
 				retour.setRetour(retourlist);

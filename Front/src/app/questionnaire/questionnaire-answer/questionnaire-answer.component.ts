@@ -186,7 +186,9 @@ export class QuestionnaireAnswerComponent implements OnInit {
           || question.value.typeQuestion === 'EVALUATION') {
         reponse.valeur = question.value.valeurReponse;
         // on envoie la réponse seulement si celle-ci a une valeur
-        this.participant.reponses.push(reponse);
+        if (reponse.valeur !== '') {
+          this.participant.reponses.push(reponse);
+        }
       } else {
         reponse.idsProposition = [];
         this.getPropositions(question).forEach((proposition) => {
