@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Participant} from '../models/participant';
-import {User} from '../models/user';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 
@@ -21,5 +20,4 @@ export class ParticipantService {
                return data.retour.filter(x => x.idQuestionnaire === idQuestionnaire);
             }));
     }
-
 }
