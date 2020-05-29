@@ -48,6 +48,7 @@ export class QuestionService {
             return value;
         }
         question.propositions = propositions;
+        question.id = id;
         const questStr = JSON.stringify(question, replacer);
         return this.http.post(`${environment.apiUrl}/question/update`, JSON.parse(questStr));
     }

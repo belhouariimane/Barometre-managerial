@@ -84,7 +84,7 @@ export class RegisterComponent implements OnInit {
                       }
                   );
             }, error => {
-              this.alertService.error(error);
+              this.alertService.error('L\'inscription a échoué, veuillez réessayer.');
               this.loading = false;
             }
         );

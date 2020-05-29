@@ -37,6 +37,7 @@ import { QuestionEditComponent } from './question/question-edit/question-edit.co
 import { QuestionShowComponent } from './question/question-show/question-show.component';
 import { QuestionnaireAnswerComponent } from './questionnaire/questionnaire-answer/questionnaire-answer.component';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {DatePipe} from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
       // // création de fausses données en attendant le back ...
       // fakeBackendProvider,
       MatDatepickerModule,
-      MatSliderModule
+      MatSliderModule,
+      DatePipe
   ],
 
   bootstrap: [AppComponent]

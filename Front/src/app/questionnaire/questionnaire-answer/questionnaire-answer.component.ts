@@ -81,7 +81,6 @@ export class QuestionnaireAnswerComponent implements OnInit {
   checkAnswers(): boolean {
     let invalid = true;
     this.getQuestions(this.answerForm).forEach((item) => {
-      console.log(item.value);
       if (item.value.isRequired) {
         // dans le cas des questions ouvertes, si la réponse est vide et que la question est obligatoire,
         // on génère une erreur
@@ -234,9 +233,6 @@ export class QuestionnaireAnswerComponent implements OnInit {
   }
 
   onChangeEvaluation(event: number, question: AbstractControl) {
-    console.log('Nouvelle valeur : ' + event);
     question.value.valeurReponse = event;
-    console.log(question.value);
-    console.log(question.value.valeurReponse);
   }
 }
