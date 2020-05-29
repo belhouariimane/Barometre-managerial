@@ -7,7 +7,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Question} from '../../models/question';
 import {Location} from '@angular/common';
 import {QuestionnaireService} from '../../services/questionnaire.service';
-import {MatDatepickerInputEvent} from '@angular/material';
 
 @Component({
   selector: 'app-question-edit',
@@ -23,6 +22,7 @@ export class QuestionEditComponent implements OnInit {
   submitted = false;
   loading = false;
   typeQuestion: string;
+  isOpenQuestion = false;
 
   constructor(private formBuilder: FormBuilder,
               private questionService: QuestionService,
@@ -122,7 +122,13 @@ export class QuestionEditComponent implements OnInit {
       return;
     }
 
-    this.loading = true;
+      if (this.isOpenQuestion) {
+          this.questionForm.value.hasGraph = false;
+          this.questionForm.value.isFilter = false;
+      }
+
+
+      this.loading = true;
     // enregistre le nouveau questionnaire
     if (this.modification) {
       this.questionService.update(this.idQuestion, this.questionForm.value, this.propositions.value)
@@ -162,6 +168,7 @@ export class QuestionEditComponent implements OnInit {
           this.addPropositions('');
           this.addPropositions('');
       }
+      this.isOpenQuestion = false;
   }
 
   addRadioBtn() {
@@ -170,6 +177,7 @@ export class QuestionEditComponent implements OnInit {
           this.addPropositions('');
           this.addPropositions('');
       }
+      this.isOpenQuestion = false;
   }
 
   addSelect() {
@@ -178,22 +186,25 @@ export class QuestionEditComponent implements OnInit {
           this.addPropositions('');
           this.addPropositions('');
       }
+      this.isOpenQuestion = false;
   }
 
   addDatePicker() {
       this.typeQuestion = 'DATE';
+      this.isOpenQuestion = true;
   }
 
   addInput() {
       this.typeQuestion = 'OUVERT';
+      this.isOpenQuestion = true;
   }
 
   addEvaluation() {
       this.typeQuestion = 'EVALUATION';
+      this.isOpenQuestion = true;
   }
 
   backClicked() {
     this.location.back();
   }
-
 }
