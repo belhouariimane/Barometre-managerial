@@ -3,6 +3,9 @@ button{
 }
 mat-expansion-panel-header {
   background-color: ghostwhite;
+  margin: 10px;
+  height: fit-content !important;
+  min-height: 60px;
 }
 div#espace{
   margin-top: 3px;
