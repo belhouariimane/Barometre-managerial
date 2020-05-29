@@ -29,7 +29,6 @@ export class UserService {
     }
 
     delete(id: number) {
-
         return this.http.delete(`/admin/delete/${id}`);
         // return this.http.delete(`${environment.apiUrl}/users/${id}`);
     }
