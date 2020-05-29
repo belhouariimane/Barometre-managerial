@@ -41,7 +41,7 @@ public class Question implements Serializable, Comparable<Question> {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Questionnaire questionnaire;
 
-	@OneToMany(mappedBy = "question", cascade = CascadeType.PERSIST/*, orphanRemoval = true*/)
+	@OneToMany(mappedBy = "question", cascade= {CascadeType.PERSIST, CascadeType.REMOVE}/*, orphanRemoval = true*/)
 	private List<Proposition> propositions;
 
 	@JsonIgnore
