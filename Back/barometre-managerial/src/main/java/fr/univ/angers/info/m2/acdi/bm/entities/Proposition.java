@@ -62,7 +62,7 @@ public class Proposition implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Proposition{" + "id=" + id + ", valeur=" + valeur + ", question=" + question + '}';
+		return "Proposition{" + "id=" + id + ", valeur=" + valeur + '}';
 	}
 
 }
