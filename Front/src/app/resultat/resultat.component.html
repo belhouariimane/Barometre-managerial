@@ -1,6 +1,6 @@
 <div class="container shadow-lg p-3 mb-5 bg-white rounded ">
     <mat-tab-group>
-        <mat-tab label="statistique par filtre">
+        <mat-tab label="Statistiques par filtre">
             <div *ngFor="let data of dataSource">
             <mat-accordion >
                 <mat-expansion-panel class="shadow-sm p-3 mb-5 bg-white rounded" [expanded]="true">
@@ -9,9 +9,9 @@
                             {{data.filter}}
                         </mat-panel-title>
                         <mat-panel-description>
-                            Ce graphique présente les réponses collectées pour la question : {{data.question}}
+                            Question : {{data.question}}
                             <br/>
-                            On a utilisé cet question pour filtrer: {{data.questionFilter}}
+                            Critère de filtrage : {{data.questionFilter}}
                         </mat-panel-description>
                     </mat-expansion-panel-header>
                     <app-pie-chart [dataS]=data></app-pie-chart>
@@ -19,7 +19,7 @@
             </mat-accordion>
         </div>
         </mat-tab>
-        <mat-tab label="statistique global">
+        <mat-tab label="Statistiques globales">
             <div *ngFor="let data of dataSourceGlobal">
                 <mat-accordion >
                     <mat-expansion-panel class="shadow-sm p-3 mb-5 bg-white rounded">
@@ -35,43 +35,42 @@
         </mat-tab>
     </mat-tab-group>
 
-    <div class="row" id="espace">
+    <div class="row m-2" id="espace">
         <div class="col-9">
-            <label> Pour exporter les données utilisées pour la genération des graphiques selon des questions filtres :</label>
+            <label>Export des statistiques par filtre </label>
         </div>
         <div class="col-3">
-            <button class="btn btn-primary float-right"(click)="exportFilter()" >export CSV filtre </button>
+            <button class="btn btn-primary float-right"(click)="exportFilter()" >Export stats filtre CSV</button>
         </div>
     </div>
-    <div class="row" id="espace">
+    <div class="row m-2" id="espace">
         <div class="col-9">
-            <label> Pour exporter les données utilisées pour la genération des graphiques sans question filtre :</label>
+            <label>Export des statistiques globales</label>
         </div>
         <div class="col-3">
-            <button class="btn btn-primary float-right"(click)="exportStatGlobal()" > export CSV </button>
+            <button class="btn btn-primary float-right"(click)="exportStatGlobal()" >Export stats globales CSV</button>
         </div>
     </div>
-    <div class="row" id="espace">
+    <div class="row m-2" id="espace">
         <div class="col-9">
-            <label> Pour exporter le fichier CSV qui contient les réponses et les informations des répondeurs :</label>
+            <label>Export de l'ensemble des réponses du questionnaire</label>
         </div>
         <div class="col-3">
-            <button class="btn btn-primary float-right"(click)="exportGlobal()" > export les résultats CSV </button>
+            <button class="btn btn-primary float-right"(click)="exportGlobal()" >Export complet CSV</button>
         </div>
     </div>
-    <div class="row" id="espace">
+    <div class="row m-2" id="espace">
         <div class="col-9">
-            <label> Pour imprimer les graphiques  :</label>
+            <label>Impression des graphiques</label>
         </div>
         <div class="col-3">
-            <button class="btn btn-primary float-right"(click)="print()" >imprimer</button>
+            <button class="btn btn-primary float-right"(click)="print()" >Imprimer</button>
         </div>
     </div>
-    <div class="row" id="espace">
+    <div class="row mx-2" id="espace">
         <div class="col-9">
-            <label style = "color: grey"> Nb: l'impression des graphes est personnalisable ,selon l'onglet sélectionné et les cartes dépliées
-                veuillez déplier les cartes afin de faire apparaitre les graphes sur le document PDF </label>
+            <label style = "color: grey"> NB: l'impression des graphes est personnalisable selon l'onglet sélectionné et les sections dépliées.
+                Veuillez déplier les sections de votre choix afin de faire apparaitre les graphes sur le document PDF.</label>
         </div>
-
     </div>
 </div>
