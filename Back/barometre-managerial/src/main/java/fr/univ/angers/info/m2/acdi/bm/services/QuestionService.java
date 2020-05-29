@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,17 +13,21 @@ import org.springframework.stereotype.Service;
 import fr.univ.angers.info.m2.acdi.bm.constantes.ConstantesREST;
 import fr.univ.angers.info.m2.acdi.bm.entities.Proposition;
 import fr.univ.angers.info.m2.acdi.bm.entities.Question;
+import fr.univ.angers.info.m2.acdi.bm.repositories.PropositionRepository;
 import fr.univ.angers.info.m2.acdi.bm.repositories.QuestionRepository;
 import fr.univ.angers.info.m2.acdi.bm.request.response.ResponseSingleQuestion;
 import fr.univ.angers.info.m2.acdi.bm.request.response.ResponseSingleQuestionnaire;
 
 @Service
+@Transactional
 public class QuestionService {
 
 	@Autowired
 	private QuestionnaireService questionnaireService;
 	@Autowired
 	private QuestionRepository questionRepository;
+	@Autowired
+	private PropositionRepository propositionRepository;
 	
 	public ResponseSingleQuestion insertOne(Question question) {
 		// vérification de la validité des champs de la question
@@ -46,6 +52,7 @@ public class QuestionService {
 			question.setHasGraph(false);
 		}
 		question.setQuestionnaire(rsquestionnaire.getQuestionnaire());
+		
 		// Faire une boucle, pour chaque proposition rajouter une référence à la question
 		for (Proposition p : question.getPropositions()) {
 			p.setQuestion(question);
@@ -95,10 +102,7 @@ public class QuestionService {
 		}
 		if (question.getPropositions() != null) {
 			questionToUpdate.setPropositions(question.getPropositions());
-		}
-		if (question.getPropositions() != null) {
-			questionToUpdate.setPropositions(null);
-			questionToUpdate.setPropositions(question.getPropositions());
+			this.propositionRepository.deleteByQuestion_id(question.getId());
 		}
 		
 		Question savedQuestion = this.questionRepository.save(questionToUpdate);

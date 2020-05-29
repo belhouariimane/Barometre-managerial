@@ -41,7 +41,7 @@ public class Question implements Serializable, Comparable<Question> {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Questionnaire questionnaire;
 
-	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL/* , orphanRemoval = true */)
+	@OneToMany(mappedBy = "question", cascade = CascadeType.PERSIST/*, orphanRemoval = true*/)
 	private List<Proposition> propositions;
 
 	@JsonIgnore
@@ -159,7 +159,7 @@ public class Question implements Serializable, Comparable<Question> {
 	@Override
 	public String toString() {
 		return "Question{" + "id=" + id + ", typeQuestion=" + typeQuestion + ", valeur=" + valeur + ", isRequired="
-				+ isRequired + ", isFilter=" + isFilter /* + ", propositionsString=" + propositionsString */
+				+ isRequired + ", isFilter=" + isFilter
 				+ ", questionnaire=" + questionnaire + ", propositions=" + propositions + ", reponses=" + reponses
 				+ '}';
 	}
