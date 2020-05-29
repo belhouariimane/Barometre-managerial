@@ -27,21 +27,21 @@ public class QuestionController {
 	@PostMapping("/create")
 	public ResponseEntity<ResponseSingleQuestion> createOne(@RequestBody Question question) {
 		ResponseSingleQuestion rsq = this.questionService.insertOne(question);
-		return new ResponseEntity<ResponseSingleQuestion>(rsq, rsq.getStatus());
+		return new ResponseEntity<>(rsq, rsq.getStatus());
 	}
 	
 	@ApiOperation(value = "Lecture d'une question en renseignant son identifiant")
 	@GetMapping("/read/{id}")
 	public ResponseEntity<ResponseSingleQuestion> read(@PathVariable("id") Long id) {
 		ResponseSingleQuestion rsq = this.questionService.readQuestionById(id);
-		return new ResponseEntity<ResponseSingleQuestion>(rsq, rsq.getStatus());
+		return new ResponseEntity<>(rsq, rsq.getStatus());
 	}
 	
 	@ApiOperation(value = "Mise à jour des champs d'une question")
 	@PostMapping("/update")
 	public ResponseEntity<ResponseSingleQuestion> update(@RequestBody Question question) {
 		ResponseSingleQuestion rsq = this.questionService.updateQuestion(question);
-		return new ResponseEntity<ResponseSingleQuestion>(rsq, rsq.getStatus());
+		return new ResponseEntity<>(rsq, rsq.getStatus());
 	}
 	
 	@ApiOperation(value = "Liste de toutes les questions associées à un questionnaire")

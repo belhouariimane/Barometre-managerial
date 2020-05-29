@@ -30,21 +30,21 @@ public class QuestionnaireController {
 	@PostMapping("/create")
 	public ResponseEntity<ResponseSingleQuestionnaire> create(@RequestBody QuestionnaireCreateDTO questionnaireDTO) {
 		ResponseSingleQuestionnaire rsq = this.questionnaireService.insertOne(questionnaireDTO);
-		return new ResponseEntity<ResponseSingleQuestionnaire>(rsq, rsq.getStatus());
+		return new ResponseEntity<>(rsq, rsq.getStatus());
 	}
 	
 	@ApiOperation(value = "Lecture d'un questionnaire en renseignant son identifiant")
 	@GetMapping("/read/{id}")
 	public ResponseEntity<ResponseSingleQuestionnaire> read(@PathVariable("id") Long id) {
 		ResponseSingleQuestionnaire rsq = this.questionnaireService.readQuestionnaireById(id);
-		return new ResponseEntity<ResponseSingleQuestionnaire>(rsq, rsq.getStatus());
+		return new ResponseEntity<>(rsq, rsq.getStatus());
 	}
 	
 	@ApiOperation(value = "Mise à jour des champs d'un questionnaire")
 	@PostMapping("/update")
 	public ResponseEntity<ResponseSingleQuestionnaire> update(@RequestBody QuestionnaireUpdateDTO questionnaireDTO) {
 		ResponseSingleQuestionnaire rsq = this.questionnaireService.updateQuestionnaire(questionnaireDTO);
-		return new ResponseEntity<ResponseSingleQuestionnaire>(rsq, rsq.getStatus());
+		return new ResponseEntity<>(rsq, rsq.getStatus());
 	}
 	
 	@ApiOperation(value = "Liste de tous les questionnaires créés par un administrateur")

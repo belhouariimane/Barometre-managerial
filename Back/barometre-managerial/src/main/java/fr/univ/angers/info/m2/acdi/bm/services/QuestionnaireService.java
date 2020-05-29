@@ -33,7 +33,7 @@ public class QuestionnaireService {
 
 		// Vérification de la validité du questionnaire,
 		// conformité des champs obligatoires
-		if (!questionnaireDTO.validity()) {
+		if (!questionnaireDTO.validity().booleanValue()) {
 			return new ResponseSingleQuestionnaire(ConstantesREST.QUESTIONNAIRE_NOT_VALIDE, null,
 					HttpStatus.BAD_REQUEST);
 		}

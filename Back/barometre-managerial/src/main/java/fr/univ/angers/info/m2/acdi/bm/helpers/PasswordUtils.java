@@ -10,15 +10,16 @@ import javax.crypto.spec.PBEKeySpec;
 
 public class PasswordUtils {
 
+	private PasswordUtils() {
+		throw new IllegalStateException("Utility class");
+	}
+
 	@SuppressWarnings("unused")
 	private static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		String originalPassword = "password";
 		String generatedSecuredPasswordHash = generateStorngPasswordHash(originalPassword);
-		System.out.println(generatedSecuredPasswordHash);
-		boolean matched = validatePassword("password", generatedSecuredPasswordHash);
-		System.out.println(matched);
-		matched = validatePassword("password1", generatedSecuredPasswordHash);
-		System.out.println(matched);
+		validatePassword("password", generatedSecuredPasswordHash);
+		validatePassword("password1", generatedSecuredPasswordHash);
 	}
 
 	public static String generateStorngPasswordHash(String password)
@@ -40,7 +41,7 @@ public class PasswordUtils {
 		return salt;
 	}
 
-	private static String toHex(byte[] array) throws NoSuchAlgorithmException {
+	private static String toHex(byte[] array) {
 		BigInteger bi = new BigInteger(1, array);
 		String hex = bi.toString(16);
 		int paddingLength = (array.length * 2) - hex.length();
@@ -69,7 +70,7 @@ public class PasswordUtils {
 		return diff == 0;
 	}
 
-	private static byte[] fromHex(String hex) throws NoSuchAlgorithmException {
+	private static byte[] fromHex(String hex) {
 		byte[] bytes = new byte[hex.length() / 2];
 		for (int i = 0; i < bytes.length; i++) {
 			bytes[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
@@ -77,4 +78,4 @@ public class PasswordUtils {
 		return bytes;
 	}
 
-} 
+}

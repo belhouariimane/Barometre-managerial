@@ -8,5 +8,4 @@ import fr.univ.angers.info.m2.acdi.bm.entities.Questionnaire;
 @Mapper(componentModel="spring")
 public interface QuestionnaireMapper {
 	Questionnaire createDtoToEntity(QuestionnaireCreateDTO questionnaireDto);
-	//Questionnaire updateDtoToEntity(QuestionnaireUpdateDTO questionnaireDto);
 }

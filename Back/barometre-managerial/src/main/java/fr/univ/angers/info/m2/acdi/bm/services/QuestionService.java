@@ -25,7 +25,7 @@ public class QuestionService {
 	
 	public ResponseSingleQuestion insertOne(Question question) {
 		// vérification de la validité des champs de la question
-		if (!question.validity()) {
+		if (!question.validity().booleanValue()) {
 			return new ResponseSingleQuestion(ConstantesREST.QUESTION_NOT_VALIDE, null, HttpStatus.BAD_REQUEST);
 		}
 		
