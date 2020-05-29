@@ -35,15 +35,15 @@
         </mat-tab>
     </mat-tab-group>
 
-    <div class="row">
+    <div class="row" id="espace">
         <div class="col-9">
-            <label> Pour exporter les données utilisées pour la genération des graphiques avec des questions filtres :</label>
+            <label> Pour exporter les données utilisées pour la genération des graphiques selon des questions filtres :</label>
         </div>
         <div class="col-3">
             <button class="btn btn-primary float-right"(click)="exportFilter()" >export CSV filtre </button>
         </div>
     </div>
-    <div class="row">
+    <div class="row" id="espace">
         <div class="col-9">
             <label> Pour exporter les données utilisées pour la genération des graphiques sans question filtre :</label>
         </div>
@@ -51,15 +51,15 @@
             <button class="btn btn-primary float-right"(click)="exportStatGlobal()" > export CSV </button>
         </div>
     </div>
-    <div class="row">
+    <div class="row" id="espace">
         <div class="col-9">
-            <label> Pour exporter les réponses avec les informations des répondeurs :</label>
+            <label> Pour exporter le fichier CSV qui contient les réponses et les informations des répondeurs :</label>
         </div>
         <div class="col-3">
             <button class="btn btn-primary float-right"(click)="exportGlobal()" > export les résultats CSV </button>
         </div>
     </div>
-    <div class="row">
+    <div class="row" id="espace">
         <div class="col-9">
             <label> Pour imprimer les graphiques  :</label>
         </div>
@@ -67,5 +67,11 @@
             <button class="btn btn-primary float-right"(click)="print()" >imprimer</button>
         </div>
     </div>
+    <div class="row" id="espace">
+        <div class="col-9">
+            <label style = "color: grey"> Nb: l'impression des graphes est personnalisable ,selon l'onglet sélectionné et les cartes dépliées
+                veuillez déplier les cartes afin de faire apparaitre les graphes sur le document PDF </label>
+        </div>
 
+    </div>
 </div>
