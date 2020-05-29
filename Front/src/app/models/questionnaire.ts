@@ -13,18 +13,4 @@ export class Questionnaire {
     url: string;
 
     constructor() { }
-
-    toString() {
-        console.log('--- QUESTIONNAIRE ---');
-        console.log('id: ' + this.id);
-        console.log('idUser: ' + this.idUser);
-        console.log('titre: ' + this.titre);
-        console.log('description: ' + this.description);
-        console.log('remerciement: ' + this.remerciement);
-        console.log('anonymous: ' + this.anonymous);
-        console.log('administrateur: ' + this.administrateur);
-        console.log('dateCreation: ' + this.dateCreation);
-        console.log('datePeremption: ' + this.datePeremption);
-        console.log('url: ' + this.url);
-    }
 }

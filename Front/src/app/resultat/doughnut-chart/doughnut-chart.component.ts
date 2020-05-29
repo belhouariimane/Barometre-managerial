@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-doughnut-chart',
@@ -6,14 +6,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./doughnut-chart.component.scss']
 })
 export class DoughnutChartComponent implements OnInit {
-
-  public doughnutChartLabels = ['Sales Q1', 'Sales Q2', 'Sales Q3', 'Sales Q4'];
-  public doughnutChartData = [120, 150, 180, 90];
+  @Input() dataS;
+  public doughnutChartLabels ;
+  public doughnutChartData ;
   public doughnutChartType = 'doughnut';
 
   constructor() { }
 
   ngOnInit() {
+    if (this.dataS) {
+      this.doughnutChartData = this.dataS.nombreRepondantsParProposition;
+      this.doughnutChartLabels = this.dataS.propositions;
+    }
   }
-
 }

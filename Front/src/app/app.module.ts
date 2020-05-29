@@ -10,7 +10,7 @@ import {
     MatFormFieldModule,
     MatIconModule,
     MatInputModule, MatListModule, MatNativeDateModule,
-    MatSelectModule, MatSliderModule, MatSnackBar, MatSnackBarModule, MatTableModule, MatTabsModule
+    MatSelectModule, MatSliderModule, MatSnackBar, MatSnackBarModule, MatTableModule, MatTabsModule, MatTooltipModule
 } from '@angular/material';
 import {MatRadioModule} from '@angular/material/radio';
 
@@ -37,6 +37,7 @@ import { QuestionEditComponent } from './question/question-edit/question-edit.co
 import { QuestionShowComponent } from './question/question-show/question-show.component';
 import { QuestionnaireAnswerComponent } from './questionnaire/questionnaire-answer/questionnaire-answer.component';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {DatePipe} from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
         BrowserAnimationsModule,
         MatFormFieldModule,
         MatInputModule,
+        MatSliderModule,
         MatSelectModule,
         MatCheckboxModule,
         MatIconModule,
@@ -83,15 +85,18 @@ import {MatExpansionModule} from '@angular/material/expansion';
         ChartsModule,
         MatTabsModule,
         MatExpansionModule,
-        MatSliderModule
+        MatSliderModule,
+        MatTooltipModule
     ],
   providers: [
-      { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+      // { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
       { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-
-      // création de fausses données en attendant le back ...
-      fakeBackendProvider,
-      MatDatepickerModule
+      //
+      // // création de fausses données en attendant le back ...
+      // fakeBackendProvider,
+      MatDatepickerModule,
+      MatSliderModule,
+      DatePipe
   ],
 
   bootstrap: [AppComponent]

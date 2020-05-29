@@ -12,7 +12,7 @@ export class ResultatService {
   constructor(private http: HttpClient) { }
 
   getData(id: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/statistique/${id}`);
+    return this.http.get<any>(`/statistique/${id}`);
   }
 
 }

@@ -1,20 +1,18 @@
 import {
   Component,
-  OnInit,
-  ViewChild
+  OnInit
 } from '@angular/core';
 import {Question} from '../../models/question';
 import {Questionnaire} from '../../models/questionnaire';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {QuestionnaireService} from '../../services/questionnaire.service';
 import {AlertService} from '../../services/alert.service';
 import {AuthService} from '../../services/auth.service';
 import {first} from 'rxjs/operators';
-import {Location} from '@angular/common';
+import {DatePipe, Location} from '@angular/common';
 import {ThemeService} from '../../services/theme.service';
 import {QuestionService} from '../../services/question.service';
-import {Theme} from '../../models/theme';
 import {ParticipantService} from '../../services/participant.service';
 
 @Component({
@@ -34,6 +32,7 @@ export class QuestionnaireEditComponent implements OnInit {
   submitted = false;
   modification = false;
   nbParticipants = 0;
+  dateLimite: string;
 
   constructor(private fb: FormBuilder,
               private questionnaireService: QuestionnaireService,
@@ -43,6 +42,7 @@ export class QuestionnaireEditComponent implements OnInit {
               private questionService: QuestionService,
               private participantService: ParticipantService,
               private location: Location,
+              private datePipe: DatePipe,
               private router: Router,
               private route: ActivatedRoute) { }
 
@@ -51,9 +51,10 @@ export class QuestionnaireEditComponent implements OnInit {
       titre: ['', Validators.required],
       description: ['', Validators.required],
       remerciement: ['', Validators.required],
+      datePeremption: [''],
       anonymous: [false],
       idUser: [this.authService.currentUserValue.id]
-    });
+    }, { validators: this.checkDate});
 
     this.idQuestionnaire = this.route.snapshot.params.id;
     // en cas de modification, on renseigne dans le formulaire les informations déjà présentes
@@ -62,15 +63,17 @@ export class QuestionnaireEditComponent implements OnInit {
       this.questionnaireService.getById(this.idQuestionnaire)
           .subscribe(questionnaire => {
             if (questionnaire !== null) {
-              this.loadAllQuestions(this.idQuestionnaire);
-              this.loadNbParticipations(this.idQuestionnaire);
+              this.loadAllQuestions();
+              this.loadNbParticipations(questionnaire.id);
               this.questionnaireForm = this.fb.group({
                 titre: [questionnaire.titre, Validators.required],
                 description: [questionnaire.description, Validators.required],
                 remerciement: [questionnaire.remerciement, Validators.required],
+                datePeremption: [questionnaire.datePeremption],
                 anonymous: [questionnaire.anonymous],
                 idUser: [this.authService.currentUserValue.id]
-              });
+              }, { validators: this.checkDate});
+              this.dateLimite = this.datePipe.transform(questionnaire.datePeremption, 'yyyy-MM-ddThh:mm');
             } else {
               this.alertService.clear();
               this.alertService.error('Le questionnaire demandé n\'existe pas. Retour au menu principal.', true);
@@ -105,31 +108,28 @@ export class QuestionnaireEditComponent implements OnInit {
               data => {
                 this.alertService.success('Questionnaire enregistré', true);
               }, error => {
-                this.alertService.error(error);
+                this.alertService.error('Le questionnaire n\'a pas été mis à jour');
               }
       );
     } else {
       this.questionnaireService.register(this.questionnaireForm.value)
           .pipe(first())
           .subscribe(
-              questionnaire => {
-                this.router.navigate(['/edit-questionnaire', questionnaire.id]);
+              retour => {
+                this.router.navigate(['/edit-questionnaire', retour.questionnaire.id]);
                 this.alertService.success('Questionnaire enregistré', true);
               }, error => {
-                this.alertService.error(error);
+                this.alertService.error('Le questionnaire n\'a pas été créé');
               }
           );
     }
     this.loading = false;
   }
 
-  loadAllQuestions(idQuestionnaire: number) {
-    this.questionService.readAllByIdQuestionnaire(idQuestionnaire)
+  loadAllQuestions() {
+    this.questionService.readAllByIdQuestionnaire(this.idQuestionnaire)
         .subscribe(questions => {
           this.questions = questions;
-          questions.forEach((item) => {
-            console.log(item.valeur + ' : ordre ' + item.order);
-          });
         });
   }
 
@@ -139,43 +139,53 @@ export class QuestionnaireEditComponent implements OnInit {
         .subscribe(participants => {
           this.nbParticipants = participants.length;
         });
-    this.nbParticipants = 1;
   }
 
   deleteQuestion(idQuestion: number) {
-    this.questionService.delete(idQuestion).subscribe();
-    this.questionService.readAllByIdQuestionnaire(this.idQuestionnaire)
-        .subscribe(questions => {
-          questions.forEach((item, index) => {
-            if (index > idQuestion) {
-              item.order--;
-              this.questionService.update(item.id, item, item.propositions).subscribe();
-            }
+    const indexQuestion = this.questions.findIndex(x => x.id === idQuestion);
+    this.questionService.delete(idQuestion).subscribe(() => {
+      this.questionService.readAllByIdQuestionnaire(this.idQuestionnaire)
+          .subscribe(questions => {
+            questions.forEach((item, index) => {
+              if (index >= indexQuestion) {
+                item.ordre--;
+                this.questionService.updateOrder(item).subscribe(() => {}, () => {}, () => {
+                  // Après avoir mis à jour le dernier ordre, on met à jour la liste de questions
+                  if (index === questions.length - 1) {
+                    this.loadAllQuestions();
+                  }
+                });
+              }
+            });
           });
-          this.loadAllQuestions(this.idQuestionnaire);
-        });
+    });
   }
 
   // monte l'emplacement d'une question (décrémente l'ordre de 1)
   up(index: number) {
     const questionUp: Question = this.questions[index];
     const questionDown: Question = this.questions[index - 1];
-    questionUp.order--;
-    questionDown.order++;
-    this.questionService.update(questionUp.id, questionUp, questionUp.propositions).subscribe();
-    this.questionService.update(questionDown.id, questionDown, questionDown.propositions).subscribe();
-    this.loadAllQuestions(this.idQuestionnaire);
+    questionUp.ordre--;
+    questionDown.ordre++;
+    // ici, on veut simplement mettre à jour l'ordre donc on ne passe pas les propositions de la question en paramètre
+    this.questionService.updateOrder(questionUp).subscribe(() => {
+      this.questionService.updateOrder(questionDown).subscribe(() => {
+        this.loadAllQuestions();
+      });
+    });
   }
 
   // descend l'emplacement d'une question (donc l'augmente de 1)
   down(index: number) {
     const questionDown: Question = this.questions[index];
     const questionUp: Question = this.questions[index + 1];
-    questionDown.order++;
-    questionUp.order--;
-    this.questionService.update(questionUp.id, questionUp, questionUp.propositions).subscribe();
-    this.questionService.update(questionDown.id, questionDown, questionDown.propositions).subscribe();
-    this.loadAllQuestions(this.idQuestionnaire);
+    questionDown.ordre++;
+    questionUp.ordre--;
+    this.questionService.updateOrder(questionUp).subscribe(() => {
+      this.questionService.updateOrder(questionDown).subscribe(() => {
+        this.loadAllQuestions();
+      });
+    });
   }
 
   // permet d'afficher à l'utilisateur des types de questions plus compréhensibles
@@ -204,4 +214,9 @@ export class QuestionnaireEditComponent implements OnInit {
     return returnStr;
   }
 
+  checkDate: ValidatorFn = (group: FormGroup): ValidationErrors | null => {
+    const dateP = new Date(group.get('datePeremption').value).getTime();
+    const dateN = new Date(Date.now()).getTime();
+    return dateP > dateN ? null : { 'before': true };
+  }
 }

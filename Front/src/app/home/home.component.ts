@@ -42,6 +42,10 @@ export class HomeComponent implements OnInit {
         .pipe(first())
         .subscribe(questionnaires => {
           this.questionnaires = questionnaires;
+          this.questionnaires.forEach((item) => {
+              item.dateCreation = new Date(item.dateCreation).toLocaleDateString();
+              item.datePeremption = new Date(item.datePeremption).toLocaleDateString();
+          });
           this.loadNbQuestions();
           this.loadNbParticipations();
         });
@@ -66,7 +70,7 @@ export class HomeComponent implements OnInit {
     for (const questionnaire of this.questionnaires) {
       this.participantService.readAllByIdQuestionnaire(questionnaire.id)
           .subscribe(participants => {
-            questionnaire.nbParticipants = participants !== undefined ? participants.length : 0;
+            questionnaire.nbParticipants = participants.length;
           });
     }
   }

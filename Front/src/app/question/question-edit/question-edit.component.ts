@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {QuestionService} from '../../services/question.service';
 import {AlertService} from '../../services/alert.service';
 import {AuthService} from '../../services/auth.service';
@@ -7,6 +7,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Question} from '../../models/question';
 import {Location} from '@angular/common';
 import {QuestionnaireService} from '../../services/questionnaire.service';
+import {MatDatepickerInputEvent} from '@angular/material';
 
 @Component({
   selector: 'app-question-edit',
@@ -54,7 +55,7 @@ export class QuestionEditComponent implements OnInit {
         isRequired: [false],
         isFilter: [false],
         hasGraph: [false],
-        order: [],
+        ordre: [],
         propositions: this.formBuilder.array([])
     });
 
@@ -70,11 +71,10 @@ export class QuestionEditComponent implements OnInit {
                         idQuestionnaire: [this.idQuestionnaire],
                         valeur: [question.valeur, Validators.required],
                         typeQuestion: [question.typeQuestion, Validators.required],
-                        // idTheme: [question.idTheme, Validators.required],
                         isRequired: [question.isRequired, Validators.required],
                         isFilter: [question.isFilter, Validators.required],
                         hasGraph: [question.hasGraph, Validators.required],
-                        order: [question.order],
+                        ordre: [question.ordre],
                         propositions: this.formBuilder.array([])
                     });
                     this.question.propositions.forEach((item) => {
@@ -111,7 +111,6 @@ export class QuestionEditComponent implements OnInit {
 
   onNewQuestion() {
     this.questionForm.value.typeQuestion = this.typeQuestion;
-    console.log(this.questionForm.value);
 
     this.submitted = true;
 
@@ -131,24 +130,31 @@ export class QuestionEditComponent implements OnInit {
                 this.alertService.success('Question enregistrée', true);
               }, error => {
                   this.alertService.error(error);
+              }, () => {
+                  this.router.navigate(['/edit-questionnaire', this.idQuestionnaire]);
+                  this.loading = false;
               }
           );
     } else {
-      this.questionService.readAllByIdQuestionnaire(this.idQuestionnaire).subscribe(questions => {
-          this.questionForm.value.order = questions === undefined ? 1 : questions.length + 1;
-          console.log('order: ' + this.questionForm.value.order);
-      });
-      this.questionService.create(this.questionForm.value, this.propositions.value)
-          .subscribe(data => {
-                this.alertService.success('Question enregistrée', true);
-              }, error => {
-                this.alertService.error(error);
-              }
-          );
+        this.questionService.readAllByIdQuestionnaire(this.idQuestionnaire)
+            .subscribe(questions => {
+                this.questionForm.value.ordre = questions.length;
+                this.questionForm.value.ordre++;
+            }, () => {}, () => {
+                this.questionService.create(this.questionForm.value, this.propositions.value)
+                  .subscribe(data => {
+                        this.alertService.success('Question enregistrée', true);
+                      }, error => {
+                        this.alertService.error(error);
+                      }, () => {
+                          this.router.navigate(['/edit-questionnaire', this.idQuestionnaire]);
+                          this.loading = false;
+                      }
+                  );
+            });
     }
-    this.router.navigate(['/edit-questionnaire', this.idQuestionnaire]);
-    this.loading = false;
   }
+
 
   addCheckBox() {
       this.typeQuestion = 'CHECKBOX';

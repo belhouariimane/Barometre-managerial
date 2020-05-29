@@ -15,9 +15,10 @@ export class PieChartComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.dataS);
-    this.pieChartData = this.dataS.data;
-    this.pieChartLabels = this.dataS.labels;
+    if (this.dataS) {
+      this.pieChartData = this.dataS.data;
+      this.pieChartLabels = this.dataS.labels;
+    }
   }
 
 }

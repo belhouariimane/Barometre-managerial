@@ -25,6 +25,7 @@ export class QuestionnaireAnswerComponent implements OnInit {
   loading = false;
   done = false;
   anonymous: boolean;
+  perime = false;
 
   constructor(private formBuilder: FormBuilder,
               private questionService: QuestionService,
@@ -62,28 +63,30 @@ export class QuestionnaireAnswerComponent implements OnInit {
             this.alertService.error('Le questionnaire demandé n\'existe pas.', true);
             this.router.navigate(['/login']);
           }
-        });
-    // permet de récupérer l'ensemble des questions et des propositions liées à ce questionnaire
-    this.questionService.readAllByIdQuestionnaire(this.route.snapshot.params.id)
-        .subscribe(questions => {
-          questions.forEach( (item, index) => {
-            console.log(item.valeur);
-            this.addQuestion(item);
-            item.propositions.forEach((item2) => {
-              this.addProposition(index, item2);
-            });
-          });
+
+          // permet de récupérer l'ensemble des questions et des propositions liées à ce questionnaire
+          this.questionService.readAllByIdQuestionnaire(this.route.snapshot.params.id)
+              .subscribe(questions => {
+                questions.forEach( (item, index) => {
+                  this.addQuestion(item);
+                  item.propositions.forEach((item2) => {
+                    this.addProposition(index, item2);
+                  });
+                });
+              });
         });
   }
 
+  // Permet de vérifier si l'utilisateur a bien répondu à toutes les questions obligatoires
   checkAnswers(): boolean {
+    let invalid = true;
     this.getQuestions(this.answerForm).forEach((item) => {
       if (item.value.isRequired) {
-        console.log('required : ' + item.value.valeurQuestion);
-        if (item.value.typeQuestion === 'OUVERT' || item.value.typeQuestion === 'DATE') {
+        // dans le cas des questions ouvertes, si la réponse est vide et que la question est obligatoire,
+        // on génère une erreur
+        if (item.value.typeQuestion === 'OUVERT' || item.value.typeQuestion === 'DATE' || item.value.typeQuestion === 'EVALUATION') {
           if (item.value.valeurReponse === '') {
-            console.log('Erreur : ' + item.value.valeurQuestion);
-            return false;
+            invalid = false;
           }
         } else {
           let isRequiredOK = false;
@@ -96,25 +99,20 @@ export class QuestionnaireAnswerComponent implements OnInit {
           });
           // sinon, on signale qu'aucune réponse n'a été détectée
           if (!isRequiredOK) {
-            console.log('Erreur : ' + item.value.valeurQuestion);
-            return false;
+            invalid = false;
           }
         }
       }
     });
-    return true;
+    return invalid;
   }
 
   initQuestion(question: Question) {
-    const prop = new Proposition();
-    prop.valeur = 'OUIII';
-    prop.id = 54;
     return this.formBuilder.group({
       idQuestion: [question.id],
       valeurQuestion: [question.valeur],
       typeQuestion: [question.typeQuestion],
       isRequired: [question.isRequired],
-      order: [''],
       valeurReponse: [''],
       propositions: this.formBuilder.array([])
     });
@@ -162,11 +160,12 @@ export class QuestionnaireAnswerComponent implements OnInit {
 
     // s'arrête ici si le formulaire est invalide
     if (this.answerForm.invalid || !this.checkAnswers()) {
-      console.log(this.checkAnswers());
+      if (!this.checkAnswers()) {
+        this.alertService.clear();
+        this.alertService.error('Merci de répondre aux questions obligatoires');
+      }
       return;
     }
-
-    console.log(this.questions.controls[0].value.valeurReponse);
 
     // récupère dans un premier temps le nom et prénom du participant si non anonyme
     if (!this.anonymous) {
@@ -182,16 +181,15 @@ export class QuestionnaireAnswerComponent implements OnInit {
     this.getQuestions(this.answerForm).forEach((question) => {
       const reponse = new Reponse();
       reponse.idQuestion = question.value.idQuestion;
-      if (question.value.typeQuestion === 'OUVERT' || question.value.typeQuestion === 'DATE') {
+      if (question.value.typeQuestion === 'OUVERT'
+          || question.value.typeQuestion === 'DATE'
+          || question.value.typeQuestion === 'EVALUATION') {
         reponse.valeur = question.value.valeurReponse;
         // on envoie la réponse seulement si celle-ci a une valeur
         this.participant.reponses.push(reponse);
       } else {
         reponse.idsProposition = [];
-        console.log('Question : ' + question.value.valeurQuestion);
-        console.log('Propositions : ');
         this.getPropositions(question).forEach((proposition) => {
-          console.log(proposition.value.valeurProp + ' : ' + proposition.value.chosen);
           if (proposition.value.chosen) {
             reponse.idsProposition.push(proposition.value.idProp);
           }
@@ -206,7 +204,8 @@ export class QuestionnaireAnswerComponent implements OnInit {
     this.participantService.create(this.participant).subscribe(next => {
       this.alertService.success('Participation enregistrée');
     }, error => {
-      this.alertService.error(error);
+      this.alertService.error('Ce questionnaire n\'est plus disponible.');
+      this.perime = true;
     });
     this.done = true;
   }
@@ -218,7 +217,6 @@ export class QuestionnaireAnswerComponent implements OnInit {
       } else {
         item.value.chosen = false;
       }
-      console.log(item.value.valeurProp + ' : ' + item.value.chosen);
     });
   }
 
@@ -226,16 +224,15 @@ export class QuestionnaireAnswerComponent implements OnInit {
     this.getPropositions(question).forEach((item) => {
       if (item.value.valeurProp === this.getPropositions(question)[event.source.id].value.valeurProp) {
         item.value.chosen = event.checked;
-        console.log(item.value.valeurProp + ' : ' + item.value.chosen);
       }
     });
   }
 
   onChangeDate(event: MatDatepickerInputEvent<any>, question: AbstractControl) {
-    question.value.valeurReponse = new Date(event.value).toLocaleDateString();
+    question.value.valeurReponse = new Date((event.value).setHours(event.value.getHours() + 2)).toLocaleDateString();
   }
 
-  onChangeEvaluation(event: MatSliderChange, question: AbstractControl) {
-    question.value.valeurReponse = event.value;
+  onChangeEvaluation(event: number, question: AbstractControl) {
+    question.value.valeurReponse = event;
   }
 }

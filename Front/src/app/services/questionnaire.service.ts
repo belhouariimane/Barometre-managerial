@@ -13,7 +13,6 @@ export class QuestionnaireService {
 
     getAllByIdUser(idUser: number) {
         return this.http.get<Questionnaire[]>(`${environment.apiUrl}/questionnaire/findByIdAdministrateur/${idUser}`);
-        // return this.http.get<Questionnaire[]>(`${environment.apiUrl}/questionnaires/all/${idUser}`);
     }
 
     getById(idQuestionnaire: number): Observable<Questionnaire> {
@@ -33,11 +32,10 @@ export class QuestionnaireService {
         questionnaire.administrateur = new User();
         questionnaire.administrateur.id = questionnaire.idUser;
         questionnaire.dateCreation = new Date(Date.now());
-        questionnaire.datePeremption = new Date(2020, 12, 15);
+        questionnaire.dateCreation.setHours(questionnaire.dateCreation.getHours() + 2);
         questionnaire.url = environment.apiUrl + '/answer/' + questionnaire.id;
         const questStr = JSON.stringify(questionnaire, replacer);
         return this.http.post(`${environment.apiUrl}/questionnaire/create`, JSON.parse(questStr));
-        // return this.http.post(`${environment.apiUrl}/questionnaires/register`, questionnaire);
     }
 
     update(id: number, questionnaire: Questionnaire) {
@@ -47,16 +45,18 @@ export class QuestionnaireService {
             }
             return value;
         }
-        questionnaire.datePeremption = new Date(2020, 12, 15);
         questionnaire.url = environment.apiUrl + '/answer/' + id;
         questionnaire.id = id;
+        if (questionnaire.datePeremption === undefined) {
+          questionnaire.datePeremption = new Date(Date.now());
+        }
         const questStr = JSON.stringify(questionnaire, replacer);
         return this.http.post(`${environment.apiUrl}/questionnaire/update`, JSON.parse(questStr));
-        // return this.http.post(`${environment.apiUrl}/questionnaires/update/${id}`, questionnaire);
     }
 
     delete(id: number) {
         return this.http.delete(`${environment.apiUrl}/questionnaire/delete/${id}`);
-        // return this.http.delete(`${environment.apiUrl}/questionnaires/${id}`);
     }
+
 }
+

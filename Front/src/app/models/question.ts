@@ -9,7 +9,7 @@ export class Question {
   isRequired: boolean;
   isFilter: boolean;
   hasGraph: boolean;
-  order: number;
+  ordre: number;
   idTheme: number;
   idQuestionnaire: number;
   questionnaire: Questionnaire;

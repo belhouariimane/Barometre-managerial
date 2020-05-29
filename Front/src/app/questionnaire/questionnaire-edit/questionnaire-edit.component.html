@@ -1,4 +1,4 @@
-<div class="container border rounded border-info mb-4 p-3">
+<div class="container shadow-lg p-3 mb-5 bg-white rounded ">
     <h3>Informations du questionnaire</h3>
     <form class="m-3" [formGroup]="questionnaireForm" >
         <div class="form-group ">
@@ -25,7 +25,16 @@
                 <div *ngIf="f.remerciement.errors.required">Veuillez renseigner un message de remerciement</div>
             </div>
         </div>
-        <br/>
+        <div class="form-group">
+            <label>Choisissez une date limite de réponse au questionnaire</label>
+            <div class="input-group">
+                <input type="datetime-local" class="form-control" formControlName="datePeremption" value="{{this.dateLimite}}"/>
+<!--                <input type="text" class="form-control float-left w-25" matInput formControlName="datePeremption" placeholder="{{this.dateLimite}}" [matDatepicker]="picker">-->
+<!--                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>-->
+<!--                <mat-datepicker #picker></mat-datepicker>-->
+            </div>
+            <div *ngIf="submitted && questionnaireForm.errors?.before" class="before-error">Veuillez saisir une date supérieure à la date du jour</div>
+        </div>
         <div class="form-group">
             <mat-slide-toggle
                     class="example-margin"
@@ -42,23 +51,58 @@
         </div>
     </form>
 </div>
-<div *ngIf="modification" class="container border rounded border-info mb-4 p-3">
+<div *ngIf="modification" class="container shadow-lg p-3 mb-5 bg-white rounded">
     <h3>Liste des questions</h3>
     <ul class="list-group">
         <div *ngFor="let question of questions; let i = index" class="list-group-item m-3 rounded border">
-            <div class="zero-border" [routerLink]="['/edit-question',idQuestionnaire, question.id]">
+            <div *ngIf="nbParticipants === 0" class="zero-border" [routerLink]="['/edit-question',idQuestionnaire, question.id]">
                 <div>Question : {{question.valeur}}</div>
                 <div>Type : {{getRealType(question.typeQuestion)}}</div>
-                <div *ngIf="question.isFilter">Filtre : {{question.isFilter}}</div>
-                <div *ngIf="question.hasGraph">Graphe : {{question.hasGraph}}</div>
-                <div *ngIf="question.isRequired">Obligatoire : {{question.isRequired}}</div>
+                <div *ngIf="question.isRequired">Question obligatoire</div>
+                <div *ngIf="question.isFilter">Question de filtrage</div>
+                <div *ngIf="question.hasGraph">Présent dans la page de synthèse</div>
+            </div>
+            <div *ngIf="nbParticipants > 0">
+                <div>Question : {{question.valeur}}</div>
+                <div>Type : {{getRealType(question.typeQuestion)}}</div>
+                <div *ngIf="question.isRequired">Question obligatoire</div>
+                <div *ngIf="question.isFilter">Question de filtrage</div>
+                <div *ngIf="question.hasGraph">Présent dans la page de synthèse</div>
             </div>
             <div class="float-right ">
-                <button class="mx-2" [disabled]="i === 0" (click)="up(i)" mat-button mat-raised-button><mat-icon>arrow_upward</mat-icon> </button>
-                <button class="mx-2" [disabled]="i === questions.length - 1" (click)="down(i)" mat-button mat-raised-button><mat-icon>arrow_downward</mat-icon> </button>
-                <button class="mx-2" mat-button mat-raised-button color="primary"  [routerLink]="['/show-question',idQuestionnaire, question.id]"><mat-icon>slideshow</mat-icon> </button>
-                <button class="mx-2" [disabled]="nbParticipants > 0" mat-button mat-raised-button color="accent" [routerLink]="['/edit-question',idQuestionnaire, question.id]"><mat-icon>update</mat-icon> </button>
-                <button class="mx-2" [disabled]="nbParticipants > 0" mat-button mat-raised-button color="warn" [routerLink]="['/edit-questionnaire', idQuestionnaire]" (click)="deleteQuestion(question.id)"><mat-icon>delete</mat-icon> </button>
+                <button class="mx-2"
+                        [disabled]="i === 0" (click)="up(i)"
+                        mat-button mat-raised-button
+                        #tooltip="matTooltip"
+                        matTooltip="Déplacer la question vers le haut .">
+                    <mat-icon>arrow_upward</mat-icon> </button>
+                <button class="mx-2"
+                        [disabled]="i === questions.length - 1" (click)="down(i)"
+                        mat-button mat-raised-button
+                        #tooltip="matTooltip"
+                        matTooltip="Déplacer la question vers le bas .">
+                    <mat-icon>arrow_downward</mat-icon> </button>
+                <button class="mx-2"
+                        mat-button mat-raised-button
+                        color="primary"
+                        [routerLink]="['/show-question',idQuestionnaire, question.id]"
+                        #tooltip="matTooltip"
+                        matTooltip="Afficher la question .">
+                    <mat-icon>slideshow</mat-icon> </button>
+                <button class="mx-2"
+                        [disabled]="nbParticipants > 0"
+                        mat-button mat-raised-button color="accent"
+                        [routerLink]="['/edit-question',idQuestionnaire, question.id]"
+                        #tooltip="matTooltip"
+                        matTooltip="Modifier la question .">
+                    <mat-icon>update</mat-icon> </button>
+                <button class="mx-2"
+                        mat-button mat-raised-button color="warn"
+                        [routerLink]="['/edit-questionnaire', idQuestionnaire]"
+                        (click)="deleteQuestion(question.id)"
+                        #tooltip="matTooltip"
+                        matTooltip="Supprimer la question.">
+                    <mat-icon>delete</mat-icon> </button>
             </div>
         </div>
     </ul>

@@ -25,7 +25,6 @@ export class AuthService {
     }
 
     login(email, password) {
-         //return this.http.post<any>(`/public/login`, { email, password })
           return this.http.post<any>(`${environment.apiUrl}/public/login`, { email, password })
             .pipe(map(user => {
                // stocke les détails de l'utilisateur + le jeton jwt dans le stockaqe local pour conserver
@@ -48,10 +47,6 @@ export class AuthService {
         user.nom = user.nom.length === 0 ? this.currentUserValue.nom : user.nom;
         user.prenom = user.prenom.length === 0 ? this.currentUserValue.prenom : user.prenom;
         user.id = this.currentUserValue.id;
-        console.log(user.email);
-        console.log(user.password);
-        console.log(user.nom);
-        console.log(user.prenom);
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
     }
